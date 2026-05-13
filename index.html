@@ -108,40 +108,6 @@
 
     #scroll-hint.hidden { opacity: 0 !important; }
 
-    /* ── SCROLL-NEXT CHEVRON ─────────────────────────────────── */
-    #scroll-next {
-      position: fixed;
-      bottom: 2rem;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 10;
-      background: none;
-      border: 1px solid rgba(200,169,110,0.3);
-      border-radius: 50%;
-      width: 46px; height: 46px;
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer;
-      color: var(--gold);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.6s ease, border-color 0.3s, background 0.3s, box-shadow 0.3s;
-      animation: chevronPulse 2.6s ease-in-out infinite;
-    }
-    #scroll-next.visible {
-      opacity: 1;
-      pointer-events: auto;
-    }
-    #scroll-next:hover {
-      background: rgba(200,169,110,0.08);
-      border-color: rgba(200,169,110,0.7);
-      box-shadow: 0 0 18px rgba(200,169,110,0.15);
-    }
-    #scroll-next svg { width: 15px; height: 15px; }
-    @keyframes chevronPulse {
-      0%, 100% { box-shadow: 0 0 0 0   rgba(200,169,110,0);    }
-      50%       { box-shadow: 0 0 0 10px rgba(200,169,110,0.10); }
-    }
-
     #scroll-hint span {
       font-family: 'Helvetica Neue', Arial, sans-serif;
       font-size: 0.62rem;
@@ -1443,13 +1409,6 @@
   <div class="scroll-line"></div>
 </div>
 
-<button id="scroll-next" aria-label="Nächster Abschnitt">
-  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"
-       stroke-linecap="round" stroke-linejoin="round">
-    <polyline points="2,5 8,11 14,5"/>
-  </svg>
-</button>
-
 <div id="location-label">
   <p class="label-city">Bremen</p>
   <p class="label-sub">Freie Hansestadt · Deutschland</p>
@@ -1748,9 +1707,6 @@
     document.getElementById('globe-vignette').classList.toggle('hidden', !isGlobe);
     document.getElementById('lb-top').classList.toggle('visible', isGlobe);
     document.getElementById('lb-bottom').classList.toggle('visible', isGlobe);
-
-    // Scroll-next chevron: visible on steps 1–5
-    document.getElementById('scroll-next').classList.toggle('visible', idx > 0);
   }
 
   function hideAllCards() {
@@ -1783,16 +1739,6 @@
       const idx = parseInt(dot.dataset.step);
       document.getElementById(`step-${idx}`).scrollIntoView({ behavior: 'smooth' });
     });
-  });
-
-  // ── Scroll-next chevron click ─────────────────────────────────
-  document.getElementById('scroll-next').addEventListener('click', () => {
-    const nextStep = document.getElementById(`step-${currentStep + 1}`);
-    if (nextStep) {
-      nextStep.scrollIntoView({ behavior: 'smooth' });
-    } else {
-      document.getElementById('content-section').scrollIntoView({ behavior: 'smooth' });
-    }
   });
 
   // ── Globe auto-rotation ───────────────────────────────────────
@@ -1854,7 +1800,6 @@
     document.getElementById('location-label'),
     document.getElementById('overview-hint'),
     document.getElementById('scroll-hint'),
-    document.getElementById('scroll-next'),
     document.getElementById('building-panel'),
     ...document.querySelectorAll('.property-card'),
     ...document.querySelectorAll('.map-marker'),
