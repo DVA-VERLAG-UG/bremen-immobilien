@@ -1105,6 +1105,77 @@
       80%  { transform: scale(3.5); opacity: 0; }
       100% { transform: scale(3.5); opacity: 0; }
     }
+
+    /* ── GLOBE PREMIUM OVERLAYS ─────────────────────────────── */
+
+    /* Deep-space vignette — makes the globe float in darkness */
+    #globe-vignette {
+      position: fixed; inset: 0; z-index: 1;
+      pointer-events: none;
+      background: radial-gradient(
+        ellipse 68% 68% at 50% 50%,
+        transparent 26%,
+        rgba(2, 3, 12, 0.42) 50%,
+        rgba(2, 3, 12, 0.88) 70%,
+        rgba(2, 3, 12, 1) 87%
+      );
+      opacity: 1;
+      transition: opacity 1.8s ease;
+    }
+    #globe-vignette.hidden { opacity: 0; }
+
+    /* Film grain overlay */
+    #film-grain {
+      position: fixed; inset: -50%;
+      width: 200%; height: 200%;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.042;
+      mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 180px 180px;
+      animation: grainShift 0.08s steps(1) infinite;
+    }
+    @keyframes grainShift {
+      0%   { transform: translate(0,     0); }
+      25%  { transform: translate(-9px, -7px); }
+      50%  { transform: translate(7px,  9px); }
+      75%  { transform: translate(-7px, 7px); }
+    }
+
+    /* Cinematic letterbox bars — top & bottom on globe step */
+    .letterbox {
+      position: fixed; left: 0; right: 0;
+      z-index: 2; pointer-events: none;
+      height: 72px;
+      background: #000;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+    .letterbox.top { top: 0; }
+    .letterbox.bottom { bottom: 0; }
+    .letterbox.visible { opacity: 1; }
+
+    /* ── HERO UPGRADES ──────────────────────────────────────── */
+    .hero-line {
+      width: 36px; height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+      margin: 1rem auto 1.2rem;
+      opacity: 0;
+      animation: riseIn 1s ease forwards 0.6s;
+    }
+
+    .hero-title {
+      font-size: clamp(3.8rem, 9vw, 7rem) !important;
+      text-shadow: 0 2px 60px rgba(0,0,0,0.85),
+                   0 0 140px rgba(200,169,110,0.06) !important;
+      letter-spacing: 0.12em !important;
+    }
+
+    .hero-sub {
+      letter-spacing: 0.38em !important;
+      color: rgba(255,255,255,0.38) !important;
+    }
   </style>
 </head>
 <body>
@@ -1158,12 +1229,19 @@
 <!-- ── MAP ──────────────────────────────────────────────────── -->
 <div id="map"></div>
 
+<!-- ── PREMIUM GLOBE OVERLAYS ──────────────────────────────── -->
+<div id="globe-vignette"></div>
+<div id="film-grain"></div>
+<div class="letterbox top" id="lb-top"></div>
+<div class="letterbox bottom" id="lb-bottom"></div>
+
 <!-- ── SCROLL SECTIONS ──────────────────────────────────────── -->
 <div id="scroll-driver">
   <!-- 0: Globe hero -->
   <section class="step" id="step-0">
     <div class="hero-content">
       <p class="hero-eyebrow">Exklusive Immobilien</p>
+      <div class="hero-line"></div>
       <h1 class="hero-title">Bremen</h1>
       <p class="hero-sub">Erstklassige Objekte in bester Lage</p>
     </div>
@@ -1491,11 +1569,11 @@
 
   map.on('style.load', () => {
     map.setFog({
-      'color':          'rgb(18, 22, 38)',
-      'high-color':     'rgb(28, 52, 115)',
-      'horizon-blend':  0.03,
-      'space-color':    'rgb(5, 5, 16)',
-      'star-intensity': 0.9,
+      'color':          'rgb(6, 10, 26)',
+      'high-color':     'rgb(8, 28, 90)',
+      'horizon-blend':  0.022,
+      'space-color':    'rgb(1, 1, 8)',
+      'star-intensity': 1.0,
     });
   });
 
@@ -1623,6 +1701,12 @@
     } else {
       stopGlobeRotation();
     }
+
+    // Vignette & letterbox: visible only on globe step
+    const isGlobe = idx === 0;
+    document.getElementById('globe-vignette').classList.toggle('hidden', !isGlobe);
+    document.getElementById('lb-top').classList.toggle('visible', isGlobe);
+    document.getElementById('lb-bottom').classList.toggle('visible', isGlobe);
   }
 
   function hideAllCards() {
