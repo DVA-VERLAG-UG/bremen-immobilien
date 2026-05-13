@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kontakt – Bremen Immobilien</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --gold:    #c8a96e;
+      --gold-l:  #e2c98a;
+      --dark:    #08080e;
+      --card-bg: #0f0f18;
+      --border:  rgba(200,169,110,0.18);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--dark);
+      color: #fff;
+      font-family: 'Georgia', 'Times New Roman', serif;
+      min-height: 100vh;
+    }
+
+    /* ── NAV ─────────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2.5rem;
+      background: rgba(8,8,14,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .nav-logo {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.42em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--gold); }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+      align-items: center;
+    }
+    .nav-links a {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+      text-decoration: none;
+      transition: color 0.25s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--gold); }
+
+    .burger-btn {
+      background: none; border: none; cursor: pointer;
+      display: flex; flex-direction: column; gap: 5px;
+      padding: 6px;
+    }
+    .burger-line {
+      display: block; width: 22px; height: 1.5px;
+      background: rgba(255,255,255,0.75);
+      transition: all 0.3s;
+    }
+
+    /* ── MENU OVERLAY ────────────────────────────────────── */
+    #menu-overlay {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(8,8,14,0.97);
+      backdrop-filter: blur(16px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+    #menu-overlay.open { opacity: 1; pointer-events: all; }
+
+    .menu-inner { text-align: center; }
+
+    .menu-nav { list-style: none; display: flex; flex-direction: column; gap: 0; }
+
+    .menu-item { overflow: hidden; }
+
+    .menu-link {
+      background: none; border: none; cursor: pointer;
+      font-family: 'Georgia', serif;
+      font-size: clamp(1.6rem, 5vw, 2.8rem);
+      color: rgba(255,255,255,0.65);
+      letter-spacing: 0.04em;
+      padding: 0.5rem 1rem;
+      transition: color 0.25s;
+      display: block; width: 100%; text-align: center;
+      text-decoration: none;
+    }
+    .menu-link:hover { color: var(--gold); }
+    .menu-link.active-page { color: var(--gold); }
+
+    .menu-sub {
+      list-style: none; max-height: 0;
+      overflow: hidden; transition: max-height 0.4s ease;
+    }
+    .menu-sub.open { max-height: 200px; }
+
+    .menu-sub-link {
+      background: none; border: none; cursor: pointer;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+      padding: 0.35rem 1rem;
+      display: block; width: 100%; text-align: center;
+      transition: color 0.25s;
+      text-decoration: none;
+    }
+    .menu-sub-link:hover { color: var(--gold); }
+
+    .menu-divider {
+      width: 60px; height: 1px;
+      background: var(--border);
+      margin: 1.5rem auto;
+    }
+
+    .menu-close {
+      position: absolute; top: 1.5rem; right: 2rem;
+      background: none; border: none; cursor: pointer;
+      font-size: 1.6rem; color: rgba(255,255,255,0.5);
+      transition: color 0.2s;
+      line-height: 1;
+    }
+    .menu-close:hover { color: var(--gold); }
+
+    /* ── HERO ────────────────────────────────────────────── */
+    .hero {
+      padding-top: 64px;
+      min-height: 38vh;
+      display: flex;
+      align-items: flex-end;
+      padding-bottom: 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 20% 60%, rgba(200,169,110,0.07) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      max-width: 820px;
+      padding: 0 2.5rem;
+      position: relative;
+    }
+
+    .hero-eyebrow {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.2rem;
+    }
+
+    .hero-h1 {
+      font-family: 'Georgia', serif;
+      font-size: clamp(2.2rem, 6vw, 4rem);
+      font-weight: 400;
+      line-height: 1.12;
+      color: #fff;
+    }
+
+    .hero-sub {
+      margin-top: 1.2rem;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 0.04em;
+      line-height: 1.7;
+    }
+
+    /* ── GOLD LINE ───────────────────────────────────────── */
+    .gold-line {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(to right, var(--gold), transparent);
+      opacity: 0.25;
+    }
+
+    /* ── MAIN CONTENT ────────────────────────────────────── */
+    .contact-wrapper {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 5rem 2.5rem 7rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    /* ── LEFT: CONTACT INFO ──────────────────────────────── */
+    .info-block { display: flex; flex-direction: column; gap: 3rem; }
+
+    .section-label {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.2rem;
+    }
+
+    .info-group h3 {
+      font-family: 'Georgia', serif;
+      font-size: 1.25rem;
+      font-weight: 400;
+      color: #fff;
+      margin-bottom: 0.8rem;
+    }
+
+    .info-group p, .info-group address {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.9rem;
+      line-height: 1.85;
+      color: rgba(255,255,255,0.55);
+      font-style: normal;
+    }
+
+    .info-group a {
+      color: rgba(255,255,255,0.55);
+      text-decoration: none;
+      transition: color 0.25s;
+    }
+    .info-group a:hover { color: var(--gold); }
+
+    .contact-divider {
+      width: 40px; height: 1px;
+      background: var(--border);
+    }
+
+    /* ── RIGHT: FORM ─────────────────────────────────────── */
+    .form-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2.5rem 2rem;
+    }
+
+    .form-card h2 {
+      font-family: 'Georgia', serif;
+      font-size: 1.4rem;
+      font-weight: 400;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-card .form-sub {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .form-group label {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 3px;
+      color: #fff;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.88rem;
+      padding: 0.75rem 1rem;
+      outline: none;
+      transition: border-color 0.25s;
+      width: 100%;
+    }
+
+    .form-group select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23c8a96e' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      padding-right: 2.5rem;
+      cursor: pointer;
+    }
+
+    .form-group select option { background: #0f0f18; }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: rgba(200,169,110,0.5);
+    }
+
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+      color: rgba(255,255,255,0.2);
+    }
+
+    .form-group textarea { resize: vertical; min-height: 120px; }
+
+    .checkbox-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .checkbox-row input[type="checkbox"] {
+      width: 16px; height: 16px;
+      margin-top: 2px;
+      accent-color: var(--gold);
+      flex-shrink: 0;
+    }
+
+    .checkbox-row label {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.4);
+      line-height: 1.6;
+      cursor: pointer;
+    }
+
+    .checkbox-row label a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 1rem;
+      background: transparent;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: background 0.3s, color 0.3s;
+    }
+    .btn-submit:hover {
+      background: var(--gold);
+      color: var(--dark);
+    }
+
+    /* success state */
+    #form-success {
+      display: none;
+      text-align: center;
+      padding: 2rem 0;
+    }
+    #form-success .check {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: var(--gold);
+    }
+    #form-success h3 {
+      font-family: 'Georgia', serif;
+      font-weight: 400;
+      font-size: 1.3rem;
+      margin-bottom: 0.6rem;
+    }
+    #form-success p {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.45);
+    }
+
+    /* ── MAP STRIP ───────────────────────────────────────── */
+    .map-strip {
+      width: 100%;
+      height: 320px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .map-strip iframe {
+      width: 100%; height: 100%;
+      border: none;
+      filter: grayscale(0.7) brightness(0.65) sepia(0.2);
+      transition: filter 0.4s;
+    }
+    .map-strip:hover iframe {
+      filter: grayscale(0.3) brightness(0.8) sepia(0.1);
+    }
+
+    .map-strip-overlay {
+      position: absolute; inset: 0;
+      pointer-events: none;
+      background: linear-gradient(to bottom, var(--dark) 0%, transparent 15%, transparent 85%, var(--dark) 100%);
+    }
+
+    /* ── FOOTER ──────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 2.5rem 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-logo {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+    }
+    .footer-logo span { color: var(--gold); }
+
+    footer nav a {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      text-decoration: none;
+      transition: color 0.25s;
+      margin-left: 1.5rem;
+    }
+    footer nav a:hover { color: var(--gold); }
+
+    /* ── REVEAL ──────────────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.75s ease, transform 0.75s ease;
+    }
+    .reveal.in-view { opacity: 1; transform: none; }
+    .reveal-d1 { transition-delay: 0.12s; }
+    .reveal-d2 { transition-delay: 0.24s; }
+    .reveal-d3 { transition-delay: 0.36s; }
+
+    /* ── RESPONSIVE ──────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .contact-wrapper {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+        padding: 3.5rem 1.5rem 5rem;
+      }
+      .form-row { grid-template-columns: 1fr; }
+      nav { padding: 0 1.5rem; }
+      .hero-content { padding: 0 1.5rem; }
+      footer { padding: 2rem 1.5rem; flex-direction: column; align-items: flex-start; gap: 1rem; }
+      footer nav { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-left: 0; }
+      footer nav a { margin-left: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ───────────────────────────────────────────────────── -->
+<nav>
+  <a href="index.html" class="nav-logo">DVA <span>Verlag</span></a>
+
+  <ul class="nav-links" id="desktop-nav">
+    <li><a href="index.html">Start</a></li>
+    <li><a href="immobilien.html">Immobilien</a></li>
+    <li><a href="kontakt.html" class="active">Kontakt</a></li>
+  </ul>
+
+  <button class="burger-btn" id="menu-btn" aria-label="Menü öffnen">
+    <span class="burger-line"></span>
+    <span class="burger-line"></span>
+    <span class="burger-line"></span>
+  </button>
+</nav>
+
+<!-- ── MENU OVERLAY ──────────────────────────────────────────── -->
+<div id="menu-overlay" role="dialog" aria-modal="true">
+  <button class="menu-close" id="menu-close" aria-label="Menü schließen">✕</button>
+  <div class="menu-inner">
+    <ul class="menu-nav">
+
+      <li class="menu-item">
+        <a href="index.html" class="menu-link">Start</a>
+      </li>
+
+      <li class="menu-item">
+        <button class="menu-link" onclick="toggleSub('sub-objekte')">Objekte</button>
+        <ul class="menu-sub" id="sub-objekte">
+          <li><a class="menu-sub-link" href="index.html#step-3">Schwachhauser Heerstraße 179</a></li>
+          <li><a class="menu-sub-link" href="index.html#step-5">Müdener Strasse 31</a></li>
+        </ul>
+      </li>
+
+      <li class="menu-item">
+        <a href="immobilien.html" class="menu-link">Immobilien</a>
+      </li>
+
+      <li class="menu-item">
+        <a href="kontakt.html" class="menu-link active-page">Kontakt</a>
+      </li>
+
+    </ul>
+
+    <div class="menu-divider"></div>
+
+    <p style="font-family:'Helvetica Neue',Arial,sans-serif; font-size:0.72rem;
+       letter-spacing:0.18em; text-transform:uppercase; color:rgba(255,255,255,0.3);">
+      Bremen &nbsp;·&nbsp; Deutschland
+    </p>
+  </div>
+</div>
+
+<!-- ── HERO ──────────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-content">
+    <p class="hero-eyebrow reveal">Kontakt</p>
+    <h1 class="hero-h1 reveal reveal-d1">Sprechen wir.<br>Wir sind für Sie da.</h1>
+    <p class="hero-sub reveal reveal-d2">
+      Ob Kaufanfrage, Besichtigung oder einfache Fragen — unser Team antwortet Ihnen persönlich.
+    </p>
+  </div>
+</section>
+
+<div class="gold-line"></div>
+
+<!-- ── CONTACT SECTION ───────────────────────────────────────── -->
+<div class="contact-wrapper">
+
+  <!-- LEFT: INFO -->
+  <div class="info-block">
+
+    <div class="info-group reveal">
+      <p class="section-label">Anschrift</p>
+      <h3>DVA Verlag GmbH</h3>
+      <address>
+        Schwachhauser Heerstraße 179<br>
+        28211 Bremen<br>
+        Deutschland
+      </address>
+    </div>
+
+    <div class="contact-divider reveal"></div>
+
+    <div class="info-group reveal reveal-d1">
+      <p class="section-label">Erreichbarkeit</p>
+      <h3>Direkt erreichen</h3>
+      <p>
+        Telefon: <a href="tel:+49421000000">+49 (0)421 – 000 000</a><br>
+        E-Mail: <a href="mailto:info@dva-verlag.de">info@dva-verlag.de</a><br><br>
+        Mo – Fr: 09:00 – 18:00 Uhr<br>
+        Sa: nach Vereinbarung
+      </p>
+    </div>
+
+    <div class="contact-divider reveal"></div>
+
+    <div class="info-group reveal reveal-d2">
+      <p class="section-label">Schnellanfrage</p>
+      <h3>Exposé anfordern</h3>
+      <p>
+        Besuchen Sie unsere <a href="immobilien.html">Immobilienübersicht</a> und fordern Sie
+        direkt das Exposé Ihrer Wunschimmobilie über Google Drive an.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- RIGHT: FORM -->
+  <div class="form-card reveal reveal-d1">
+    <h2>Nachricht senden</h2>
+    <p class="form-sub">Wir melden uns innerhalb von 24 Stunden bei Ihnen.</p>
+
+    <form id="contact-form" onsubmit="submitForm(event)">
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="fname">Vorname</label>
+          <input type="text" id="fname" name="fname" placeholder="Max" required />
+        </div>
+        <div class="form-group">
+          <label for="lname">Nachname</label>
+          <input type="text" id="lname" name="lname" placeholder="Mustermann" required />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">E-Mail-Adresse</label>
+        <input type="email" id="email" name="email" placeholder="max@beispiel.de" required />
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Telefon (optional)</label>
+        <input type="tel" id="phone" name="phone" placeholder="+49 421 …" />
+      </div>
+
+      <div class="form-group">
+        <label for="objekt">Objekt</label>
+        <select id="objekt" name="objekt">
+          <option value="">Alle / Allgemeine Anfrage</option>
+          <option value="schwachhausen">Schwachhauser Heerstraße 179</option>
+          <option value="muedener">Müdener Strasse 31</option>
+          <option value="andere">Anderes Objekt / Sonstige Anfrage</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="message">Ihre Nachricht</label>
+        <textarea id="message" name="message" placeholder="Ich interessiere mich für …" required></textarea>
+      </div>
+
+      <div class="checkbox-row">
+        <input type="checkbox" id="datenschutz" name="datenschutz" required />
+        <label for="datenschutz">
+          Ich habe die <a href="#">Datenschutzerklärung</a> gelesen und stimme der Verarbeitung
+          meiner Daten zur Bearbeitung meiner Anfrage zu.
+        </label>
+      </div>
+
+      <button type="submit" class="btn-submit">Nachricht senden</button>
+    </form>
+
+    <div id="form-success">
+      <div class="check">✦</div>
+      <h3>Vielen Dank!</h3>
+      <p>Wir haben Ihre Nachricht erhalten und melden uns in Kürze bei Ihnen.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── MAP STRIP ─────────────────────────────────────────────── -->
+<div class="map-strip">
+  <iframe
+    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2393.6!2d8.8416!3d53.0784!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47b127b45a3b7c05%3A0x9a7c6e0a7b4f2d1!2sSchwachhauser+Heerstra%C3%9Fe+179%2C+28211+Bremen!5e0!3m2!1sde!2sde!4v1"
+    allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+    title="Standort Bremen">
+  </iframe>
+  <div class="map-strip-overlay"></div>
+</div>
+
+<!-- ── FOOTER ────────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-logo">DVA <span>Verlag</span></div>
+  <nav aria-label="Footer Navigation">
+    <a href="index.html">Start</a>
+    <a href="immobilien.html">Immobilien</a>
+    <a href="kontakt.html">Kontakt</a>
+  </nav>
+</footer>
+
+<script>
+  // ── MENU ──────────────────────────────────────────────────────
+  const overlay = document.getElementById('menu-overlay');
+  const menuBtn = document.getElementById('menu-btn');
+  const closeBtn = document.getElementById('menu-close');
+
+  function openMenu() {
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMenu() {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  menuBtn.addEventListener('click', openMenu);
+  closeBtn.addEventListener('click', closeMenu);
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeMenu(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+
+  function toggleSub(id) {
+    document.getElementById(id).classList.toggle('open');
+  }
+
+  // ── FORM SUBMIT ───────────────────────────────────────────────
+  function submitForm(e) {
+    e.preventDefault();
+    const f = e.target;
+    const fname  = f.fname.value;
+    const lname  = f.lname.value;
+    const email  = f.email.value;
+    const phone  = f.phone.value;
+    const objekt = f.objekt.value;
+    const msg    = f.message.value;
+
+    const subject = encodeURIComponent('Immobilienanfrage – ' + fname + ' ' + lname);
+    const body = encodeURIComponent(
+      'Name: ' + fname + ' ' + lname + '\n' +
+      'E-Mail: ' + email + '\n' +
+      (phone ? 'Telefon: ' + phone + '\n' : '') +
+      (objekt ? 'Objekt: ' + objekt + '\n' : '') +
+      '\nNachricht:\n' + msg
+    );
+
+    window.location.href = 'mailto:info@dva-verlag.de?subject=' + subject + '&body=' + body;
+
+    // Show success state
+    f.style.display = 'none';
+    document.getElementById('form-success').style.display = 'block';
+  }
+
+  // ── REVEAL ────────────────────────────────────────────────────
+  const revealEls = document.querySelectorAll('.reveal');
+  const revealObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in-view');
+        revealObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  revealEls.forEach(el => revealObs.observe(el));
+</script>
+</body>
+</html>

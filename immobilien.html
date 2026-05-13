@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Immobilien – Bremen</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --gold:     #c8a96e;
+      --gold-l:   #e2c98a;
+      --dark:     #08080e;
+      --card-bg:  #0f0f18;
+      --border:   rgba(200,169,110,0.18);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--dark);
+      color: #fff;
+      font-family: 'Georgia', 'Times New Roman', serif;
+      min-height: 100vh;
+    }
+
+    /* ── NAV ───────────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2.5rem;
+      background: rgba(8,8,14,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .nav-logo {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.42em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--gold); }
+
+    /* ── BURGER ────────────────────────────────────────────── */
+    #menu-btn {
+      width: 44px; height: 44px;
+      display: flex; flex-direction: column;
+      align-items: flex-end; justify-content: center;
+      gap: 6px; cursor: pointer;
+      background: none; border: none; padding: 0;
+    }
+    .burger-line {
+      height: 1px; background: #fff; border-radius: 1px;
+      transition: transform .4s cubic-bezier(.16,1,.3,1),
+                  opacity .3s ease, width .4s cubic-bezier(.16,1,.3,1);
+    }
+    .burger-line:nth-child(1) { width: 28px; }
+    .burger-line:nth-child(2) { width: 20px; }
+    .burger-line:nth-child(3) { width: 24px; }
+    #menu-btn.open .burger-line:nth-child(1) { width:26px; transform:translateY(7px) rotate(45deg); }
+    #menu-btn.open .burger-line:nth-child(2) { opacity:0; width:0; }
+    #menu-btn.open .burger-line:nth-child(3) { width:26px; transform:translateY(-7px) rotate(-45deg); }
+
+    /* ── MENU OVERLAY ──────────────────────────────────────── */
+    #menu-overlay {
+      position: fixed; inset: 0; z-index: 150;
+      background: rgba(8,8,14,0.97);
+      backdrop-filter: blur(12px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity .45s ease;
+    }
+    #menu-overlay.open { opacity:1; pointer-events:auto; }
+
+    .menu-nav { list-style:none; text-align:center; }
+    .menu-item { overflow: hidden; }
+
+    .menu-link {
+      display: inline-block;
+      font-size: clamp(2rem,5vw,3.2rem);
+      font-weight: 400; font-family: 'Georgia', serif;
+      color: rgba(255,255,255,0.85);
+      text-decoration: none; cursor: pointer;
+      background: none; border: none; padding: .15rem 0;
+      position: relative;
+      opacity: 0; transform: translateY(30px);
+      transition: transform .55s cubic-bezier(.16,1,.3,1),
+                  opacity .55s ease, color .25s ease;
+    }
+    #menu-overlay.open .menu-link { transform:translateY(0); opacity:1; }
+    .menu-item:nth-child(1) .menu-link { transition-delay:.05s; }
+    .menu-item:nth-child(2) .menu-link { transition-delay:.12s; }
+    .menu-item:nth-child(3) .menu-link { transition-delay:.19s; }
+    .menu-item:nth-child(4) .menu-link { transition-delay:.26s; }
+
+    .menu-link::after {
+      content:''; position:absolute; left:0; bottom:0;
+      width:0; height:1px; background:var(--gold);
+      transition: width .35s ease;
+    }
+    .menu-link:hover { color:#fff; }
+    .menu-link:hover::after { width:100%; }
+
+    .menu-sub { list-style:none; max-height:0; overflow:hidden; transition:max-height .45s cubic-bezier(.16,1,.3,1); }
+    .menu-sub.open { max-height:200px; }
+    .menu-sub-link {
+      display:inline-block; font-family:'Helvetica Neue',Arial,sans-serif;
+      font-size:.72rem; letter-spacing:.3em; text-transform:uppercase;
+      color:rgba(255,255,255,.35); text-decoration:none; cursor:pointer;
+      background:none; border:none; padding:.45rem 0;
+      transition: color .25s ease;
+    }
+    .menu-sub-link:hover { color:var(--gold); }
+
+    .menu-divider { width:1px; height:40px; background:rgba(200,169,110,.25); margin:1.5rem auto; }
+    .menu-contact-row {
+      font-family:'Helvetica Neue',Arial,sans-serif; font-size:.65rem;
+      letter-spacing:.3em; text-transform:uppercase; color:rgba(255,255,255,.2);
+      opacity:0; transform:translateY(10px);
+      transition: opacity .5s ease .35s, transform .5s ease .35s;
+    }
+    #menu-overlay.open .menu-contact-row { opacity:1; transform:translateY(0); }
+    .menu-contact-row a { color:rgba(255,255,255,.4); text-decoration:none; transition:color .2s; }
+    .menu-contact-row a:hover { color:var(--gold); }
+
+    /* ── PAGE HERO ─────────────────────────────────────────── */
+    .page-hero {
+      padding: 120px 2.5rem 4rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .page-eyebrow {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+
+    .page-title {
+      font-size: clamp(2.2rem, 5vw, 4rem);
+      font-weight: 400;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+
+    .page-sub {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.4);
+      line-height: 1.7;
+      max-width: 480px;
+    }
+
+    .gold-line {
+      width: 50px; height: 1px;
+      background: var(--gold); opacity: 0.45;
+      margin: 2rem 0;
+    }
+
+    /* ── FILTER BAR ────────────────────────────────────────── */
+    .filter-bar {
+      max-width: 1100px;
+      margin: 0 auto 3rem;
+      padding: 0 2.5rem;
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      padding: 0.5rem 1.1rem;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: transparent;
+      color: rgba(255,255,255,0.4);
+      cursor: pointer;
+      border-radius: 2px;
+      transition: border-color 0.25s, color 0.25s, background 0.25s;
+    }
+    .filter-btn.active,
+    .filter-btn:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+    .filter-btn.active { background: rgba(200,169,110,0.06); }
+
+    /* ── GRID ──────────────────────────────────────────────── */
+    .listings-grid {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 2.5rem 8rem;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5px;
+    }
+
+    /* ── PROPERTY CARD ─────────────────────────────────────── */
+    .prop-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.3s ease;
+    }
+    .prop-card:hover { border-color: rgba(200,169,110,0.45); }
+
+    .prop-card.coming-soon { opacity: 0.45; pointer-events: none; }
+
+    .card-img-wrap {
+      position: relative;
+      aspect-ratio: 4/3;
+      overflow: hidden;
+      background: #0c0c18;
+    }
+
+    .card-img-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover; display: block;
+      transition: transform 0.6s cubic-bezier(0.16,1,0.3,1);
+    }
+    .prop-card:hover .card-img-wrap img { transform: scale(1.04); }
+
+    .card-img-placeholder {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .card-img-placeholder svg { opacity: 0.12; }
+
+    .card-badge {
+      position: absolute;
+      top: 1rem; left: 1rem;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.55rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      padding: 0.28rem 0.6rem;
+      background: rgba(8,8,14,0.82);
+      border: 1px solid var(--border);
+      color: var(--gold);
+      backdrop-filter: blur(4px);
+    }
+
+    .card-soon-badge {
+      position: absolute;
+      top: 1rem; left: 1rem;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.55rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      padding: 0.28rem 0.6rem;
+      background: rgba(8,8,14,0.82);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.4);
+    }
+
+    .card-body {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .card-type {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.58rem;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+
+    .card-address {
+      font-size: 1.05rem;
+      font-weight: 400;
+      line-height: 1.3;
+      margin-bottom: 0.2rem;
+    }
+
+    .card-city {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 1.1rem;
+    }
+
+    .card-divider {
+      width: 1.5rem; height: 1px;
+      background: var(--gold); opacity: 0.4;
+      margin-bottom: 1.1rem;
+    }
+
+    .card-specs {
+      display: flex;
+      gap: 1.4rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .spec { display: flex; flex-direction: column; gap: 0.15rem; }
+    .spec-val { font-size: 1rem; }
+    .spec-key {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.52rem; letter-spacing: 0.28em;
+      text-transform: uppercase; color: rgba(255,255,255,0.3);
+    }
+
+    .card-price {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.58rem; letter-spacing: 0.32em;
+      text-transform: uppercase; color: rgba(255,255,255,0.25);
+      margin-bottom: 0.25rem;
+    }
+    .card-price-val {
+      font-size: 1.25rem;
+      margin-bottom: 1.4rem;
+    }
+
+    /* spacer pushes button to bottom */
+    .card-spacer { flex: 1; }
+
+    /* Google Drive expose button */
+    .btn-expose {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--gold);
+      background: transparent;
+      color: var(--gold);
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.3s, color 0.3s;
+    }
+    .btn-expose:hover { background: var(--gold); color: var(--dark); }
+    .btn-expose svg { flex-shrink: 0; }
+
+    /* ── REVEAL ────────────────────────────────────────────── */
+    .reveal {
+      opacity: 0; transform: translateY(22px);
+      transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.16,1,0.3,1);
+    }
+    .reveal.in-view { opacity: 1; transform: translateY(0); }
+    .reveal-d1 { transition-delay: 0.08s; }
+    .reveal-d2 { transition-delay: 0.16s; }
+    .reveal-d3 { transition-delay: 0.24s; }
+    .reveal-d4 { transition-delay: 0.32s; }
+    .reveal-d5 { transition-delay: 0.40s; }
+
+    /* ── FOOTER ────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 2rem 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .footer-brand {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.6rem; letter-spacing: 0.4em;
+      text-transform: uppercase; color: rgba(255,255,255,0.25);
+    }
+    .footer-copy {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.58rem; color: rgba(255,255,255,0.18);
+    }
+
+    /* ── RESPONSIVE ────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .listings-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 580px) {
+      nav { padding: 0 1.25rem; }
+      .page-hero { padding: 100px 1.25rem 3rem; }
+      .filter-bar { padding: 0 1.25rem; }
+      .listings-grid { grid-template-columns: 1fr; padding: 0 1.25rem 5rem; }
+      footer { padding: 2rem 1.25rem; flex-direction: column; gap: 0.5rem; text-align: center; }
+      #menu-btn { top: 1.2rem; right: 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ──────────────────────────────────────────────────── -->
+<nav>
+  <a class="nav-logo" href="index.html">Bremen <span>Immobilien</span></a>
+  <button id="menu-btn" aria-label="Menü öffnen">
+    <span class="burger-line"></span>
+    <span class="burger-line"></span>
+    <span class="burger-line"></span>
+  </button>
+</nav>
+
+<!-- ── MENU OVERLAY ──────────────────────────────────────────── -->
+<div id="menu-overlay" role="dialog" aria-modal="true">
+  <div style="text-align:center">
+    <ul class="menu-nav">
+      <li class="menu-item">
+        <a class="menu-link" href="immobilien.html">Immobilien</a>
+      </li>
+      <li class="menu-item">
+        <button class="menu-link" onclick="toggleSub('sub-obj')">Objekte</button>
+        <ul class="menu-sub" id="sub-obj">
+          <li><a class="menu-sub-link" href="index.html#">Schwachhauser Heerstraße 179</a></li>
+          <li><a class="menu-sub-link" href="index.html#">Müdener Strasse 31</a></li>
+        </ul>
+      </li>
+      <li class="menu-item">
+        <a class="menu-link" href="index.html">Karte</a>
+      </li>
+      <li class="menu-item">
+        <a class="menu-link" href="kontakt.html">Kontakt</a>
+      </li>
+    </ul>
+    <div class="menu-divider"></div>
+    <p class="menu-contact-row">
+      <a href="mailto:navidistanbullu@gmail.com">navidistanbullu@gmail.com</a>
+    </p>
+  </div>
+</div>
+
+<!-- ── PAGE HERO ─────────────────────────────────────────────── -->
+<section class="page-hero">
+  <p class="page-eyebrow reveal">Verfügbare Objekte</p>
+  <h1 class="page-title reveal reveal-d1">Unsere Immobilien</h1>
+  <div class="gold-line reveal reveal-d2"></div>
+  <p class="page-sub reveal reveal-d2">
+    Sorgfältig ausgewählte Objekte in Bremen — gewerblich und privat.
+    Fordern Sie das vollständige Exposé direkt über Google Drive an.
+  </p>
+</section>
+
+<!-- ── FILTER ─────────────────────────────────────────────────── -->
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="filter('alle', this)">Alle</button>
+  <button class="filter-btn" onclick="filter('gewerbe', this)">Gewerbe</button>
+  <button class="filter-btn" onclick="filter('wohnen', this)">Wohnen</button>
+</div>
+
+<!-- ── LISTINGS ───────────────────────────────────────────────── -->
+<main class="listings-grid" id="grid">
+
+  <!-- Property 1 -->
+  <article class="prop-card reveal" data-type="gewerbe">
+    <div class="card-img-wrap">
+      <img src="Schwachhausen/Front.png" alt="Schwachhauser Heerstraße 179" />
+      <span class="card-badge">Gewerbe</span>
+    </div>
+    <div class="card-body">
+      <p class="card-type">Bürofläche · Souterrain</p>
+      <p class="card-address">Schwachhauser Heerstraße 179</p>
+      <p class="card-city">28211 Bremen · Schwachhausen</p>
+      <div class="card-divider"></div>
+      <div class="card-specs">
+        <div class="spec"><span class="spec-val">152 m²</span><span class="spec-key">Fläche</span></div>
+        <div class="spec"><span class="spec-val">6</span><span class="spec-key">Räume</span></div>
+        <div class="spec"><span class="spec-val">1968</span><span class="spec-key">Baujahr</span></div>
+      </div>
+      <p class="card-price">Kaufpreis</p>
+      <p class="card-price-val">Auf Anfrage</p>
+      <div class="card-spacer"></div>
+      <a class="btn-expose"
+         href="mailto:navidistanbullu@gmail.com?subject=Expose-Anfrage: Schwachhauser Heerstraße 179&body=Hallo,%0A%0Aich interessiere mich für das Expose zu Schwachhauser Heerstraße 179 und bitte um Zugangsgenehmigung.%0A%0AMit freundlichen Grüßen"
+         target="_blank">
+        <!-- replace href above with your Google Drive share link -->
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
+        Exposé anfordern
+      </a>
+    </div>
+  </article>
+
+  <!-- Property 2 -->
+  <article class="prop-card reveal reveal-d1" data-type="wohnen">
+    <div class="card-img-wrap">
+      <img src="Müdener/Front.png" alt="Müdener Strasse 31" />
+      <span class="card-badge">Wohnen</span>
+    </div>
+    <div class="card-body">
+      <p class="card-type">Etagenwohnung · 3. OG</p>
+      <p class="card-address">Müdener Strasse 31</p>
+      <p class="card-city">28329 Bremen · Neue Vahr</p>
+      <div class="card-divider"></div>
+      <div class="card-specs">
+        <div class="spec"><span class="spec-val">57 m²</span><span class="spec-key">Fläche</span></div>
+        <div class="spec"><span class="spec-val">3</span><span class="spec-key">Zimmer</span></div>
+        <div class="spec"><span class="spec-val">1955</span><span class="spec-key">Baujahr</span></div>
+      </div>
+      <p class="card-price">Kaufpreis</p>
+      <p class="card-price-val">Auf Anfrage</p>
+      <div class="card-spacer"></div>
+      <a class="btn-expose"
+         href="mailto:navidistanbullu@gmail.com?subject=Expose-Anfrage: Müdener Strasse 31&body=Hallo,%0A%0Aich interessiere mich für das Expose zu Müdener Strasse 31 und bitte um Zugangsgenehmigung.%0A%0AMit freundlichen Grüßen"
+         target="_blank">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
+        Exposé anfordern
+      </a>
+    </div>
+  </article>
+
+  <!-- Property 3 – placeholder -->
+  <article class="prop-card coming-soon reveal reveal-d2" data-type="wohnen">
+    <div class="card-img-wrap">
+      <div class="card-img-placeholder">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1">
+          <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+      </div>
+      <span class="card-soon-badge">Demnächst</span>
+    </div>
+    <div class="card-body">
+      <p class="card-type">Wohnobjekt</p>
+      <p class="card-address">Objekt in Vorbereitung</p>
+      <p class="card-city">Bremen</p>
+      <div class="card-divider"></div>
+      <div class="card-specs">
+        <div class="spec"><span class="spec-val">–</span><span class="spec-key">Fläche</span></div>
+        <div class="spec"><span class="spec-val">–</span><span class="spec-key">Zimmer</span></div>
+      </div>
+      <p class="card-price">Kaufpreis</p>
+      <p class="card-price-val">–</p>
+      <div class="card-spacer"></div>
+      <a class="btn-expose" style="opacity:.4;pointer-events:none">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
+        Bald verfügbar
+      </a>
+    </div>
+  </article>
+
+  <!-- Property 4 – placeholder -->
+  <article class="prop-card coming-soon reveal reveal-d3" data-type="gewerbe">
+    <div class="card-img-wrap">
+      <div class="card-img-placeholder">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1">
+          <rect x="2" y="7" width="20" height="14" rx="1"/><path d="M16 7V5a2 2 0 00-4 0v2M8 7V5a2 2 0 014 0"/>
+        </svg>
+      </div>
+      <span class="card-soon-badge">Demnächst</span>
+    </div>
+    <div class="card-body">
+      <p class="card-type">Gewerbeobjekt</p>
+      <p class="card-address">Objekt in Vorbereitung</p>
+      <p class="card-city">Bremen</p>
+      <div class="card-divider"></div>
+      <div class="card-specs">
+        <div class="spec"><span class="spec-val">–</span><span class="spec-key">Fläche</span></div>
+        <div class="spec"><span class="spec-val">–</span><span class="spec-key">Räume</span></div>
+      </div>
+      <p class="card-price">Kaufpreis</p>
+      <p class="card-price-val">–</p>
+      <div class="card-spacer"></div>
+      <a class="btn-expose" style="opacity:.4;pointer-events:none">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
+        Bald verfügbar
+      </a>
+    </div>
+  </article>
+
+  <!-- Property 5 – placeholder -->
+  <article class="prop-card coming-soon reveal reveal-d4" data-type="wohnen">
+    <div class="card-img-wrap">
+      <div class="card-img-placeholder">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1">
+          <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+      </div>
+      <span class="card-soon-badge">Demnächst</span>
+    </div>
+    <div class="card-body">
+      <p class="card-type">Wohnobjekt</p>
+      <p class="card-address">Objekt in Vorbereitung</p>
+      <p class="card-city">Bremen</p>
+      <div class="card-divider"></div>
+      <div class="card-specs">
+        <div class="spec"><span class="spec-val">–</span><span class="spec-key">Fläche</span></div>
+        <div class="spec"><span class="spec-val">–</span><span class="spec-key">Zimmer</span></div>
+      </div>
+      <p class="card-price">Kaufpreis</p>
+      <p class="card-price-val">–</p>
+      <div class="card-spacer"></div>
+      <a class="btn-expose" style="opacity:.4;pointer-events:none">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
+        Bald verfügbar
+      </a>
+    </div>
+  </article>
+
+</main>
+
+<!-- ── FOOTER ─────────────────────────────────────────────────── -->
+<footer>
+  <span class="footer-brand">Bremen Immobilien</span>
+  <span class="footer-copy">© 2025 · Alle Rechte vorbehalten</span>
+</footer>
+
+<script>
+  // ── Burger menu ──────────────────────────────────────────────
+  const menuBtn     = document.getElementById('menu-btn');
+  const menuOverlay = document.getElementById('menu-overlay');
+
+  menuBtn.addEventListener('click', () => {
+    const open = menuOverlay.classList.toggle('open');
+    menuBtn.classList.toggle('open', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      menuOverlay.classList.remove('open');
+      menuBtn.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  });
+
+  function toggleSub(id) {
+    document.getElementById(id).classList.toggle('open');
+  }
+
+  // ── Filter ───────────────────────────────────────────────────
+  function filter(type, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.prop-card').forEach(card => {
+      const match = type === 'alle' || card.dataset.type === type;
+      card.style.display = match ? '' : 'none';
+    });
+  }
+
+  // ── Reveal on scroll ─────────────────────────────────────────
+  const ro = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('in-view'); ro.unobserve(e.target); }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+</script>
+</body>
+</html>
