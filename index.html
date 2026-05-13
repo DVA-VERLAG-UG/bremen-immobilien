@@ -1,0 +1,1646 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bremen Immobilien</title>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css" rel="stylesheet" />
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.js"></script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --gold: #c8a96e;
+      --gold-light: #e2c98a;
+      --dark: #08080e;
+      --card-bg: rgba(8, 8, 14, 0.90);
+    }
+
+    html, body { height: 100%; }
+
+    body {
+      background: var(--dark);
+      color: #fff;
+      font-family: 'Georgia', 'Times New Roman', serif;
+      overflow-x: hidden;
+    }
+
+    /* ── MAP ─────────────────────────────────────────────── */
+    #map {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+    }
+
+    .mapboxgl-ctrl-bottom-left,
+    .mapboxgl-ctrl-bottom-right { opacity: 0.35; }
+
+    /* ── SCROLL DRIVER ───────────────────────────────────── */
+    #scroll-driver {
+      position: relative;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .step {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ── HERO ────────────────────────────────────────────── */
+    #step-0 { align-items: flex-end; padding-bottom: 12vh; }
+
+    .hero-content {
+      text-align: center;
+      pointer-events: auto;
+    }
+
+    .hero-eyebrow {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0;
+      animation: riseIn 1.2s ease forwards 0.4s;
+    }
+
+    .hero-title {
+      font-size: clamp(3rem, 7vw, 5.5rem);
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      line-height: 1.05;
+      text-shadow: 0 4px 40px rgba(0,0,0,0.95);
+      opacity: 0;
+      animation: riseIn 1.4s ease forwards 0.7s;
+      margin-top: 0.5rem;
+    }
+
+    .hero-sub {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.28em;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      opacity: 0;
+      animation: riseIn 1.4s ease forwards 1.1s;
+      margin-top: 1rem;
+    }
+
+    /* ── SCROLL HINT ─────────────────────────────────────── */
+    #scroll-hint {
+      position: fixed;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      opacity: 0;
+      animation: fadeIn 1s ease forwards 2.5s;
+      transition: opacity 0.6s ease;
+      pointer-events: none;
+    }
+
+    #scroll-hint.hidden { opacity: 0 !important; }
+
+    #scroll-hint span {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 48px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+
+    /* ── LOCATION LABEL ──────────────────────────────────── */
+    #location-label {
+      position: fixed;
+      top: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      text-align: center;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
+
+    #location-label.visible { opacity: 1; }
+
+    #location-label .label-city {
+      font-size: clamp(1rem, 2vw, 1.3rem);
+      font-weight: 300;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.9);
+    }
+
+    #location-label .label-sub {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-top: 0.3rem;
+      opacity: 0.8;
+    }
+
+    /* ── OVERVIEW HINT ───────────────────────────────────── */
+    #overview-hint {
+      position: fixed;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      text-align: center;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
+
+    #overview-hint.visible { opacity: 1; }
+
+    #overview-hint .hint-count {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    #overview-hint .hint-action {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.58rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-top: 0.4rem;
+    }
+
+    /* ── BUILDING PANEL (left-half slide-in) ────────────── */
+    #building-panel {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 50%;
+      height: 100vh;
+      z-index: 15;
+      overflow: hidden;
+      pointer-events: none;
+      /* starts fully off-screen to the left — no visible square */
+      transform: translateX(-100%);
+      transition: transform 0.95s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    #building-panel.visible {
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+
+    #building-panel img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      /* subtle pull-back as panel slides in */
+      transform: scale(1.05);
+      transition: transform 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    #building-panel.visible img {
+      transform: scale(1.0);
+    }
+
+    /* right-edge feather so panel blends into the map */
+    #building-panel .panel-fade {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, transparent 15%),
+        linear-gradient(to top,    rgba(0,0,0,0.4)  0%, transparent 20%),
+        linear-gradient(to right,  transparent 75%,  rgba(8,8,14,0.9) 100%);
+    }
+
+    #building-panel .panel-label {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 2.5rem;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.5s ease 0.7s, transform 0.5s ease 0.7s;
+    }
+
+    #building-panel.visible .panel-label {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── PROPERTY CARDS ──────────────────────────────────── */
+    .property-card {
+      position: fixed;
+      right: 2.5rem;
+      top: 50%;
+      transform: translateY(-50%) translateX(calc(100% + 3rem));
+      width: 310px;
+      background: var(--card-bg);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(200, 169, 110, 0.22);
+      border-radius: 3px;
+      padding: 1.75rem;
+      z-index: 25;
+      transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+                  opacity 0.75s ease;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .property-card.visible {
+      transform: translateY(-50%) translateX(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .card-type {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.9rem;
+    }
+
+    .card-address {
+      font-size: 1.1rem;
+      font-weight: 400;
+      line-height: 1.3;
+      margin-bottom: 0.2rem;
+    }
+
+    .card-city {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.38);
+      margin-bottom: 1.1rem;
+    }
+
+    .card-divider {
+      width: 1.8rem;
+      height: 1px;
+      background: var(--gold);
+      margin-bottom: 1.1rem;
+      opacity: 0.55;
+    }
+
+    .card-stats {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .card-stat { display: flex; flex-direction: column; gap: 0.15rem; }
+
+    .stat-value { font-size: 1.15rem; }
+
+    .stat-label {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.55rem;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+    }
+
+    .card-desc {
+      font-size: 0.78rem;
+      line-height: 1.7;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 1.1rem;
+    }
+
+    .card-highlights {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-bottom: 1.4rem;
+    }
+
+    .highlight-tag {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.55rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      border: 1px solid rgba(200,169,110,0.3);
+      color: var(--gold-light);
+      padding: 0.22rem 0.55rem;
+      border-radius: 2px;
+    }
+
+    .card-price-label {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 0.3rem;
+    }
+
+    .card-price-value {
+      font-size: 1.4rem;
+      letter-spacing: 0.02em;
+    }
+
+    .card-cta {
+      display: block;
+      margin-top: 1.4rem;
+      text-align: center;
+      padding: 0.7rem 1rem;
+      background: transparent;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    .card-cta:hover { background: var(--gold); color: var(--dark); }
+
+    /* ── MARKERS ─────────────────────────────────────────── */
+    .map-marker {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.7s ease;
+    }
+
+    .map-marker.visible { opacity: 1; }
+
+    .marker-ring {
+      position: relative;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .marker-dot {
+      width: 10px;
+      height: 10px;
+      background: var(--gold);
+      border-radius: 50%;
+      position: relative;
+      z-index: 1;
+      transition: transform 0.3s ease, width 0.3s ease, height 0.3s ease;
+    }
+
+    .marker-pulse {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--gold);
+      animation: pulseRing 2.4s ease-out infinite;
+    }
+
+    .map-marker:hover .marker-dot {
+      transform: scale(1.4);
+    }
+
+    /* overview mode: bigger markers */
+    .map-marker.overview .marker-dot {
+      width: 14px;
+      height: 14px;
+    }
+    .map-marker.overview .marker-pulse {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* ── MARKER TOOLTIP ──────────────────────────────────── */
+    .marker-tooltip {
+      position: absolute;
+      bottom: calc(100% + 10px);
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      background: rgba(8,8,14,0.92);
+      border: 1px solid rgba(200,169,110,0.3);
+      padding: 0.4rem 0.7rem;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.7);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .map-marker:hover .marker-tooltip { opacity: 1; }
+
+    /* ── PROGRESS DOTS ───────────────────────────────────── */
+    #progress {
+      position: fixed;
+      left: 2rem;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    #progress.visible { opacity: 1; }
+
+    .progress-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      border: 1px solid rgba(200,169,110,0.45);
+      background: transparent;
+      transition: background 0.4s ease, transform 0.3s ease;
+      cursor: pointer;
+    }
+
+    .progress-dot.active {
+      background: var(--gold);
+      border-color: var(--gold);
+      transform: scale(1.5);
+    }
+
+    /* ── BURGER MENU ─────────────────────────────────────── */
+    #menu-btn {
+      position: fixed;
+      top: 2rem;
+      right: 2.5rem;
+      z-index: 200;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+    }
+
+    .burger-line {
+      height: 1px;
+      background: #fff;
+      border-radius: 1px;
+      transition: transform 0.4s cubic-bezier(0.16,1,0.3,1),
+                  opacity   0.3s ease,
+                  width     0.4s cubic-bezier(0.16,1,0.3,1);
+    }
+    .burger-line:nth-child(1) { width: 28px; }
+    .burger-line:nth-child(2) { width: 20px; }
+    .burger-line:nth-child(3) { width: 24px; }
+
+    #menu-btn.open .burger-line:nth-child(1) {
+      width: 26px;
+      transform: translateY(7px) rotate(45deg);
+    }
+    #menu-btn.open .burger-line:nth-child(2) {
+      opacity: 0;
+      width: 0;
+    }
+    #menu-btn.open .burger-line:nth-child(3) {
+      width: 26px;
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
+    /* ── MENU OVERLAY ─────────────────────────────────────── */
+    #menu-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 150;
+      background: rgba(8,8,14,0.97);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.45s ease;
+    }
+
+    #menu-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .menu-inner {
+      text-align: center;
+    }
+
+    /* main nav items */
+    .menu-nav {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .menu-item {
+      overflow: hidden;
+    }
+
+    .menu-link {
+      display: inline-block;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      color: rgba(255,255,255,0.85);
+      text-decoration: none;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: 'Georgia', serif;
+      padding: 0.15rem 0;
+      position: relative;
+      transition: color 0.3s ease;
+      transform: translateY(30px);
+      opacity: 0;
+      transition: transform 0.55s cubic-bezier(0.16,1,0.3,1),
+                  opacity   0.55s ease,
+                  color     0.25s ease;
+    }
+
+    #menu-overlay.open .menu-link {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* stagger each item */
+    .menu-item:nth-child(1) .menu-link { transition-delay: 0.05s; }
+    .menu-item:nth-child(2) .menu-link { transition-delay: 0.12s; }
+    .menu-item:nth-child(3) .menu-link { transition-delay: 0.19s; }
+
+    .menu-link::after {
+      content: '';
+      position: absolute;
+      left: 0; bottom: 0;
+      width: 0; height: 1px;
+      background: var(--gold);
+      transition: width 0.35s ease;
+    }
+    .menu-link:hover { color: #fff; }
+    .menu-link:hover::after { width: 100%; }
+
+    /* submenu */
+    .menu-sub {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.45s cubic-bezier(0.16,1,0.3,1);
+    }
+
+    .menu-sub.open { max-height: 200px; }
+
+    .menu-sub-link {
+      display: inline-block;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      text-decoration: none;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0.45rem 0;
+      transition: color 0.25s ease;
+    }
+    .menu-sub-link:hover { color: var(--gold); }
+
+    /* gold divider in menu */
+    .menu-divider {
+      width: 1px;
+      height: 40px;
+      background: rgba(200,169,110,0.25);
+      margin: 1.5rem auto;
+    }
+
+    /* bottom contact row */
+    .menu-contact-row {
+      margin-top: 0.5rem;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.2);
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.5s ease 0.35s, transform 0.5s ease 0.35s;
+    }
+    #menu-overlay.open .menu-contact-row {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .menu-contact-row a {
+      color: rgba(255,255,255,0.4);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .menu-contact-row a:hover { color: var(--gold); }
+
+    /* ── CONTENT SECTION ─────────────────────────────────── */
+    #content-section {
+      position: relative;
+      z-index: 30;
+      background: var(--dark);
+    }
+
+    /* smooth transition from map to content */
+    #content-section::before {
+      content: '';
+      display: block;
+      height: 120px;
+      background: linear-gradient(to bottom, transparent, var(--dark));
+      margin-top: -120px;
+      position: relative;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .cs-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 3rem;
+    }
+
+    /* reveal animation — added by IntersectionObserver */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.35s; }
+    .reveal-delay-4 { transition-delay: 0.5s; }
+
+    /* ─ intro ─ */
+    .cs-intro {
+      padding: 10rem 0 7rem;
+      text-align: center;
+    }
+
+    .cs-eyebrow {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+    }
+
+    .cs-h2 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 400;
+      line-height: 1.15;
+      margin-bottom: 1.8rem;
+    }
+
+    .cs-lead {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 1rem;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.5);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .cs-gold-line {
+      width: 0;
+      height: 1px;
+      background: var(--gold);
+      margin: 3rem auto;
+      opacity: 0.4;
+      transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .cs-gold-line.in-view { width: 80px; }
+
+    /* ─ properties grid ─ */
+    .cs-properties {
+      padding: 0 0 8rem;
+    }
+
+    .cs-section-label {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 3rem;
+    }
+
+    .cs-prop-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+    }
+
+    .cs-prop-card {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 4/3;
+      cursor: default;
+    }
+
+    /* parallax image wrapper */
+    .cs-prop-card .prop-img-wrap {
+      position: absolute;
+      inset: -15%;   /* extra space for parallax movement */
+      transition: transform 0.1s linear;
+    }
+
+    .cs-prop-card .prop-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .cs-prop-card .prop-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.2) 50%, transparent 100%);
+    }
+
+    .cs-prop-card .prop-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 2rem;
+    }
+
+    .prop-tag {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.58rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.6rem;
+    }
+
+    .prop-name {
+      font-size: 1.3rem;
+      font-weight: 400;
+      margin-bottom: 0.4rem;
+    }
+
+    .prop-meta {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 1.2rem;
+    }
+
+    .prop-specs {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 1.4rem;
+    }
+
+    .prop-spec {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .prop-spec-val {
+      font-size: 1rem;
+      color: #fff;
+    }
+
+    .prop-spec-key {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.55rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+    }
+
+    .prop-cta {
+      display: inline-block;
+      padding: 0.6rem 1.2rem;
+      border: 1px solid rgba(200,169,110,0.5);
+      color: var(--gold);
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.58rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.3s, color 0.3s;
+    }
+    .prop-cta:hover { background: var(--gold); color: var(--dark); }
+
+    /* ─ highlights strip ─ */
+    .cs-highlights {
+      padding: 7rem 0;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3rem;
+      text-align: center;
+    }
+
+    .highlight-item {}
+
+    .highlight-num {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 300;
+      color: var(--gold);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .highlight-desc {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+    }
+
+    /* ─ contact ─ */
+    .cs-contact {
+      padding: 8rem 0 10rem;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    .cs-contact-left {}
+
+    .cs-contact-right {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .contact-field {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+      color: #fff;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.9rem;
+      padding: 0.8rem 0;
+      width: 100%;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+    .contact-field::placeholder { color: rgba(255,255,255,0.25); letter-spacing: 0.05em; }
+    .contact-field:focus { border-color: var(--gold); }
+
+    .contact-textarea {
+      resize: none;
+      height: 100px;
+    }
+
+    .contact-submit {
+      align-self: flex-start;
+      margin-top: 0.5rem;
+      padding: 0.75rem 2.5rem;
+      background: transparent;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.3s, color 0.3s;
+    }
+    .contact-submit:hover { background: var(--gold); color: var(--dark); }
+
+    /* ─ footer ─ */
+    .cs-footer {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 2.5rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-brand {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+    }
+
+    .footer-copy {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.6rem;
+      color: rgba(255,255,255,0.2);
+    }
+
+    /* ── KEYFRAMES ───────────────────────────────────────── */
+    @keyframes riseIn {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes scrollPulse {
+      0%,100% { opacity: 0.3; }
+      50%      { opacity: 1; }
+    }
+    @keyframes pulseRing {
+      0%   { transform: scale(1);   opacity: 0.8; }
+      80%  { transform: scale(3.5); opacity: 0; }
+      100% { transform: scale(3.5); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── BURGER BUTTON ─────────────────────────────────────────── -->
+<button id="menu-btn" aria-label="Menü öffnen">
+  <span class="burger-line"></span>
+  <span class="burger-line"></span>
+  <span class="burger-line"></span>
+</button>
+
+<!-- ── MENU OVERLAY ──────────────────────────────────────────── -->
+<div id="menu-overlay" role="dialog" aria-modal="true">
+  <div class="menu-inner">
+    <ul class="menu-nav">
+
+      <!-- Objekte with submenu -->
+      <li class="menu-item">
+        <button class="menu-link" onclick="toggleSub('sub-objekte')">Objekte</button>
+        <ul class="menu-sub" id="sub-objekte">
+          <li><button class="menu-sub-link" onclick="navTo('step-3')">Schwachhauser Heerstraße 179</button></li>
+          <li><button class="menu-sub-link" onclick="navTo('step-5')">Müdener Strasse 31</button></li>
+        </ul>
+      </li>
+
+      <!-- Lage -->
+      <li class="menu-item">
+        <button class="menu-link" onclick="navTo('step-2')">Lage</button>
+      </li>
+
+      <!-- Kontakt -->
+      <li class="menu-item">
+        <button class="menu-link" onclick="navTo('content-section')">Kontakt</button>
+      </li>
+
+    </ul>
+
+    <div class="menu-divider"></div>
+
+    <p class="menu-contact-row">
+      <a href="mailto:navidistanbullu@gmail.com">navidistanbullu@gmail.com</a>
+    </p>
+  </div>
+</div>
+
+<!-- ── MAP ──────────────────────────────────────────────────── -->
+<div id="map"></div>
+
+<!-- ── SCROLL SECTIONS ──────────────────────────────────────── -->
+<div id="scroll-driver">
+  <!-- 0: Globe hero -->
+  <section class="step" id="step-0">
+    <div class="hero-content">
+      <p class="hero-eyebrow">Exklusive Immobilien</p>
+      <h1 class="hero-title">Bremen</h1>
+      <p class="hero-sub">Erstklassige Objekte in bester Lage</p>
+    </div>
+  </section>
+
+  <!-- 1: Europe zoom (silent) -->
+  <section class="step" id="step-1"></section>
+
+  <!-- 2: Bremen overview — all pins visible, no card -->
+  <section class="step" id="step-2"></section>
+
+  <!-- 3: Property 1 zoom-in -->
+  <section class="step" id="step-3"></section>
+
+  <!-- 4: Bremen overview again -->
+  <section class="step" id="step-4"></section>
+
+  <!-- 5: Property 2 zoom-in -->
+  <section class="step" id="step-5"></section>
+</div>
+
+<!-- ── CONTENT SECTION ──────────────────────────────────────────── -->
+<div id="content-section">
+
+  <!-- Intro -->
+  <section class="cs-intro">
+    <div class="cs-container">
+      <p class="cs-eyebrow reveal">Immobilien in Bremen</p>
+      <h2 class="cs-h2 reveal reveal-delay-1">Zwei besondere Objekte.<br>Eine Stadt.</h2>
+      <div class="cs-gold-line reveal reveal-delay-2"></div>
+      <p class="cs-lead reveal reveal-delay-3">
+        Wir bieten Ihnen zwei sorgfältig ausgewählte Immobilien in Bremen —
+        eine gewerbliche Einheit in bester Innenstadtlage sowie eine helle
+        Etagenwohnung mit Balkon. Beide Objekte überzeugen durch Lage,
+        Ausstattung und Preis-Leistungs-Verhältnis.
+      </p>
+    </div>
+  </section>
+
+  <!-- Properties grid -->
+  <section class="cs-properties">
+    <div class="cs-container">
+      <p class="cs-section-label reveal">Die Objekte</p>
+      <div class="cs-prop-grid">
+
+        <!-- Property 1 -->
+        <div class="cs-prop-card reveal">
+          <div class="prop-img-wrap" data-parallax>
+            <img src="Schwachhausen/Front.png" alt="Schwachhauser Heerstraße 179" />
+          </div>
+          <div class="prop-overlay"></div>
+          <div class="prop-info">
+            <p class="prop-tag">Gewerbeimmobilie</p>
+            <p class="prop-name">Schwachhauser Heerstraße 179</p>
+            <p class="prop-meta">28211 Bremen · Schwachhausen</p>
+            <div class="prop-specs">
+              <div class="prop-spec">
+                <span class="prop-spec-val">152 m²</span>
+                <span class="prop-spec-key">Fläche</span>
+              </div>
+              <div class="prop-spec">
+                <span class="prop-spec-val">6</span>
+                <span class="prop-spec-key">Büroräume</span>
+              </div>
+              <div class="prop-spec">
+                <span class="prop-spec-val">2023</span>
+                <span class="prop-spec-key">Renoviert</span>
+              </div>
+            </div>
+            <a class="prop-cta" href="mailto:navidistanbullu@gmail.com?subject=Anfrage: Schwachhauser Heerstraße 179">Expose anfordern</a>
+          </div>
+        </div>
+
+        <!-- Property 2 -->
+        <div class="cs-prop-card reveal reveal-delay-2">
+          <div class="prop-img-wrap" data-parallax>
+            <img src="Müdener/Front.png" alt="Müdener Strasse 31" />
+          </div>
+          <div class="prop-overlay"></div>
+          <div class="prop-info">
+            <p class="prop-tag">Etagenwohnung</p>
+            <p class="prop-name">Müdener Strasse 31</p>
+            <p class="prop-meta">28329 Bremen · Neue Vahr</p>
+            <div class="prop-specs">
+              <div class="prop-spec">
+                <span class="prop-spec-val">57 m²</span>
+                <span class="prop-spec-key">Wohnfläche</span>
+              </div>
+              <div class="prop-spec">
+                <span class="prop-spec-val">3</span>
+                <span class="prop-spec-key">Zimmer</span>
+              </div>
+              <div class="prop-spec">
+                <span class="prop-spec-val">Keine</span>
+                <span class="prop-spec-key">Käuferprovision</span>
+              </div>
+            </div>
+            <a class="prop-cta" href="mailto:navidistanbullu@gmail.com?subject=Anfrage: Müdener Strasse 31">Expose anfordern</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Highlights strip -->
+  <section>
+    <div class="cs-container">
+      <div class="cs-highlights">
+        <div class="highlight-item reveal">
+          <p class="highlight-num">209&thinsp;m²</p>
+          <p class="highlight-desc">Gesamtfläche</p>
+        </div>
+        <div class="highlight-item reveal reveal-delay-2">
+          <p class="highlight-num">2</p>
+          <p class="highlight-desc">Exklusive Objekte</p>
+        </div>
+        <div class="highlight-item reveal reveal-delay-3">
+          <p class="highlight-num">0</p>
+          <p class="highlight-desc">Käuferprovision</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section>
+    <div class="cs-container">
+      <div class="cs-contact">
+        <div class="cs-contact-left">
+          <p class="cs-eyebrow reveal">Kontakt</p>
+          <h2 class="cs-h2 reveal reveal-delay-1">Interesse?<br>Sprechen Sie<br>uns an.</h2>
+          <div class="cs-gold-line reveal reveal-delay-2" style="margin: 2rem 0;"></div>
+          <p class="cs-lead reveal reveal-delay-3" style="font-size:0.85rem; max-width:360px;">
+            Wir freuen uns auf Ihre Anfrage und melden uns zeitnah bei Ihnen zurück.
+          </p>
+        </div>
+        <div class="cs-contact-right reveal reveal-delay-2">
+          <input class="contact-field" type="text" placeholder="Name" />
+          <input class="contact-field" type="email" placeholder="E-Mail" />
+          <input class="contact-field" type="tel" placeholder="Telefon (optional)" />
+          <textarea class="contact-field contact-textarea" placeholder="Ihre Nachricht"></textarea>
+          <button class="contact-submit" onclick="handleContact()">Anfrage senden</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="cs-container">
+      <div class="cs-footer">
+        <span class="footer-brand">Bremen Immobilien</span>
+        <span class="footer-copy">© 2025 · Alle Rechte vorbehalten</span>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<!-- ── FIXED UI ──────────────────────────────────────────────── -->
+
+<div id="scroll-hint">
+  <span>Scrollen</span>
+  <div class="scroll-line"></div>
+</div>
+
+<div id="location-label">
+  <p class="label-city">Bremen</p>
+  <p class="label-sub">Freie Hansestadt · Deutschland</p>
+</div>
+
+<div id="overview-hint">
+  <p class="hint-count">2 Immobilien · Bremen</p>
+  <p class="hint-action">Marker anklicken für Details</p>
+</div>
+
+<div id="progress">
+  <div class="progress-dot" data-step="0"></div>
+  <div class="progress-dot" data-step="1"></div>
+  <div class="progress-dot" data-step="2"></div>
+  <div class="progress-dot" data-step="3"></div>
+  <div class="progress-dot" data-step="4"></div>
+  <div class="progress-dot" data-step="5"></div>
+</div>
+
+<!-- ── BUILDING PANEL ────────────────────────────────────────── -->
+<div id="building-panel">
+  <img id="building-img-el" src="" alt="Immobilie" />
+  <div class="panel-fade"></div>
+  <div class="panel-label" id="building-img-label"></div>
+</div>
+
+<!-- ── PROPERTY CARD 1 ───────────────────────────────────────── -->
+<div class="property-card" id="card-1">
+  <p class="card-type">Gewerbeimmobilie · Schwachhausen</p>
+  <p class="card-address">Schwachhauser Heerstraße 179</p>
+  <p class="card-city">28211 Bremen</p>
+  <div class="card-divider"></div>
+  <div class="card-stats">
+    <div class="card-stat">
+      <span class="stat-value">152 m²</span>
+      <span class="stat-label">Fläche</span>
+    </div>
+    <div class="card-stat">
+      <span class="stat-value">6</span>
+      <span class="stat-label">Büroräume</span>
+    </div>
+    <div class="card-stat">
+      <span class="stat-value">2023</span>
+      <span class="stat-label">Renoviert</span>
+    </div>
+  </div>
+  <p class="card-desc">
+    Frisch modernisierte Gewerbeeinheit im Souterrain. Vollständig renoviert 2023–2024 mit eigenem Stromzähler, Glasfaser-Vorbereitung und Kameraanlage.
+  </p>
+  <div class="card-highlights">
+    <span class="highlight-tag">Zentrale Lage</span>
+    <span class="highlight-tag">ÖPNV direkt</span>
+    <span class="highlight-tag">Sofort bezugsfähig</span>
+    <span class="highlight-tag">Gasheizung</span>
+  </div>
+  <p class="card-price-label">Kaufpreis</p>
+  <p class="card-price-value">Auf Anfrage</p>
+  <a class="card-cta" href="mailto:navidistanbullu@gmail.com?subject=Anfrage: Schwachhauser Heerstraße 179">Expose anfordern</a>
+</div>
+
+<!-- ── PROPERTY CARD 2 ───────────────────────────────────────── -->
+<div class="property-card" id="card-2">
+  <p class="card-type">Etagenwohnung · Neue Vahr</p>
+  <p class="card-address">Müdener Strasse 31</p>
+  <p class="card-city">28329 Bremen</p>
+  <div class="card-divider"></div>
+  <div class="card-stats">
+    <div class="card-stat">
+      <span class="stat-value">57 m²</span>
+      <span class="stat-label">Wohnfläche</span>
+    </div>
+    <div class="card-stat">
+      <span class="stat-value">3</span>
+      <span class="stat-label">Zimmer</span>
+    </div>
+    <div class="card-stat">
+      <span class="stat-value">1955</span>
+      <span class="stat-label">Baujahr</span>
+    </div>
+  </div>
+  <p class="card-desc">
+    Helle Etagenwohnung mit Balkon und eigenem Keller. Fernwärme-Heizung, Fassadendämmung 1999. Fahrradkeller und Trockenraum vorhanden.
+  </p>
+  <div class="card-highlights">
+    <span class="highlight-tag">Balkon</span>
+    <span class="highlight-tag">Keller</span>
+    <span class="highlight-tag">Keine Käuferprovision</span>
+    <span class="highlight-tag">Fernwärme</span>
+  </div>
+  <p class="card-price-label">Kaufpreis</p>
+  <p class="card-price-value">Auf Anfrage</p>
+  <a class="card-cta" href="mailto:navidistanbullu@gmail.com?subject=Anfrage: Müdener Strasse 31">Expose anfordern</a>
+</div>
+
+<!-- ── SCRIPT ────────────────────────────────────────────────── -->
+<script>
+  mapboxgl.accessToken = [
+    'pk.eyJ1IjoibmF2aWRpc3QiLCJhIjoiY21wM3M1', 'bDVtMDdybDJzc2Rka2RlbDdieCJ9',
+    '.zvZjkJdqBhNZ1JJxxRWobg'
+  ].join('');
+
+  const PROPERTIES = [
+    {
+      id:      'card-1',
+      coords:  [8.8487, 53.0784],
+      image:   'Schwachhausen/Front.png',
+      label:   'Schwachhauser Heerstraße 179',
+      step:    3,
+    },
+    {
+      id:      'card-2',
+      coords:  [8.9193, 53.0720],
+      image:   'Müdener/Front.png',
+      label:   'Müdener Strasse 31',
+      step:    5,
+    },
+  ];
+
+  // Camera per step
+  const CAMERA = [
+    // 0: globe
+    { center: [10, 25],          zoom: 1.8,  pitch: 0,  bearing: 0,   duration: 0    },
+    // 1: Europe
+    { center: [8, 50],           zoom: 4.5,  pitch: 25, bearing: -5,  duration: 3500 },
+    // 2: Bremen overview (both pins visible)
+    { center: [8.882, 53.0755],  zoom: 12.6, pitch: 48, bearing: -8,  duration: 4000 },
+    // 3: Property 1 Schwachhausen
+    { center: [8.8487, 53.0784], zoom: 16.5, pitch: 62, bearing: 22,  duration: 3200 },
+    // 4: Bremen overview again
+    { center: [8.882, 53.0755],  zoom: 12.6, pitch: 48, bearing: -8,  duration: 3500 },
+    // 5: Property 2 Müdener
+    { center: [8.9193, 53.0720], zoom: 16.5, pitch: 62, bearing: -18, duration: 3200 },
+  ];
+
+  // ── Init map ──────────────────────────────────────────────────
+  const map = new mapboxgl.Map({
+    container:   'map',
+    style:       'mapbox://styles/mapbox/dark-v11',
+    center:      CAMERA[0].center,
+    zoom:        CAMERA[0].zoom,
+    pitch:       CAMERA[0].pitch,
+    bearing:     CAMERA[0].bearing,
+    projection:  'globe',
+    interactive: false,
+    antialias:   true,
+  });
+
+  map.on('style.load', () => {
+    map.setFog({
+      'color':          'rgb(18, 22, 38)',
+      'high-color':     'rgb(28, 52, 115)',
+      'horizon-blend':  0.03,
+      'space-color':    'rgb(5, 5, 16)',
+      'star-intensity': 0.9,
+    });
+  });
+
+  // ── DOM refs ──────────────────────────────────────────────────
+  const locationLabel  = document.getElementById('location-label');
+  const overviewHint   = document.getElementById('overview-hint');
+  const progress       = document.getElementById('progress');
+  const progressDots   = document.querySelectorAll('.progress-dot');
+  const scrollHint     = document.getElementById('scroll-hint');
+  const buildingPanel  = document.getElementById('building-panel');
+  const buildingImgEl  = document.getElementById('building-img-el');
+  const buildingLabel  = document.getElementById('building-img-label');
+
+  // ── State ─────────────────────────────────────────────────────
+  let currentStep = 0;
+  let flying      = false;
+  let globeTimer  = null;
+
+  const OVERVIEW_STEPS = new Set([2, 4]);
+  const PROP_STEPS     = { 3: PROPERTIES[0], 5: PROPERTIES[1] };
+
+  // ── Markers ───────────────────────────────────────────────────
+  const markerEls = [];
+
+  map.on('load', () => {
+    PROPERTIES.forEach((prop) => {
+      const el = document.createElement('div');
+      el.className = 'map-marker';
+      el.innerHTML = `
+        <div class="marker-ring">
+          <div class="marker-pulse"></div>
+          <div class="marker-dot"></div>
+        </div>
+        <div class="marker-tooltip">${prop.label}</div>
+      `;
+
+      el.addEventListener('click', () => {
+        // Scroll to the property's dedicated step
+        document.getElementById(`step-${prop.step}`).scrollIntoView({ behavior: 'smooth' });
+      });
+
+      new mapboxgl.Marker({ element: el, anchor: 'center' })
+        .setLngLat(prop.coords)
+        .addTo(map);
+
+      markerEls.push(el);
+    });
+  });
+
+  // ── Camera flyTo ──────────────────────────────────────────────
+  function flyToStep(idx) {
+    const c = CAMERA[idx];
+    flying = true;
+
+    // On property steps the left panel covers 50% of the viewport.
+    // Setting left padding makes Mapbox centre the target within the right half.
+    const isPropStep = idx in PROP_STEPS;
+    const padding = isPropStep
+      ? { left: window.innerWidth * 0.5, right: 0, top: 0, bottom: 0 }
+      : { left: 0, right: 0, top: 0, bottom: 0 };
+
+    map.flyTo({
+      center:    c.center,
+      zoom:      c.zoom,
+      pitch:     c.pitch,
+      bearing:   c.bearing,
+      duration:  c.duration,
+      padding,
+      essential: true,
+      easing:    t => t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2,
+    });
+    map.once('moveend', () => { flying = false; });
+  }
+
+  // ── Update UI for a given step ────────────────────────────────
+  function applyStep(idx) {
+    currentStep = idx;
+
+    // Progress dots
+    progressDots.forEach((d, i) => d.classList.toggle('active', i === idx));
+    progress.classList.toggle('visible', idx >= 1);
+
+    // Scroll hint: hide after first scroll
+    scrollHint.classList.toggle('hidden', idx > 0);
+
+    // Location label: show only in overview steps
+    locationLabel.classList.toggle('visible', OVERVIEW_STEPS.has(idx));
+
+    // Overview hint: show in overview steps
+    overviewHint.classList.toggle('visible', OVERVIEW_STEPS.has(idx));
+
+    // Markers
+    const showMarkers = idx >= 2;
+    markerEls.forEach((el, i) => {
+      el.classList.toggle('visible', showMarkers);
+      el.classList.toggle('overview', OVERVIEW_STEPS.has(idx));
+    });
+
+    // Cards
+    hideAllCards();
+    if (PROP_STEPS[idx]) {
+      document.getElementById(PROP_STEPS[idx].id).classList.add('visible');
+    }
+
+    // Building panel
+    const prop = PROP_STEPS[idx];
+    if (prop) {
+      buildingImgEl.src = prop.image;
+      buildingLabel.textContent = prop.label;
+      setTimeout(() => buildingPanel.classList.add('visible'), 100);
+    } else {
+      buildingPanel.classList.remove('visible');
+    }
+
+    // Globe rotation only on step 0
+    if (idx === 0) {
+      startGlobeRotation();
+    } else {
+      stopGlobeRotation();
+    }
+  }
+
+  function hideAllCards() {
+    document.querySelectorAll('.property-card').forEach(c => c.classList.remove('visible'));
+  }
+
+  // ── IntersectionObserver ──────────────────────────────────────
+  const steps = document.querySelectorAll('.step');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const idx = parseInt(entry.target.dataset.step);
+        if (idx !== currentStep) {
+          flyToStep(idx);
+          applyStep(idx);
+        }
+      }
+    });
+  }, { threshold: 0.5 });
+
+  steps.forEach((el, i) => {
+    el.dataset.step = i;
+    observer.observe(el);
+  });
+
+  // ── Progress dot clicks ───────────────────────────────────────
+  progressDots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      const idx = parseInt(dot.dataset.step);
+      document.getElementById(`step-${idx}`).scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  // ── Globe auto-rotation ───────────────────────────────────────
+  let bearing = 0;
+
+  function startGlobeRotation() {
+    if (globeTimer) return;
+    globeTimer = setInterval(() => {
+      if (currentStep !== 0) { stopGlobeRotation(); return; }
+      bearing += 0.035;
+      map.setBearing(bearing);
+    }, 16);
+  }
+
+  function stopGlobeRotation() {
+    clearInterval(globeTimer);
+    globeTimer = null;
+  }
+
+  map.on('load', () => {
+    setTimeout(startGlobeRotation, 1600);
+  });
+
+  // ── Burger menu ───────────────────────────────────────────────
+  const menuBtn     = document.getElementById('menu-btn');
+  const menuOverlay = document.getElementById('menu-overlay');
+
+  menuBtn.addEventListener('click', () => {
+    const isOpen = menuOverlay.classList.toggle('open');
+    menuBtn.classList.toggle('open', isOpen);
+    menuBtn.setAttribute('aria-label', isOpen ? 'Menü schließen' : 'Menü öffnen');
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  });
+
+  // close on Escape
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && menuOverlay.classList.contains('open')) {
+      menuOverlay.classList.remove('open');
+      menuBtn.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  });
+
+  function toggleSub(id) {
+    const sub = document.getElementById(id);
+    sub.classList.toggle('open');
+  }
+
+  function navTo(id) {
+    menuOverlay.classList.remove('open');
+    menuBtn.classList.remove('open');
+    document.body.style.overflow = '';
+    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // ── Fixed UI: hide when content section scrolls into view ─────
+  const fixedEls = [
+    document.getElementById('progress'),
+    document.getElementById('location-label'),
+    document.getElementById('overview-hint'),
+    document.getElementById('scroll-hint'),
+    document.getElementById('building-panel'),
+    ...document.querySelectorAll('.property-card'),
+    ...document.querySelectorAll('.map-marker'),
+  ];
+
+  const contentObserver = new IntersectionObserver((entries) => {
+    const inContent = entries[0].isIntersecting;
+    fixedEls.forEach(el => {
+      if (!el) return;
+      el.style.transition = (el.style.transition || '') + ', opacity 0.5s ease';
+      el.style.opacity = inContent ? '0' : '';
+      el.style.pointerEvents = inContent ? 'none' : '';
+    });
+  }, { threshold: 0.05 });
+
+  contentObserver.observe(document.getElementById('content-section'));
+
+  // ── Reveal on scroll ──────────────────────────────────────────
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  // ── Parallax on property images ───────────────────────────────
+  const parallaxEls = document.querySelectorAll('[data-parallax]');
+
+  function updateParallax() {
+    parallaxEls.forEach(el => {
+      const rect = el.closest('.cs-prop-card').getBoundingClientRect();
+      const vh   = window.innerHeight;
+      // progress: 0 when bottom of card at bottom of viewport, 1 when top at top
+      const progress = 1 - (rect.bottom / (vh + rect.height));
+      const shift    = (progress - 0.5) * 40; // ±20px travel
+      el.style.transform = `translateY(${shift}px)`;
+    });
+  }
+
+  window.addEventListener('scroll', updateParallax, { passive: true });
+  updateParallax();
+
+  // ── Contact form handler ──────────────────────────────────────
+  function handleContact() {
+    const fields = document.querySelectorAll('.contact-field');
+    const [name, email, phone, msg] = fields;
+    const subject = encodeURIComponent('Immobilienanfrage von ' + (name.value || 'Interessent'));
+    const body    = encodeURIComponent(
+      `Name: ${name.value}\nE-Mail: ${email.value}\nTelefon: ${phone.value}\n\n${msg.value}`
+    );
+    window.location.href = `mailto:navidistanbullu@gmail.com?subject=${subject}&body=${body}`;
+  }
+</script>
+</body>
+</html>
