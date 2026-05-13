@@ -979,6 +979,114 @@
       color: rgba(255,255,255,0.2);
     }
 
+    /* ── MOBILE ──────────────────────────────────────────── */
+    @media (max-width: 768px) {
+
+      /* hero */
+      #step-0 { padding-bottom: 8vh; }
+      .hero-title { letter-spacing: 0.03em; }
+      .hero-sub   { font-size: 0.72rem; letter-spacing: 0.18em; }
+
+      /* progress dots: hide, not enough space */
+      #progress { display: none; }
+
+      /* menu button closer to edge */
+      #menu-btn { top: 1.4rem; right: 1.4rem; }
+
+      /* building panel: slide from bottom, map stays visible on top */
+      #building-panel {
+        width: 100%;
+        height: 42vh;
+        top: auto;
+        bottom: 0;
+        left: 0;
+        transform: translateY(100%);   /* off-screen below */
+      }
+      #building-panel.visible { transform: translateY(0); }
+
+      /* right-edge fade not needed, add top fade instead */
+      #building-panel .panel-fade {
+        background:
+          linear-gradient(to bottom, rgba(8,8,14,0.6) 0%, transparent 30%),
+          linear-gradient(to top, rgba(0,0,0,0.35) 0%, transparent 30%);
+      }
+
+      /* property card: bottom sheet, full width */
+      .property-card {
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: auto;
+        width: 100%;
+        max-height: 52vh;
+        overflow-y: auto;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        border-bottom: none;
+        border-top: 1px solid rgba(200,169,110,0.22);
+        padding: 1.25rem 1.25rem 2rem;
+        /* override the translateX slide — slide from bottom instead */
+        transform: translateY(100%);
+        transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+                    opacity 0.75s ease;
+        opacity: 1;  /* always opaque, transform handles visibility */
+      }
+      .property-card.visible { transform: translateY(0); }
+
+      /* when image panel is also visible, card sits above it */
+      #building-panel.visible ~ .property-card.visible,
+      .property-card.visible { bottom: 0; }
+
+      /* card stats: tighter on mobile */
+      .card-stats { gap: 1rem; }
+      .stat-value { font-size: 1rem; }
+      .card-desc  { font-size: 0.75rem; }
+
+      /* content section */
+      .cs-container { padding: 0 1.25rem; }
+
+      .cs-intro { padding: 6rem 0 3.5rem; }
+      .cs-h2    { font-size: clamp(1.6rem, 6vw, 2.4rem); }
+      .cs-lead  { font-size: 0.88rem; }
+
+      .cs-prop-grid {
+        grid-template-columns: 1fr;
+        gap: 2px;
+      }
+      .cs-prop-card { aspect-ratio: 3/2; }
+
+      .cs-highlights {
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        padding: 4rem 0;
+      }
+      .cs-highlights .highlight-item:last-child {
+        grid-column: 1 / -1;
+      }
+
+      .cs-contact {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+        padding: 5rem 0 6rem;
+      }
+
+      .cs-footer {
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: center;
+      }
+
+      /* menu overlay: tighter font on small screens */
+      .menu-link { font-size: clamp(1.6rem, 8vw, 2.6rem); }
+      .menu-sub-link { font-size: 0.68rem; }
+    }
+
+    @media (max-width: 480px) {
+      .cs-highlights { grid-template-columns: 1fr; }
+      .cs-highlights .highlight-item:last-child { grid-column: auto; }
+    }
+
     /* ── KEYFRAMES ───────────────────────────────────────── */
     @keyframes riseIn {
       from { opacity: 0; transform: translateY(14px); }
@@ -1337,12 +1445,14 @@
   ];
 
   // Camera per step
+  const isMobile = () => window.innerWidth < 768;
+
   const CAMERA = [
     // 0: globe
     { center: [10, 25],          zoom: 1.8,  pitch: 0,  bearing: 0,   duration: 0    },
     // 1: Europe
     { center: [8, 50],           zoom: 4.5,  pitch: 25, bearing: -5,  duration: 3500 },
-    // 2: Bremen overview (both pins visible)
+    // 2: Bremen overview — both pins visible
     { center: [8.882, 53.0755],  zoom: 12.6, pitch: 48, bearing: -8,  duration: 4000 },
     // 3: Property 1 Schwachhausen
     { center: [8.8487, 53.0784], zoom: 16.5, pitch: 62, bearing: 22,  duration: 3200 },
@@ -1351,6 +1461,15 @@
     // 5: Property 2 Müdener
     { center: [8.9193, 53.0720], zoom: 16.5, pitch: 62, bearing: -18, duration: 3200 },
   ];
+
+  // Mobile overrides: zoom out on overview so both pins fit narrow screen
+  const CAMERA_MOBILE = {
+    2: { zoom: 11.2, pitch: 35 },
+    4: { zoom: 11.2, pitch: 35 },
+    // property steps: lower zoom so pin sits above the bottom card
+    3: { zoom: 15.8, pitch: 55 },
+    5: { zoom: 15.8, pitch: 55 },
+  };
 
   // ── Init map ──────────────────────────────────────────────────
   const map = new mapboxgl.Map({
@@ -1423,15 +1542,22 @@
 
   // ── Camera flyTo ──────────────────────────────────────────────
   function flyToStep(idx) {
-    const c = CAMERA[idx];
+    const base       = CAMERA[idx];
+    const mob        = isMobile() && CAMERA_MOBILE[idx] ? CAMERA_MOBILE[idx] : {};
+    const c          = { ...base, ...mob };
+    const isPropStep = idx in PROP_STEPS;
     flying = true;
 
-    // On property steps the left panel covers 50% of the viewport.
-    // Setting left padding makes Mapbox centre the target within the right half.
-    const isPropStep = idx in PROP_STEPS;
-    const padding = isPropStep
-      ? { left: window.innerWidth * 0.5, right: 0, top: 0, bottom: 0 }
-      : { left: 0, right: 0, top: 0, bottom: 0 };
+    // Desktop: left panel covers 50% → pad left so pin centres in right half
+    // Mobile:  bottom panel/card covers ~45% → pad bottom so pin centres above
+    let padding;
+    if (isPropStep) {
+      padding = isMobile()
+        ? { left: 0, right: 0, top: 0, bottom: Math.round(window.innerHeight * 0.45) }
+        : { left: window.innerWidth * 0.5, right: 0, top: 0, bottom: 0 };
+    } else {
+      padding = { left: 0, right: 0, top: 0, bottom: 0 };
+    }
 
     map.flyTo({
       center:    c.center,
