@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bremen Immobilien</title>
+  <title>Kuscu Holding – Immobilien Bremen</title>
   <link href="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css" rel="stylesheet" />
   <script src="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.js"></script>
   <style>
@@ -1122,6 +1122,58 @@
       100% { transform: scale(3.5); opacity: 0; }
     }
 
+    /* ── PREVIEW PINS (nicht klickbar, grau) ───────────────────── */
+    .map-marker-preview {
+      opacity: 0;
+      pointer-events: none !important;
+      transition: opacity 0.6s ease;
+    }
+    .map-marker-preview.visible { opacity: 1; }
+    .preview-dot {
+      width: 10px; height: 10px;
+      background: rgba(160, 175, 200, 0.55);
+      border: 1.5px solid rgba(160, 175, 200, 0.35);
+      border-radius: 50%;
+      box-shadow: 0 0 8px rgba(160, 175, 200, 0.2);
+    }
+
+    /* ── ALLE-OBJEKTE CTA ───────────────────────────────────────── */
+    #all-props-cta {
+      position: fixed;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.8s ease;
+      white-space: nowrap;
+    }
+    #all-props-cta.visible { opacity: 1; pointer-events: auto; }
+    .cta-all-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      border: 1px solid rgba(200,169,110,0.32);
+      padding: 0.8rem 1.8rem;
+      border-radius: 2px;
+      background: rgba(8,8,14,0.55);
+      backdrop-filter: blur(10px);
+      transition: color 0.25s, border-color 0.25s, background 0.25s;
+    }
+    .cta-all-link:hover {
+      color: var(--gold);
+      border-color: var(--gold);
+      background: rgba(8,8,14,0.75);
+    }
+    .cta-all-link svg { width: 11px; height: 11px; flex-shrink: 0; }
+
     /* ── GLOBE PREMIUM OVERLAYS ─────────────────────────────── */
 
     /* Deep-space vignette — makes the globe float in darkness */
@@ -1290,6 +1342,16 @@
   <div style="height: 50vh; pointer-events: none;"></div>
 </div>
 
+<!-- ── ALLE OBJEKTE CTA ─────────────────────────────────────────── -->
+<div id="all-props-cta">
+  <a class="cta-all-link" href="immobilien.html">
+    Alle 6 Objekte ansehen
+    <svg viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M1.5 5.5H9.5M6 2L9.5 5.5L6 9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </a>
+</div>
+
 <!-- ── CONTENT SECTION ──────────────────────────────────────────── -->
 <div id="content-section">
 
@@ -1421,7 +1483,7 @@
   <footer>
     <div class="cs-container">
       <div class="cs-footer">
-        <span class="footer-brand">Bremen Immobilien</span>
+        <span class="footer-brand">Kuscu Holding</span>
         <span class="footer-copy">© 2025 · Alle Rechte vorbehalten</span>
       </div>
     </div>
@@ -1674,8 +1736,16 @@
   const OVERVIEW_STEPS = new Set([2, 4, 6]);
   const PROP_STEPS     = { 3: PROPERTIES[0], 5: PROPERTIES[1], 7: PROPERTIES[2] };
 
+  const PREVIEW_PROPERTIES = [
+    { coords: [8.9410, 53.0710], label: 'Wilseder Berg Str 7' },
+    { coords: [8.9350, 53.0650], label: 'Visselhöverder Str 10–18' },
+    { coords: [8.9080, 53.0715], label: 'Adam Stegerwald 34' },
+    { coords: [8.9150, 53.0680], label: 'Ferdinand Lassalle Str 18' },
+  ];
+
   // ── Markers ───────────────────────────────────────────────────
   const markerEls = [];
+  const previewMarkerEls = [];
 
   map.on('load', () => {
     PROPERTIES.forEach((prop) => {
@@ -1699,6 +1769,16 @@
         .addTo(map);
 
       markerEls.push(el);
+    });
+
+    PREVIEW_PROPERTIES.forEach((prop) => {
+      const el = document.createElement('div');
+      el.className = 'map-marker-preview';
+      el.innerHTML = `<div class="preview-dot"></div>`;
+      new mapboxgl.Marker({ element: el, anchor: 'center' })
+        .setLngLat(prop.coords)
+        .addTo(map);
+      previewMarkerEls.push(el);
     });
   });
 
@@ -1812,6 +1892,15 @@
       el.classList.toggle('overview', OVERVIEW_STEPS.has(idx));
     });
 
+    // Preview markers: visible in overview + property steps
+    previewMarkerEls.forEach(el => {
+      el.classList.toggle('visible', idx >= 2);
+    });
+
+    // CTA: show on final property step
+    const ctaEl = document.getElementById('all-props-cta');
+    if (ctaEl) ctaEl.classList.toggle('visible', idx === 7);
+
     // Cards
     hideAllCards();
     if (PROP_STEPS[idx]) {
@@ -1922,6 +2011,7 @@
     document.getElementById('location-label'),
     document.getElementById('overview-hint'),
     document.getElementById('scroll-hint'),
+    document.getElementById('all-props-cta'),
     ...document.querySelectorAll('.map-marker'),
   ];
 
