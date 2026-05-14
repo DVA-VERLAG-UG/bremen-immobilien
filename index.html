@@ -50,11 +50,39 @@
     }
 
     /* ── HERO ────────────────────────────────────────────── */
-    #step-0 { align-items: flex-end; padding-bottom: 12vh; }
+    #step-0 { pointer-events: none; }
+
+    /* Fixed full-viewport wrapper — radial mask creates the globe "hole" */
+    #hero-wrap {
+      position: fixed;
+      inset: 0;
+      z-index: 3;
+      pointer-events: none;
+      /* Soft circular hole centred where the globe sits (50% x, ~46% y).
+         Text entering this area appears to sink behind the globe. */
+      -webkit-mask-image: radial-gradient(
+        ellipse 42vmin 42vmin at 50% 46%,
+        transparent 38%,
+        rgba(0,0,0,0.12) 56%,
+        black 74%
+      );
+      mask-image: radial-gradient(
+        ellipse 42vmin 42vmin at 50% 46%,
+        transparent 38%,
+        rgba(0,0,0,0.12) 56%,
+        black 74%
+      );
+    }
 
     .hero-content {
+      position: absolute;
+      bottom: 12vh;
+      left: 50%;
+      transform: translateX(-50%);
       text-align: center;
       pointer-events: auto;
+      will-change: transform;
+      white-space: nowrap;
     }
 
     .hero-eyebrow {
@@ -1250,14 +1278,7 @@
 <!-- ── SCROLL SECTIONS ──────────────────────────────────────── -->
 <div id="scroll-driver">
   <!-- 0: Globe hero -->
-  <section class="step" id="step-0">
-    <div class="hero-content">
-      <p class="hero-eyebrow">Exklusive Immobilien</p>
-      <div class="hero-line"></div>
-      <h1 class="hero-title">Bremen</h1>
-      <p class="hero-sub">Erstklassige Objekte in bester Lage</p>
-    </div>
-  </section>
+  <section class="step" id="step-0"></section>
 
   <!-- 1: Europe zoom (silent) -->
   <section class="step" id="step-1"></section>
@@ -1421,6 +1442,16 @@
     </div>
   </footer>
 
+</div>
+
+<!-- ── HERO WRAP (fixed, masked) ─────────────────────────────── -->
+<div id="hero-wrap">
+  <div class="hero-content">
+    <p class="hero-eyebrow">Exklusive Immobilien</p>
+    <div class="hero-line"></div>
+    <h1 class="hero-title">Bremen</h1>
+    <p class="hero-sub">Erstklassige Objekte in bester Lage</p>
+  </div>
 </div>
 
 <!-- ── FIXED UI ──────────────────────────────────────────────── -->
@@ -1769,13 +1800,28 @@
     });
   }
 
+  // ── Hero parallax — moves text up into / behind the globe ────
+  const heroContent = document.querySelector('.hero-content');
+  const heroWrap    = document.getElementById('hero-wrap');
+
+  function updateHeroParallax() {
+    const raw = window.scrollY / window.innerHeight; // 0 at top, 1 after first full scroll
+    // Shift upward: at raw=1 the text has moved 60vh — well into the globe centre
+    const moveUp = Math.max(0, raw * 60);
+    heroContent.style.transform = `translateX(-50%) translateY(-${moveUp}vh)`;
+    // Fade the whole wrap out once the text is deep behind the globe
+    heroWrap.style.opacity = Math.max(0, 1 - (raw - 0.6) * 2.8);
+  }
+
   window.addEventListener('scroll', () => {
     scheduleCameraUpdate();
     updateMapFade();
+    updateHeroParallax();
   }, { passive: true });
   window.addEventListener('resize', () => {
     scheduleCameraUpdate();
     updateMapFade();
+    updateHeroParallax();
   }, { passive: true });
 
   // ── Update UI for a given step ────────────────────────────────
@@ -1912,6 +1958,7 @@
     document.getElementById('location-label'),
     document.getElementById('overview-hint'),
     document.getElementById('scroll-hint'),
+    document.getElementById('hero-wrap'),
     ...document.querySelectorAll('.map-marker'),
   ];
 
