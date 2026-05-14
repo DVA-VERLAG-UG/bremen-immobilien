@@ -1588,9 +1588,10 @@
   const buildingLabel  = document.getElementById('building-img-label');
 
   // ── State ─────────────────────────────────────────────────────
-  let currentStep = 0;
-  let flying      = false;
-  let globeTimer  = null;
+  let currentStep  = 0;
+  let globeTimer   = null;
+  let globeBearing = 0;
+  let rafId        = null;
 
   const OVERVIEW_STEPS = new Set([2, 4]);
   const PROP_STEPS     = { 3: PROPERTIES[0], 5: PROPERTIES[1] };
@@ -1623,37 +1624,64 @@
     });
   });
 
-  // ── Camera flyTo ──────────────────────────────────────────────
-  function flyToStep(idx) {
-    const base       = CAMERA[idx];
-    const mob        = isMobile() && CAMERA_MOBILE[idx] ? CAMERA_MOBILE[idx] : {};
-    const c          = { ...base, ...mob };
-    const isPropStep = idx in PROP_STEPS;
-    flying = true;
-
-    // Desktop: left panel covers 50% → pad left so pin centres in right half
-    // Mobile:  bottom panel/card covers ~45% → pad bottom so pin centres above
-    let padding;
-    if (isPropStep) {
-      padding = isMobile()
-        ? { left: 0, right: 0, top: 0, bottom: Math.round(window.innerHeight * 0.45) }
-        : { left: window.innerWidth * 0.5, right: 0, top: 0, bottom: 0 };
-    } else {
-      padding = { left: 0, right: 0, top: 0, bottom: 0 };
-    }
-
-    map.flyTo({
-      center:    c.center,
-      zoom:      c.zoom,
-      pitch:     c.pitch,
-      bearing:   c.bearing,
-      duration:  c.duration,
-      padding,
-      essential: true,
-      easing:    t => t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2,
-    });
-    map.once('moveend', () => { flying = false; });
+  // ── Scroll-scrubbed camera ────────────────────────────────────
+  function resolvedCamera(idx) {
+    const i    = Math.max(0, Math.min(idx, CAMERA.length - 1));
+    const base = CAMERA[i];
+    const mob  = isMobile() && CAMERA_MOBILE[i] ? CAMERA_MOBILE[i] : {};
+    const c    = { ...base, ...mob };
+    if (i === 0) c.bearing = globeBearing;
+    return c;
   }
+
+  function stepPadding(idx) {
+    if (!(idx in PROP_STEPS)) return { left: 0, right: 0, top: 0, bottom: 0 };
+    return isMobile()
+      ? { left: 0, right: 0, top: 0, bottom: Math.round(window.innerHeight * 0.45) }
+      : { left: Math.round(window.innerWidth * 0.5), right: 0, top: 0, bottom: 0 };
+  }
+
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  function smoothstep(t)  { return t * t * (3 - 2 * t); }
+
+  function lerpCamera() {
+    const raw     = window.scrollY / window.innerHeight;
+    const fromIdx = Math.min(Math.floor(raw), CAMERA.length - 1);
+    const toIdx   = Math.min(fromIdx + 1,     CAMERA.length - 1);
+    const t       = smoothstep(Math.max(0, Math.min(1, raw - fromIdx)));
+
+    const from    = resolvedCamera(fromIdx);
+    const to      = resolvedCamera(toIdx);
+    const fromPad = stepPadding(fromIdx);
+    const toPad   = stepPadding(toIdx);
+
+    map.jumpTo({
+      center:  [ lerp(from.center[0], to.center[0], t),
+                 lerp(from.center[1], to.center[1], t) ],
+      zoom:    lerp(from.zoom,    to.zoom,    t),
+      pitch:   lerp(from.pitch,   to.pitch,   t),
+      bearing: lerp(from.bearing, to.bearing, t),
+      padding: {
+        left:   lerp(fromPad.left,   toPad.left,   t),
+        right:  lerp(fromPad.right,  toPad.right,  t),
+        top:    lerp(fromPad.top,    toPad.top,    t),
+        bottom: lerp(fromPad.bottom, toPad.bottom, t),
+      },
+    });
+  }
+
+  function scheduleCameraUpdate() {
+    if (rafId) return;
+    rafId = requestAnimationFrame(() => {
+      const raw = window.scrollY / window.innerHeight;
+      if (raw < 0.1) startGlobeRotation();
+      lerpCamera();
+      rafId = null;
+    });
+  }
+
+  window.addEventListener('scroll', scheduleCameraUpdate, { passive: true });
+  window.addEventListener('resize', scheduleCameraUpdate, { passive: true });
 
   // ── Update UI for a given step ────────────────────────────────
   function applyStep(idx) {
@@ -1695,13 +1723,6 @@
       buildingPanel.classList.remove('visible');
     }
 
-    // Globe rotation only on step 0
-    if (idx === 0) {
-      startGlobeRotation();
-    } else {
-      stopGlobeRotation();
-    }
-
     // Vignette & letterbox: visible only on globe step
     const isGlobe = idx === 0;
     document.getElementById('globe-vignette').classList.toggle('hidden', !isGlobe);
@@ -1720,10 +1741,7 @@
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         const idx = parseInt(entry.target.dataset.step);
-        if (idx !== currentStep) {
-          flyToStep(idx);
-          applyStep(idx);
-        }
+        if (idx !== currentStep) applyStep(idx);
       }
     });
   }, { threshold: 0.5 });
@@ -1742,14 +1760,13 @@
   });
 
   // ── Globe auto-rotation ───────────────────────────────────────
-  let bearing = 0;
-
   function startGlobeRotation() {
     if (globeTimer) return;
     globeTimer = setInterval(() => {
-      if (currentStep !== 0) { stopGlobeRotation(); return; }
-      bearing += 0.035;
-      map.setBearing(bearing);
+      const raw = window.scrollY / window.innerHeight;
+      if (raw > 0.25) { stopGlobeRotation(); return; }
+      globeBearing += 0.035;
+      scheduleCameraUpdate();
     }, 16);
   }
 
