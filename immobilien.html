@@ -40,14 +40,19 @@
     }
 
     .nav-logo {
-      font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.65rem;
-      letter-spacing: 0.42em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.7);
+      display: block;
       text-decoration: none;
+      height: 36px;
+      width: auto;
     }
-    .nav-logo span { color: var(--gold); }
+    .nav-logo img {
+      height: 100%;
+      width: auto;
+      object-fit: contain;
+      display: block;
+      opacity: 0.88;
+    }
+    .nav-logo:hover img { opacity: 1; }
 
     /* ── BURGER ────────────────────────────────────────────── */
     #menu-btn {
@@ -376,9 +381,11 @@
     }
 
     .footer-brand {
-      font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.6rem; letter-spacing: 0.4em;
-      text-transform: uppercase; color: rgba(255,255,255,0.25);
+      display: block;
+      height: 26px;
+      width: auto;
+      object-fit: contain;
+      opacity: 0.3;
     }
     .footer-copy {
       font-family: 'Helvetica Neue', Arial, sans-serif;
@@ -404,7 +411,7 @@
 
 <!-- ── NAV ──────────────────────────────────────────────────── -->
 <nav>
-  <a class="nav-logo" href="index.html">Kuscu <span>Holding</span></a>
+  <a class="nav-logo" href="index.html"><img src="Logos/Kuscu.jpeg" alt="Kuscu Immobilien" /></a>
   <button id="menu-btn" aria-label="Menü öffnen">
     <span class="burger-line"></span>
     <span class="burger-line"></span>
@@ -680,7 +687,7 @@
 
 <!-- ── FOOTER ─────────────────────────────────────────────────── -->
 <footer>
-  <span class="footer-brand">Kuscu Holding</span>
+  <img class="footer-brand" src="Logos/Kuscu.jpeg" alt="Kuscu Immobilien" />
   <span class="footer-copy">© 2025 · Alle Rechte vorbehalten</span>
 </footer>
 

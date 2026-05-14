@@ -40,14 +40,19 @@
     }
 
     .nav-logo {
-      font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.65rem;
-      letter-spacing: 0.42em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.7);
+      display: block;
       text-decoration: none;
+      height: 36px;
+      width: auto;
     }
-    .nav-logo span { color: var(--gold); }
+    .nav-logo img {
+      height: 100%;
+      width: auto;
+      object-fit: contain;
+      display: block;
+      opacity: 0.88;
+    }
+    .nav-logo:hover img { opacity: 1; }
 
     .nav-links {
       display: flex;
@@ -437,13 +442,12 @@
     }
 
     .footer-logo {
-      font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.6rem;
-      letter-spacing: 0.38em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.3);
+      display: block;
+      height: 26px;
+      width: auto;
+      object-fit: contain;
+      opacity: 0.3;
     }
-    .footer-logo span { color: var(--gold); }
 
     footer nav a {
       font-family: 'Helvetica Neue', Arial, sans-serif;
@@ -488,7 +492,7 @@
 
 <!-- ── NAV ───────────────────────────────────────────────────── -->
 <nav>
-  <a href="index.html" class="nav-logo">Kuscu <span>Holding</span></a>
+  <a href="index.html" class="nav-logo"><img src="Logos/Kuscu.jpeg" alt="Kuscu Immobilien" /></a>
 
   <ul class="nav-links" id="desktop-nav">
     <li><a href="index.html">Start</a></li>
@@ -670,7 +674,7 @@
 
 <!-- ── FOOTER ────────────────────────────────────────────────── -->
 <footer>
-  <div class="footer-logo">Kuscu <span>Holding</span></div>
+  <img class="footer-logo" src="Logos/Kuscu.jpeg" alt="Kuscu Immobilien" />
   <nav aria-label="Footer Navigation">
     <a href="index.html">Start</a>
     <a href="immobilien.html">Immobilien</a>

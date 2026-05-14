@@ -499,6 +499,37 @@
       transform: scale(1.5);
     }
 
+    /* ── SITE LOGO ───────────────────────────────────────── */
+    #site-logo {
+      position: fixed;
+      top: 1.75rem;
+      left: 2rem;
+      z-index: 200;
+      display: block;
+      height: 38px;
+      width: auto;
+      opacity: 0.88;
+      transition: opacity 0.3s;
+      text-decoration: none;
+    }
+    #site-logo img {
+      height: 100%;
+      width: auto;
+      object-fit: contain;
+      display: block;
+    }
+    #site-logo:hover { opacity: 1; }
+
+    /* ── MENU LOGO ────────────────────────────────────────── */
+    .menu-logo {
+      display: block;
+      margin: 0 auto 3rem;
+      height: 56px;
+      width: auto;
+      object-fit: contain;
+      opacity: 0.85;
+    }
+
     /* ── BURGER MENU ─────────────────────────────────────── */
     #menu-btn {
       position: fixed;
@@ -1010,11 +1041,11 @@
     }
 
     .footer-brand {
-      font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.65rem;
-      letter-spacing: 0.4em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.3);
+      display: block;
+      height: 28px;
+      width: auto;
+      object-fit: contain;
+      opacity: 0.35;
     }
 
     .footer-copy {
@@ -1278,6 +1309,11 @@
 </head>
 <body>
 
+<!-- ── SITE LOGO ─────────────────────────────────────────────── -->
+<a id="site-logo" href="index.html" aria-label="Kuscu Immobilien">
+  <img src="Logos/Kuscu.jpeg" alt="Kuscu Immobilien" />
+</a>
+
 <!-- ── BURGER BUTTON ─────────────────────────────────────────── -->
 <button id="menu-btn" aria-label="Menü öffnen">
   <span class="burger-line"></span>
@@ -1288,6 +1324,7 @@
 <!-- ── MENU OVERLAY ──────────────────────────────────────────── -->
 <div id="menu-overlay" role="dialog" aria-modal="true">
   <div class="menu-inner">
+    <img class="menu-logo" src="Logos/Kuscu.jpeg" alt="Kuscu Immobilien" />
     <ul class="menu-nav">
 
       <!-- Objekte with submenu -->
@@ -1340,7 +1377,7 @@
   <!-- 0: Globe hero -->
   <section class="step" id="step-0">
     <div class="hero-content">
-      <p class="hero-eyebrow">Exklusive Immobilien</p>
+      <p class="hero-eyebrow">Kuscu Immobilien</p>
       <div class="hero-line"></div>
       <h1 class="hero-title">Bremen</h1>
       <p class="hero-sub">Erstklassige Objekte in bester Lage</p>
@@ -1612,7 +1649,7 @@
   <footer>
     <div class="cs-container">
       <div class="cs-footer">
-        <span class="footer-brand">Kuscu Holding</span>
+        <img class="footer-brand" src="Logos/Kuscu.jpeg" alt="Kuscu Immobilien" />
         <span class="footer-copy">© 2025 · Alle Rechte vorbehalten</span>
       </div>
     </div>
