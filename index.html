@@ -1151,54 +1151,21 @@
     }
 
     /* ── PREVIEW PINS (nicht klickbar, grau) ───────────────────── */
-    .map-marker-preview {
-      width: 20px;
-      height: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.6s ease;
-      cursor: pointer;
-      position: relative;
-    }
-    .map-marker-preview.visible { opacity: 1; pointer-events: auto; }
-    .preview-dot {
-      width: 10px; height: 10px;
-      background: rgba(160, 175, 200, 0.55);
-      border: 1.5px solid rgba(160, 175, 200, 0.35);
-      border-radius: 50%;
-      box-shadow: 0 0 8px rgba(160, 175, 200, 0.2);
-      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
-    }
-    .map-marker-preview:hover .preview-dot {
-      background: rgba(200, 169, 110, 0.75);
-      border-color: rgba(200, 169, 110, 0.5);
-      box-shadow: 0 0 12px rgba(200, 169, 110, 0.35);
-      transform: scale(1.5);
-    }
-    .preview-tooltip {
-      position: absolute;
-      bottom: calc(100% + 8px);
-      left: 50%;
-      transform: translateX(-50%);
-      white-space: nowrap;
+    /* ── PREVIEW PIN POPUP ──────────────────────────────────────── */
+    .preview-popup .mapboxgl-popup-content {
       font-family: 'Helvetica Neue', Arial, sans-serif;
       font-size: 0.58rem;
       letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.65);
-      background: rgba(8,8,14,0.82);
+      color: rgba(255,255,255,0.7);
+      background: rgba(8,8,14,0.85);
       border: 1px solid rgba(200,169,110,0.25);
-      padding: 0.3rem 0.65rem;
+      padding: 0.3rem 0.7rem;
       border-radius: 2px;
-      backdrop-filter: blur(6px);
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.2s;
+      backdrop-filter: blur(8px);
+      white-space: nowrap;
     }
-    .map-marker-preview:hover .preview-tooltip { opacity: 1; }
+    .preview-popup .mapboxgl-popup-tip { display: none; }
 
     /* ── ALLE-OBJEKTE CTA ───────────────────────────────────────── */
     #all-props-cta {
@@ -1907,7 +1874,6 @@
 
   // ── Markers ───────────────────────────────────────────────────
   const markerEls = [];
-  const previewMarkerEls = [];
 
   map.on('load', () => {
     PROPERTIES.forEach((prop) => {
@@ -1933,21 +1899,72 @@
       markerEls.push(el);
     });
 
-    PREVIEW_PROPERTIES.forEach((prop) => {
-      const el = document.createElement('div');
-      el.className = 'map-marker-preview';
-      el.innerHTML = `
-        <div class="preview-dot"></div>
-        <div class="preview-tooltip">${prop.label}</div>
-      `;
-      el.addEventListener('click', () => {
-        const target = document.getElementById(prop.targetId);
-        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      });
-      new mapboxgl.Marker({ element: el, anchor: 'center' })
-        .setLngLat(prop.coords)
-        .addTo(map);
-      previewMarkerEls.push(el);
+    // Preview pins as a native GL layer — always perfectly anchored
+    map.addSource('preview-pins', {
+      type: 'geojson',
+      data: {
+        type: 'FeatureCollection',
+        features: PREVIEW_PROPERTIES.map((p, i) => ({
+          type: 'Feature',
+          id: i,
+          properties: { label: p.label, targetId: p.targetId },
+          geometry: { type: 'Point', coordinates: p.coords },
+        })),
+      },
+    });
+
+    map.addLayer({
+      id: 'preview-circles',
+      type: 'circle',
+      source: 'preview-pins',
+      paint: {
+        'circle-radius': ['case', ['boolean', ['feature-state', 'hover'], false], 7, 5],
+        'circle-color': ['case', ['boolean', ['feature-state', 'hover'], false],
+          'rgba(200,169,110,0.75)', 'rgba(160,175,200,0.55)'],
+        'circle-stroke-width': 1.5,
+        'circle-stroke-color': ['case', ['boolean', ['feature-state', 'hover'], false],
+          'rgba(200,169,110,0.5)', 'rgba(160,175,200,0.35)'],
+        'circle-opacity': 0,
+        'circle-stroke-opacity': 0,
+        'circle-opacity-transition': { duration: 600 },
+        'circle-stroke-opacity-transition': { duration: 600 },
+      },
+    });
+
+    const previewPopup = new mapboxgl.Popup({
+      closeButton: false, closeOnClick: false,
+      className: 'preview-popup', anchor: 'bottom', offset: 12,
+    });
+
+    let hoveredPreviewId = null;
+
+    map.on('mousemove', 'preview-circles', (e) => {
+      if (!e.features.length) return;
+      map.getCanvas().style.cursor = 'pointer';
+      const feat = e.features[0];
+      if (hoveredPreviewId !== feat.id) {
+        if (hoveredPreviewId !== null)
+          map.setFeatureState({ source: 'preview-pins', id: hoveredPreviewId }, { hover: false });
+        hoveredPreviewId = feat.id;
+        map.setFeatureState({ source: 'preview-pins', id: hoveredPreviewId }, { hover: true });
+      }
+      previewPopup.setLngLat(feat.geometry.coordinates)
+        .setHTML(feat.properties.label).addTo(map);
+    });
+
+    map.on('mouseleave', 'preview-circles', () => {
+      map.getCanvas().style.cursor = '';
+      if (hoveredPreviewId !== null) {
+        map.setFeatureState({ source: 'preview-pins', id: hoveredPreviewId }, { hover: false });
+        hoveredPreviewId = null;
+      }
+      previewPopup.remove();
+    });
+
+    map.on('click', 'preview-circles', (e) => {
+      if (!e.features.length) return;
+      const target = document.getElementById(e.features[0].properties.targetId);
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
   });
 
@@ -2061,10 +2078,12 @@
       el.classList.toggle('overview', OVERVIEW_STEPS.has(idx));
     });
 
-    // Preview markers: visible in overview + property steps
-    previewMarkerEls.forEach(el => {
-      el.classList.toggle('visible', idx >= 2);
-    });
+    // Preview pins (GL layer): visible from step 2 onward
+    if (map.getLayer('preview-circles')) {
+      const op = idx >= 2 ? 1 : 0;
+      map.setPaintProperty('preview-circles', 'circle-opacity', op);
+      map.setPaintProperty('preview-circles', 'circle-stroke-opacity', op);
+    }
 
     // CTA: show on final property step
     const ctaEl = document.getElementById('all-props-cta');
