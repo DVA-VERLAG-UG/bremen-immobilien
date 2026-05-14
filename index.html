@@ -1198,6 +1198,7 @@
         <ul class="menu-sub" id="sub-objekte">
           <li><button class="menu-sub-link" onclick="navTo('step-3')">Schwachhauser Heerstraße 179</button></li>
           <li><button class="menu-sub-link" onclick="navTo('step-5')">Müdener Strasse 31</button></li>
+          <li><button class="menu-sub-link" onclick="navTo('step-7')">Bürgermeister Spitta Allee 6</button></li>
         </ul>
       </li>
 
@@ -1262,8 +1263,14 @@
   <!-- 5: Property 2 zoom-in -->
   <section class="step" id="step-5"></section>
 
+  <!-- 6: Bremen overview — all 3 pins -->
+  <section class="step" id="step-6"></section>
+
+  <!-- 7: Property 3 zoom-in -->
+  <section class="step" id="step-7"></section>
+
   <!-- Buffer: extra scroll time on last property before content appears -->
-  <div style="height: 100vh; pointer-events: none;"></div>
+  <div style="height: 50vh; pointer-events: none;"></div>
 </div>
 
 <!-- ── CONTENT SECTION ──────────────────────────────────────────── -->
@@ -1418,7 +1425,7 @@
 </div>
 
 <div id="overview-hint">
-  <p class="hint-count">2 Immobilien · Bremen</p>
+  <p class="hint-count">3 Immobilien · Bremen</p>
   <p class="hint-action">Marker anklicken für Details</p>
 </div>
 
@@ -1429,6 +1436,8 @@
   <div class="progress-dot" data-step="3"></div>
   <div class="progress-dot" data-step="4"></div>
   <div class="progress-dot" data-step="5"></div>
+  <div class="progress-dot" data-step="6"></div>
+  <div class="progress-dot" data-step="7"></div>
 </div>
 
 <!-- ── BUILDING PANEL ────────────────────────────────────────── -->
@@ -1506,6 +1515,39 @@
   <a class="card-cta" href="mailto:navidistanbullu@gmail.com?subject=Anfrage: Müdener Strasse 31">Expose anfordern</a>
 </div>
 
+<!-- ── PROPERTY CARD 3 ───────────────────────────────────────── -->
+<div class="property-card" id="card-3">
+  <p class="card-type">Einfamilienhaus · Vahr</p>
+  <p class="card-address">Bürgermeister Spitta Allee 6</p>
+  <p class="card-city">28329 Bremen</p>
+  <div class="card-divider"></div>
+  <div class="card-stats">
+    <div class="card-stat">
+      <span class="stat-value">~100 m²</span>
+      <span class="stat-label">Wohnfläche</span>
+    </div>
+    <div class="card-stat">
+      <span class="stat-value">5</span>
+      <span class="stat-label">Zimmer</span>
+    </div>
+    <div class="card-stat">
+      <span class="stat-value">2</span>
+      <span class="stat-label">Etagen</span>
+    </div>
+  </div>
+  <p class="card-desc">
+    Großzügiges Einfamilienhaus über zwei Etagen mit Garage in ruhiger Lage.
+  </p>
+  <div class="card-highlights">
+    <span class="highlight-tag">Garage</span>
+    <span class="highlight-tag">2 Etagen</span>
+    <span class="highlight-tag">Ruhige Lage</span>
+  </div>
+  <p class="card-price-label">Kaufpreis</p>
+  <p class="card-price-value">Auf Anfrage</p>
+  <a class="card-cta" href="mailto:navidistanbullu@gmail.com?subject=Anfrage: Bürgermeister Spitta Allee 6">Expose anfordern</a>
+</div>
+
 <!-- ── SCRIPT ────────────────────────────────────────────────── -->
 <script>
   mapboxgl.accessToken = [
@@ -1528,6 +1570,13 @@
       label:   'Müdener Strasse 31',
       step:    5,
     },
+    {
+      id:      'card-3',
+      coords:  [8.8830, 53.0682],
+      image:   'Bürgermeister/Front.jpeg',
+      label:   'Bürgermeister Spitta Allee 6',
+      step:    7,
+    },
   ];
 
   // Camera per step
@@ -1538,23 +1587,28 @@
     { center: [10, 25],          zoom: 1.8,  pitch: 0,  bearing: 0,   duration: 0    },
     // 1: Europe
     { center: [8, 50],           zoom: 4.5,  pitch: 25, bearing: -5,  duration: 3500 },
-    // 2: Bremen overview — both pins visible
-    { center: [8.882, 53.0755],  zoom: 12.6, pitch: 48, bearing: -8,  duration: 4000 },
+    // 2: Bremen overview — all pins visible
+    { center: [8.882, 53.0755],  zoom: 12.2, pitch: 48, bearing: -8,  duration: 4000 },
     // 3: Property 1 Schwachhausen
     { center: [8.8487, 53.0784], zoom: 16.5, pitch: 62, bearing: 22,  duration: 3200 },
     // 4: Bremen overview again
-    { center: [8.882, 53.0755],  zoom: 12.6, pitch: 48, bearing: -8,  duration: 3500 },
+    { center: [8.882, 53.0755],  zoom: 12.2, pitch: 48, bearing: -8,  duration: 3500 },
     // 5: Property 2 Müdener
     { center: [8.9193, 53.0720], zoom: 16.5, pitch: 62, bearing: -18, duration: 3200 },
+    // 6: Bremen overview again
+    { center: [8.882, 53.0755],  zoom: 12.2, pitch: 48, bearing: -8,  duration: 3500 },
+    // 7: Property 3 Bürgermeister Spitta Allee
+    { center: [8.8830, 53.0682], zoom: 16.5, pitch: 62, bearing: 12,  duration: 3200 },
   ];
 
-  // Mobile overrides: zoom out on overview so both pins fit narrow screen
+  // Mobile overrides
   const CAMERA_MOBILE = {
-    2: { zoom: 11.2, pitch: 35 },
-    4: { zoom: 11.2, pitch: 35 },
-    // property steps: lower zoom so pin sits above the bottom card
+    2: { zoom: 11.0, pitch: 35 },
+    4: { zoom: 11.0, pitch: 35 },
+    6: { zoom: 11.0, pitch: 35 },
     3: { zoom: 15.8, pitch: 55 },
     5: { zoom: 15.8, pitch: 55 },
+    7: { zoom: 15.8, pitch: 55 },
   };
 
   // ── Init map ──────────────────────────────────────────────────
@@ -1596,8 +1650,8 @@
   let globeBearing = 0;
   let rafId        = null;
 
-  const OVERVIEW_STEPS = new Set([2, 4]);
-  const PROP_STEPS     = { 3: PROPERTIES[0], 5: PROPERTIES[1] };
+  const OVERVIEW_STEPS = new Set([2, 4, 6]);
+  const PROP_STEPS     = { 3: PROPERTIES[0], 5: PROPERTIES[1], 7: PROPERTIES[2] };
 
   // ── Markers ───────────────────────────────────────────────────
   const markerEls = [];
