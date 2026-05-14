@@ -1153,17 +1153,47 @@
     /* ── PREVIEW PINS (nicht klickbar, grau) ───────────────────── */
     .map-marker-preview {
       opacity: 0;
-      pointer-events: none !important;
+      pointer-events: none;
       transition: opacity 0.6s ease;
+      cursor: pointer;
+      position: relative;
     }
-    .map-marker-preview.visible { opacity: 1; }
+    .map-marker-preview.visible { opacity: 1; pointer-events: auto; }
     .preview-dot {
       width: 10px; height: 10px;
       background: rgba(160, 175, 200, 0.55);
       border: 1.5px solid rgba(160, 175, 200, 0.35);
       border-radius: 50%;
       box-shadow: 0 0 8px rgba(160, 175, 200, 0.2);
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
     }
+    .map-marker-preview:hover .preview-dot {
+      background: rgba(200, 169, 110, 0.75);
+      border-color: rgba(200, 169, 110, 0.5);
+      box-shadow: 0 0 12px rgba(200, 169, 110, 0.35);
+      transform: scale(1.5);
+    }
+    .preview-tooltip {
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.58rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+      background: rgba(8,8,14,0.82);
+      border: 1px solid rgba(200,169,110,0.25);
+      padding: 0.3rem 0.65rem;
+      border-radius: 2px;
+      backdrop-filter: blur(6px);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .map-marker-preview:hover .preview-tooltip { opacity: 1; }
 
     /* ── ALLE-OBJEKTE CTA ───────────────────────────────────────── */
     #all-props-cta {
@@ -1488,7 +1518,7 @@
         </div>
 
         <!-- Preview 1 – Wilseder Berg -->
-        <div class="cs-prop-card coming-soon reveal">
+        <div id="preview-card-1" class="cs-prop-card coming-soon reveal">
           <div class="prop-img-placeholder">
             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
           </div>
@@ -1506,7 +1536,7 @@
         </div>
 
         <!-- Preview 2 – Visselhöverder -->
-        <div class="cs-prop-card coming-soon reveal reveal-delay-2">
+        <div id="preview-card-2" class="cs-prop-card coming-soon reveal reveal-delay-2">
           <div class="prop-img-placeholder">
             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
           </div>
@@ -1524,7 +1554,7 @@
         </div>
 
         <!-- Preview 3 – Adam Stegerwald -->
-        <div class="cs-prop-card coming-soon reveal reveal-delay-3">
+        <div id="preview-card-3" class="cs-prop-card coming-soon reveal reveal-delay-3">
           <div class="prop-img-placeholder">
             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
           </div>
@@ -1542,7 +1572,7 @@
         </div>
 
         <!-- Preview 4 – Ferdinand Lassalle -->
-        <div class="cs-prop-card coming-soon reveal">
+        <div id="preview-card-4" class="cs-prop-card coming-soon reveal">
           <div class="prop-img-placeholder">
             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
           </div>
@@ -1864,10 +1894,10 @@
   const PROP_STEPS     = { 3: PROPERTIES[0], 5: PROPERTIES[1], 7: PROPERTIES[2] };
 
   const PREVIEW_PROPERTIES = [
-    { coords: [8.9410, 53.0710], label: 'Wilseder Berg Str 7' },
-    { coords: [8.9350, 53.0650], label: 'Visselhöverder Str 10–18' },
-    { coords: [8.9080, 53.0715], label: 'Adam Stegerwald 34' },
-    { coords: [8.9150, 53.0680], label: 'Ferdinand Lassalle Str 18' },
+    { coords: [8.9410, 53.0710], label: 'Wilseder Berg Str 7',       targetId: 'preview-card-1' },
+    { coords: [8.9350, 53.0650], label: 'Visselhöverder Str 10–18',   targetId: 'preview-card-2' },
+    { coords: [8.9080, 53.0715], label: 'Adam Stegerwald 34',         targetId: 'preview-card-3' },
+    { coords: [8.9150, 53.0680], label: 'Ferdinand Lassalle Str 18',  targetId: 'preview-card-4' },
   ];
 
   // ── Markers ───────────────────────────────────────────────────
@@ -1901,7 +1931,14 @@
     PREVIEW_PROPERTIES.forEach((prop) => {
       const el = document.createElement('div');
       el.className = 'map-marker-preview';
-      el.innerHTML = `<div class="preview-dot"></div>`;
+      el.innerHTML = `
+        <div class="preview-dot"></div>
+        <div class="preview-tooltip">${prop.label}</div>
+      `;
+      el.addEventListener('click', () => {
+        const target = document.getElementById(prop.targetId);
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
       new mapboxgl.Marker({ element: el, anchor: 'center' })
         .setLngLat(prop.coords)
         .addTo(map);
