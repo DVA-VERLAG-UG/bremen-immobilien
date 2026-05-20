@@ -195,83 +195,27 @@
     }
 
     /* ── BUILDING PANEL (left-half slide-in) ────────────── */
-    #building-panel {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 50%;
-      height: 100vh;
-      z-index: 15;
-      overflow: hidden;
-      pointer-events: none;
-      transform: translateX(-100%);
-      transition: transform 0.95s cubic-bezier(0.16, 1, 0.3, 1),
-                  opacity 0.6s ease;
-    }
+    /* building panel retired — hidden, cards now carry the photo */
+    #building-panel { display: none !important; }
 
-    #building-panel.visible {
-      transform: translateX(0);
-      pointer-events: auto;
-    }
-
-    #building-panel img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      /* subtle pull-back as panel slides in */
-      transform: scale(1.05);
-      transition: transform 1.4s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    #building-panel.visible img {
-      transform: scale(1.0);
-    }
-
-    /* right-edge feather so panel blends into the map */
-    #building-panel .panel-fade {
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, transparent 15%),
-        linear-gradient(to top,    rgba(0,0,0,0.4)  0%, transparent 20%),
-        linear-gradient(to right,  transparent 75%,  rgba(8,8,14,0.9) 100%);
-    }
-
-    #building-panel .panel-label {
-      position: absolute;
-      bottom: 2.5rem;
-      left: 2.5rem;
-      font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.6rem;
-      letter-spacing: 0.38em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.45);
-      opacity: 0;
-      transform: translateY(6px);
-      transition: opacity 0.5s ease 0.7s, transform 0.5s ease 0.7s;
-    }
-
-    #building-panel.visible .panel-label {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* ── PROPERTY CARDS ──────────────────────────────────── */
+    /* ── PROPERTY CARDS (left panel with photo header) ─── */
     .property-card {
       position: fixed;
-      right: 2.5rem;
+      left: 2.5rem;
       top: 50%;
-      transform: translateY(-50%) translateX(calc(100% + 3rem));
-      width: 310px;
+      transform: translateY(-50%) translateX(calc(-100% - 3rem));
+      width: 340px;
       background: var(--card-bg);
       backdrop-filter: blur(18px);
       -webkit-backdrop-filter: blur(18px);
       border: 1px solid rgba(200, 169, 110, 0.22);
       border-radius: 3px;
-      padding: 1.75rem;
       z-index: 25;
-      transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+      overflow: hidden;
+      max-height: 88vh;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
                   opacity 0.75s ease;
       opacity: 0;
       pointer-events: none;
@@ -281,6 +225,34 @@
       transform: translateY(-50%) translateX(0);
       opacity: 1;
       pointer-events: auto;
+    }
+
+    /* photo header inside card */
+    .card-photo {
+      position: relative;
+      width: 100%;
+      height: 190px;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .card-photo img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      transform: scale(1.04);
+      transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .property-card.visible .card-photo img { transform: scale(1); }
+    .card-photo-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(8,8,14,0.55) 100%);
+    }
+
+    /* scrollable info below photo */
+    .card-body-inner {
+      padding: 1.5rem 1.75rem 1.75rem;
+      overflow-y: auto;
+      flex: 1;
     }
 
     .card-type {
@@ -1069,49 +1041,19 @@
       #menu-btn { top: 1.4rem; right: 1.4rem; }
 
       /* building panel: slide from bottom, map stays visible on top */
-      #building-panel {
-        width: 100%;
-        height: 42vh;
-        top: auto;
-        bottom: 0;
-        left: 0;
-        transform: translateY(100%);   /* off-screen below */
-      }
-      #building-panel.visible { transform: translateY(0); }
-
-      /* right-edge fade not needed, add top fade instead */
-      #building-panel .panel-fade {
-        background:
-          linear-gradient(to bottom, rgba(8,8,14,0.6) 0%, transparent 30%),
-          linear-gradient(to top, rgba(0,0,0,0.35) 0%, transparent 30%);
-      }
-
-      /* property card: bottom sheet, full width */
+      /* property card: bottom sheet on mobile, hide photo */
       .property-card {
-        left: 0;
-        right: 0;
-        bottom: 0;
-        top: auto;
-        width: 100%;
-        max-height: 52vh;
-        overflow-y: auto;
+        left: 0; right: 0; bottom: 0; top: auto;
+        width: 100%; max-height: 52vh;
         border-radius: 0;
-        border-left: none;
-        border-right: none;
-        border-bottom: none;
+        border-left: none; border-right: none; border-bottom: none;
         border-top: 1px solid rgba(200,169,110,0.22);
-        padding: 1.25rem 1.25rem 2rem;
-        /* override the translateX slide — slide from bottom instead */
         transform: translateY(100%);
-        transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1),
-                    opacity 0.75s ease;
-        opacity: 1;  /* always opaque, transform handles visibility */
+        transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.75s ease;
+        opacity: 1;
       }
       .property-card.visible { transform: translateY(0); }
-
-      /* when image panel is also visible, card sits above it */
-      #building-panel.visible ~ .property-card.visible,
-      .property-card.visible { bottom: 0; }
+      .card-photo { display: none; }
 
       /* card stats: tighter on mobile */
       .card-stats { gap: 1rem; }
@@ -1698,103 +1640,121 @@
 
 <!-- ── PROPERTY CARD 1 ───────────────────────────────────────── -->
 <div class="property-card" id="card-1">
-  <p class="card-type">Gewerbeimmobilie · Schwachhausen</p>
-  <p class="card-address">Schwachhauser Heerstraße 179</p>
-  <p class="card-city">28211 Bremen</p>
-  <div class="card-divider"></div>
-  <div class="card-stats">
-    <div class="card-stat">
-      <span class="stat-value">152 m²</span>
-      <span class="stat-label">Fläche</span>
-    </div>
-    <div class="card-stat">
-      <span class="stat-value">6</span>
-      <span class="stat-label">Büroräume</span>
-    </div>
-    <div class="card-stat">
-      <span class="stat-value">2023</span>
-      <span class="stat-label">Renoviert</span>
-    </div>
+  <div class="card-photo">
+    <img src="Schwachhausen/Front.png" alt="Schwachhauser Heerstraße 179" />
+    <div class="card-photo-overlay"></div>
   </div>
-  <p class="card-desc">
-    Frisch modernisierte Gewerbeeinheit im Souterrain. Vollständig renoviert 2023–2024 mit eigenem Stromzähler, Glasfaser-Vorbereitung und Kameraanlage.
-  </p>
-  <div class="card-highlights">
-    <span class="highlight-tag">Zentrale Lage</span>
-    <span class="highlight-tag">ÖPNV direkt</span>
-    <span class="highlight-tag">Sofort bezugsfähig</span>
-    <span class="highlight-tag">Gasheizung</span>
+  <div class="card-body-inner">
+    <p class="card-type">Gewerbeimmobilie · Schwachhausen</p>
+    <p class="card-address">Schwachhauser Heerstraße 179</p>
+    <p class="card-city">28211 Bremen</p>
+    <div class="card-divider"></div>
+    <div class="card-stats">
+      <div class="card-stat">
+        <span class="stat-value">152 m²</span>
+        <span class="stat-label">Fläche</span>
+      </div>
+      <div class="card-stat">
+        <span class="stat-value">6</span>
+        <span class="stat-label">Büroräume</span>
+      </div>
+      <div class="card-stat">
+        <span class="stat-value">2023</span>
+        <span class="stat-label">Renoviert</span>
+      </div>
+    </div>
+    <p class="card-desc">
+      Frisch modernisierte Gewerbeeinheit im Souterrain. Vollständig renoviert 2023–2024 mit eigenem Stromzähler, Glasfaser-Vorbereitung und Kameraanlage.
+    </p>
+    <div class="card-highlights">
+      <span class="highlight-tag">Zentrale Lage</span>
+      <span class="highlight-tag">ÖPNV direkt</span>
+      <span class="highlight-tag">Sofort bezugsfähig</span>
+      <span class="highlight-tag">Gasheizung</span>
+    </div>
+    <p class="card-price-label">Kaufpreis</p>
+    <p class="card-price-value">Auf Anfrage</p>
+    <a class="card-cta" href="mailto:navidistanbullu@gmail.com?subject=Anfrage: Schwachhauser Heerstraße 179">Expose anfordern</a>
   </div>
-  <p class="card-price-label">Kaufpreis</p>
-  <p class="card-price-value">Auf Anfrage</p>
-  <a class="card-cta" href="mailto:navidistanbullu@gmail.com?subject=Anfrage: Schwachhauser Heerstraße 179">Expose anfordern</a>
 </div>
 
 <!-- ── PROPERTY CARD 2 ───────────────────────────────────────── -->
 <div class="property-card" id="card-2">
-  <p class="card-type">Etagenwohnung · Neue Vahr</p>
-  <p class="card-address">Müdener Strasse 31</p>
-  <p class="card-city">28329 Bremen</p>
-  <div class="card-divider"></div>
-  <div class="card-stats">
-    <div class="card-stat">
-      <span class="stat-value">57 m²</span>
-      <span class="stat-label">Wohnfläche</span>
-    </div>
-    <div class="card-stat">
-      <span class="stat-value">3</span>
-      <span class="stat-label">Zimmer</span>
-    </div>
-    <div class="card-stat">
-      <span class="stat-value">1955</span>
-      <span class="stat-label">Baujahr</span>
-    </div>
+  <div class="card-photo">
+    <img src="Müdener/Front.png" alt="Müdener Strasse 31" />
+    <div class="card-photo-overlay"></div>
   </div>
-  <p class="card-desc">
-    Helle Etagenwohnung mit Balkon und eigenem Keller. Fernwärme-Heizung, Fassadendämmung 1999. Fahrradkeller und Trockenraum vorhanden.
-  </p>
-  <div class="card-highlights">
-    <span class="highlight-tag">Balkon</span>
-    <span class="highlight-tag">Keller</span>
-    <span class="highlight-tag">Keine Käuferprovision</span>
-    <span class="highlight-tag">Fernwärme</span>
+  <div class="card-body-inner">
+    <p class="card-type">Etagenwohnung · Neue Vahr</p>
+    <p class="card-address">Müdener Strasse 31</p>
+    <p class="card-city">28329 Bremen</p>
+    <div class="card-divider"></div>
+    <div class="card-stats">
+      <div class="card-stat">
+        <span class="stat-value">57 m²</span>
+        <span class="stat-label">Wohnfläche</span>
+      </div>
+      <div class="card-stat">
+        <span class="stat-value">3</span>
+        <span class="stat-label">Zimmer</span>
+      </div>
+      <div class="card-stat">
+        <span class="stat-value">1955</span>
+        <span class="stat-label">Baujahr</span>
+      </div>
+    </div>
+    <p class="card-desc">
+      Helle Etagenwohnung mit Balkon und eigenem Keller. Fernwärme-Heizung, Fassadendämmung 1999. Fahrradkeller und Trockenraum vorhanden.
+    </p>
+    <div class="card-highlights">
+      <span class="highlight-tag">Balkon</span>
+      <span class="highlight-tag">Keller</span>
+      <span class="highlight-tag">Keine Käuferprovision</span>
+      <span class="highlight-tag">Fernwärme</span>
+    </div>
+    <p class="card-price-label">Kaufpreis</p>
+    <p class="card-price-value">Auf Anfrage</p>
+    <a class="card-cta" href="mailto:navidistanbullu@gmail.com?subject=Anfrage: Müdener Strasse 31">Expose anfordern</a>
   </div>
-  <p class="card-price-label">Kaufpreis</p>
-  <p class="card-price-value">Auf Anfrage</p>
-  <a class="card-cta" href="mailto:navidistanbullu@gmail.com?subject=Anfrage: Müdener Strasse 31">Expose anfordern</a>
 </div>
 
 <!-- ── PROPERTY CARD 3 ───────────────────────────────────────── -->
 <div class="property-card" id="card-3">
-  <p class="card-type">Einfamilienhaus · Vahr</p>
-  <p class="card-address">Bürgermeister Spitta Allee 6</p>
-  <p class="card-city">28329 Bremen</p>
-  <div class="card-divider"></div>
-  <div class="card-stats">
-    <div class="card-stat">
-      <span class="stat-value">~100 m²</span>
-      <span class="stat-label">Wohnfläche</span>
-    </div>
-    <div class="card-stat">
-      <span class="stat-value">5</span>
-      <span class="stat-label">Zimmer</span>
-    </div>
-    <div class="card-stat">
-      <span class="stat-value">2</span>
-      <span class="stat-label">Etagen</span>
-    </div>
+  <div class="card-photo">
+    <img src="Bürgermeister/Front.jpeg" alt="Bürgermeister Spitta Allee 6" />
+    <div class="card-photo-overlay"></div>
   </div>
-  <p class="card-desc">
-    Großzügiges Einfamilienhaus über zwei Etagen mit Garage in ruhiger Lage.
-  </p>
-  <div class="card-highlights">
-    <span class="highlight-tag">Garage</span>
-    <span class="highlight-tag">2 Etagen</span>
-    <span class="highlight-tag">Ruhige Lage</span>
+  <div class="card-body-inner">
+    <p class="card-type">Einfamilienhaus · Vahr</p>
+    <p class="card-address">Bürgermeister Spitta Allee 6</p>
+    <p class="card-city">28329 Bremen</p>
+    <div class="card-divider"></div>
+    <div class="card-stats">
+      <div class="card-stat">
+        <span class="stat-value">~100 m²</span>
+        <span class="stat-label">Wohnfläche</span>
+      </div>
+      <div class="card-stat">
+        <span class="stat-value">5</span>
+        <span class="stat-label">Zimmer</span>
+      </div>
+      <div class="card-stat">
+        <span class="stat-value">2</span>
+        <span class="stat-label">Etagen</span>
+      </div>
+    </div>
+    <p class="card-desc">
+      Großzügiges Einfamilienhaus über zwei Etagen mit Garage in ruhiger Lage.
+    </p>
+    <div class="card-highlights">
+      <span class="highlight-tag">Garage</span>
+      <span class="highlight-tag">2 Etagen</span>
+      <span class="highlight-tag">Ruhige Lage</span>
+    </div>
+    <p class="card-price-label">Kaufpreis</p>
+    <p class="card-price-value">Auf Anfrage</p>
+    <a class="card-cta" href="mailto:navidistanbullu@gmail.com?subject=Anfrage: Bürgermeister Spitta Allee 6">Expose anfordern</a>
   </div>
-  <p class="card-price-label">Kaufpreis</p>
-  <p class="card-price-value">Auf Anfrage</p>
-  <a class="card-cta" href="mailto:navidistanbullu@gmail.com?subject=Anfrage: Bürgermeister Spitta Allee 6">Expose anfordern</a>
 </div>
 
 <!-- ── SCRIPT ────────────────────────────────────────────────── -->
@@ -2003,6 +1963,23 @@
       const target = document.getElementById(e.features[0].properties.targetId);
       if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
+
+    // Building highlight layer — gold extrusion over the active property
+    map.addLayer({
+      id: 'building-highlight',
+      type: 'fill-extrusion',
+      source: 'composite',
+      'source-layer': 'building',
+      filter: ['==', 1, 0], // nothing highlighted initially
+      paint: {
+        'fill-extrusion-color': '#c8a96e',
+        'fill-extrusion-height': ['get', 'height'],
+        'fill-extrusion-base': ['get', 'min_height'],
+        'fill-extrusion-opacity': 0.82,
+        'fill-extrusion-vertical-gradient': true,
+        'fill-extrusion-opacity-transition': { duration: 800 },
+      },
+    });
   });
 
   // ── Scroll-scrubbed camera ────────────────────────────────────
@@ -2017,9 +1994,10 @@
 
   function stepPadding(idx) {
     if (!(idx in PROP_STEPS)) return { left: 0, right: 0, top: 0, bottom: 0 };
+    // card is 340px + 2.5rem (40px) left margin → push map right by ~420px
     return isMobile()
       ? { left: 0, right: 0, top: 0, bottom: Math.round(window.innerHeight * 0.45) }
-      : { left: Math.round(window.innerWidth * 0.5), right: 0, top: 0, bottom: 0 };
+      : { left: Math.min(420, Math.round(window.innerWidth * 0.38)), right: 0, top: 0, bottom: 0 };
   }
 
   function lerp(a, b, t) { return a + (b - a) * t; }
@@ -2132,14 +2110,22 @@
       document.getElementById(PROP_STEPS[idx].id).classList.add('visible');
     }
 
-    // Building panel
+    // Building highlight on map
     const prop = PROP_STEPS[idx];
-    if (prop) {
-      buildingImgEl.src = prop.image;
-      buildingLabel.textContent = prop.label;
-      setTimeout(() => buildingPanel.classList.add('visible'), 100);
-    } else {
-      buildingPanel.classList.remove('visible');
+    if (map.getLayer('building-highlight')) {
+      if (prop) {
+        const d = 0.00028;
+        const [lng, lat] = prop.coords;
+        map.setFilter('building-highlight', ['within', {
+          type: 'Feature',
+          geometry: { type: 'Polygon', coordinates: [[
+            [lng - d, lat - d], [lng + d, lat - d],
+            [lng + d, lat + d], [lng - d, lat + d], [lng - d, lat - d],
+          ]] },
+        }]);
+      } else {
+        map.setFilter('building-highlight', ['==', 1, 0]);
+      }
     }
 
     // Vignette & letterbox: visible only on globe step
