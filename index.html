@@ -1924,7 +1924,7 @@
     // card is 340px + 2.5rem (40px) left margin → push map right by ~420px
     return isMobile()
       ? { left: 0, right: 0, top: 0, bottom: Math.round(window.innerHeight * 0.45) }
-      : { left: Math.min(420, Math.round(window.innerWidth * 0.38)), right: 0, top: 0, bottom: 0 };
+      : { left: Math.min(420, Math.round(window.innerWidth * 0.38)), right: 0, top: 0, bottom: 160 };
   }
 
   function lerp(a, b, t) { return a + (b - a) * t; }
@@ -2043,7 +2043,7 @@
     const prop = PROP_STEPS[idx];
     if (map.getLayer('building-highlight')) {
       if (prop) {
-        const d = 0.00020;   // ~20m — tight enough to catch just this building
+        const d = 0.00055;   // ~60m — covers the full building footprint
         const [lng, lat] = prop.coords;
         map.setFilter('building-highlight', ['within', {
           type: 'Feature',
