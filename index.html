@@ -419,6 +419,48 @@
       height: 14px;
     }
 
+    /* featured pin: tall teardrop above the highlighted building */
+    .map-marker.featured {
+      width: 44px;
+      height: 64px;
+      align-items: center;
+      justify-content: flex-end;
+      padding-bottom: 2px;
+    }
+    .map-marker.featured .marker-ring {
+      position: relative;
+      width: 28px;
+      height: 28px;
+    }
+    .map-marker.featured .marker-dot {
+      width: 14px;
+      height: 14px;
+      box-shadow: 0 0 14px rgba(200,169,110,0.7);
+    }
+    .map-marker.featured .marker-pulse {
+      width: 14px;
+      height: 14px;
+    }
+    /* vertical stem connecting ring to building */
+    .marker-stem {
+      display: none;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--gold), rgba(200,169,110,0));
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      height: 0;
+      transition: height 0.5s cubic-bezier(0.16,1,0.3,1) 0.2s;
+      border-radius: 1px;
+    }
+    .map-marker.featured .marker-stem {
+      display: block;
+    }
+    .map-marker.featured.visible .marker-stem {
+      height: 34px;
+    }
+
     /* ── MARKER TOOLTIP ──────────────────────────────────── */
     .marker-tooltip {
       position: absolute;
@@ -1688,14 +1730,14 @@
     { center: [8, 50],           zoom: 4.5,  pitch: 25, bearing: -5, duration: 3500 },
     // 2: Bremen overview — all pins visible
     { center: [8.882, 53.0755],  zoom: 12.2, pitch: 48, bearing: -8, duration: 4000 },
-    // 3: Bürgermeister Spitta Allee
-    { center: [8.8830, 53.0682], zoom: 16.5, pitch: 62, bearing: 12, duration: 3200 },
+    // 3: Bürgermeister Spitta Allee — close enough to see the building
+    { center: [8.8830, 53.0682], zoom: 18.2, pitch: 55, bearing: 12, duration: 3200 },
   ];
 
   // Mobile overrides
   const CAMERA_MOBILE = {
     2: { zoom: 11.0, pitch: 35 },
-    3: { zoom: 15.8, pitch: 55 },
+    3: { zoom: 17.2, pitch: 48 },
   };
 
   // ── Init map ──────────────────────────────────────────────────
@@ -1762,6 +1804,7 @@
         <div class="marker-ring">
           <div class="marker-pulse"></div>
           <div class="marker-dot"></div>
+          <div class="marker-stem"></div>
         </div>
         <div class="marker-tooltip">${prop.label}</div>
       `;
@@ -1972,9 +2015,11 @@
 
     // Markers
     const showMarkers = idx >= 2;
-    markerEls.forEach((el, i) => {
+    const isFeatured  = idx in PROP_STEPS;
+    markerEls.forEach((el) => {
       el.classList.toggle('visible', showMarkers);
-      el.classList.toggle('overview', OVERVIEW_STEPS.has(idx));
+      el.classList.toggle('overview',  OVERVIEW_STEPS.has(idx));
+      el.classList.toggle('featured',  isFeatured);
     });
 
     // Preview pins (GL layer): visible from step 2 onward
@@ -1998,7 +2043,7 @@
     const prop = PROP_STEPS[idx];
     if (map.getLayer('building-highlight')) {
       if (prop) {
-        const d = 0.00028;
+        const d = 0.00020;   // ~20m — tight enough to catch just this building
         const [lng, lat] = prop.coords;
         map.setFilter('building-highlight', ['within', {
           type: 'Feature',
