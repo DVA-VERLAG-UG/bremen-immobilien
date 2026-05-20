@@ -1701,7 +1701,7 @@
   // ── Init map ──────────────────────────────────────────────────
   const map = new mapboxgl.Map({
     container:   'map',
-    style:       'mapbox://styles/mapbox/dark-v11',
+    style:       'mapbox://styles/mapbox/standard',
     center:      CAMERA[0].center,
     zoom:        CAMERA[0].zoom,
     pitch:       CAMERA[0].pitch,
@@ -1712,6 +1712,10 @@
   });
 
   map.on('style.load', () => {
+    // Standard style: night lighting preset keeps the dark cinematic look
+    map.setConfigProperty('basemap', 'lightPreset', 'night');
+    map.setConfigProperty('basemap', 'show3dObjects', true);
+
     map.setFog({
       'color':          'rgb(6, 10, 26)',
       'high-color':     'rgb(8, 28, 90)',
@@ -1842,9 +1846,11 @@
       if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
 
-    // Building highlight layer — gold extrusion over the active property
+    // Building highlight — gold extrusion over the active property
+    // slot:'top' ensures it renders above Standard style's 3D building mesh
     map.addLayer({
       id: 'building-highlight',
+      slot: 'top',
       type: 'fill-extrusion',
       source: 'composite',
       'source-layer': 'building',
