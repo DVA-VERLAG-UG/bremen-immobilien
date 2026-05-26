@@ -198,23 +198,18 @@
     /* building panel retired — hidden, cards now carry the photo */
     #building-panel { display: none !important; }
 
-    /* ── PROPERTY CARDS (left panel with photo header) ─── */
+    /* ── PROPERTY CARDS (full-photo with overlaid text) ────── */
     .property-card {
       position: fixed;
       left: 2.5rem;
       top: 50%;
       transform: translateY(-50%) translateX(calc(-100% - 3rem));
       width: 420px;
-      background: var(--card-bg);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
+      height: 86vh;
       border: 1px solid rgba(200, 169, 110, 0.22);
       border-radius: 3px;
       z-index: 25;
       overflow: hidden;
-      max-height: 88vh;
-      display: flex;
-      flex-direction: column;
       transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
                   opacity 0.75s ease;
       opacity: 0;
@@ -227,34 +222,110 @@
       pointer-events: auto;
     }
 
-    /* photo header inside card */
+    /* photo fills the whole card */
     .card-photo {
-      position: relative;
-      width: 100%;
-      height: 420px;
-      flex-shrink: 0;
+      position: absolute;
+      inset: 0;
       overflow: hidden;
     }
-    .card-photo img {
+
+    /* ── SLIDER ─────────────────────────────────────────────── */
+    .card-slider {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+    .card-slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.55s ease;
+    }
+    .card-slide.active { opacity: 1; }
+    .card-slide img {
       width: 100%; height: 100%;
       object-fit: cover;
       display: block;
       transform: scale(1.04);
       transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .property-card.visible .card-photo img { transform: scale(1); }
+    .property-card.visible .card-slide.active img { transform: scale(1); }
+
+    /* prev / next arrows — live in top portion of photo */
+    .slider-btn {
+      position: absolute;
+      top: 28%;
+      transform: translateY(-50%);
+      z-index: 6;
+      width: 36px;
+      height: 36px;
+      border: 1px solid rgba(200,169,110,0.45);
+      background: rgba(8,8,14,0.55);
+      backdrop-filter: blur(6px);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.3s ease, background 0.2s ease;
+      pointer-events: auto;
+    }
+    .property-card.visible .slider-btn { opacity: 1; }
+    .slider-btn:hover { background: rgba(200,169,110,0.2); }
+    .slider-btn svg { width: 13px; height: 13px; stroke: #c8a96e; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .slider-btn.prev { left: 12px; }
+    .slider-btn.next { right: 12px; }
+
+    /* dot indicators — sit just above the text overlay */
+    .slider-dots {
+      position: absolute;
+      bottom: 44%;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 6px;
+      z-index: 6;
+    }
+    .slider-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.4);
+      transition: background 0.3s ease, transform 0.3s ease;
+      cursor: pointer;
+    }
+    .slider-dot.active {
+      background: var(--gold);
+      transform: scale(1.3);
+    }
+
+    /* gradient: transparent top → opaque dark at ~55 % */
     .card-photo-overlay {
       position: absolute; inset: 0;
-      background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 55%, rgba(8,8,14,0.7) 100%);
+      background: linear-gradient(to bottom,
+        rgba(8,8,14,0)    0%,
+        rgba(8,8,14,0)    30%,
+        rgba(8,8,14,0.55) 52%,
+        rgba(8,8,14,0.92) 66%,
+        rgba(8,8,14,1)    80%
+      );
+      pointer-events: none;
+      z-index: 4;
     }
 
     .card-address, .card-city { display: none; }
 
-    /* scrollable info below photo */
+    /* text overlaid on gradient at the bottom of the card */
     .card-body-inner {
-      padding: 1.5rem 1.75rem 1.75rem;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      max-height: 56%;
       overflow-y: auto;
-      flex: 1;
+      padding: 1.4rem 1.75rem 1.75rem;
+      z-index: 5;
     }
 
     .card-type {
@@ -419,13 +490,12 @@
       height: 14px;
     }
 
-    /* featured pin: tall teardrop above the highlighted building */
+    /* featured pin — element is exactly 44×44 so anchor:'center' = dot center = coordinate */
     .map-marker.featured {
       width: 44px;
-      height: 64px;
+      height: 44px;
       align-items: center;
-      justify-content: flex-end;
-      padding-bottom: 2px;
+      justify-content: center;
     }
     .map-marker.featured .marker-ring {
       position: relative;
@@ -441,25 +511,22 @@
       width: 14px;
       height: 14px;
     }
-    /* vertical stem connecting ring to building */
+    /* stem hangs below the ring as an overflow decoration — no effect on layout/anchor */
     .marker-stem {
       display: none;
-      width: 2px;
-      background: linear-gradient(to bottom, var(--gold), rgba(200,169,110,0));
       position: absolute;
-      bottom: 0;
+      top: 100%;
       left: 50%;
       transform: translateX(-50%);
-      height: 0;
-      transition: height 0.5s cubic-bezier(0.16,1,0.3,1) 0.2s;
+      width: 2px;
+      height: 36px;
+      background: linear-gradient(to bottom, var(--gold), rgba(200,169,110,0));
       border-radius: 1px;
+      opacity: 0;
+      transition: opacity 0.45s ease 0.25s;
     }
-    .map-marker.featured .marker-stem {
-      display: block;
-    }
-    .map-marker.featured.visible .marker-stem {
-      height: 34px;
-    }
+    .map-marker.featured .marker-stem { display: block; }
+    .map-marker.featured.visible .marker-stem { opacity: 1; }
 
     /* ── MARKER TOOLTIP ──────────────────────────────────── */
     .marker-tooltip {
@@ -1667,7 +1734,22 @@
 <!-- ── PROPERTY CARD ─────────────────────────────────────────── -->
 <div class="property-card" id="card-3">
   <div class="card-photo">
-    <img src="Bürgermeister/Front.jpeg" alt="Bürgermeister Spitta Allee 6" />
+    <div class="card-slider" id="prop-slider">
+      <div class="card-slide active"><img src="Bürgermeister/Front.jpeg" alt="Frontansicht" /></div>
+      <div class="card-slide"><img src="Bürgermeister/Back.jpeg"  alt="Rückseite"    /></div>
+      <div class="card-slide"><img src="Bürgermeister/Full.jpeg"  alt="Gesamtansicht"/></div>
+    </div>
+    <button class="slider-btn prev" aria-label="Vorheriges Bild" onclick="sliderPrev()">
+      <svg viewBox="0 0 13 13"><polyline points="8,2 4,6.5 8,11"/></svg>
+    </button>
+    <button class="slider-btn next" aria-label="Nächstes Bild" onclick="sliderNext()">
+      <svg viewBox="0 0 13 13"><polyline points="5,2 9,6.5 5,11"/></svg>
+    </button>
+    <div class="slider-dots" id="slider-dots">
+      <div class="slider-dot active" onclick="sliderGoto(0)"></div>
+      <div class="slider-dot"        onclick="sliderGoto(1)"></div>
+      <div class="slider-dot"        onclick="sliderGoto(2)"></div>
+    </div>
     <div class="card-photo-overlay"></div>
   </div>
   <div class="card-body-inner">
@@ -1757,6 +1839,8 @@
     // Standard style: night lighting preset keeps the dark cinematic look
     map.setConfigProperty('basemap', 'lightPreset', 'night');
     map.setConfigProperty('basemap', 'show3dObjects', true);
+    map.setConfigProperty('basemap', 'showPointOfInterestLabels', false);
+    map.setConfigProperty('basemap', 'showTransitLabels', false);
 
     map.setFog({
       'color':          'rgb(6, 10, 26)',
@@ -1979,12 +2063,7 @@
 
     mapFadeEl.style.opacity = progress;
 
-    // Panel and card fade out ahead of the overlay so they're gone before it's opaque
-    const panelOpacity = Math.max(0, 1 - progress * 2.2);
-    buildingPanel.style.opacity = panelOpacity;
-    document.querySelectorAll('.property-card').forEach(c => {
-      c.style.opacity = panelOpacity;
-    });
+    buildingPanel.style.opacity = Math.max(0, 1 - progress * 2.2);
   }
 
   window.addEventListener('scroll', () => {
@@ -2014,12 +2093,13 @@
     overviewHint.classList.toggle('visible', OVERVIEW_STEPS.has(idx));
 
     // Markers
-    const showMarkers = idx >= 2;
-    const isFeatured  = idx in PROP_STEPS;
+    const isFeatured = idx in PROP_STEPS;
     markerEls.forEach((el) => {
-      el.classList.toggle('visible', showMarkers);
-      el.classList.toggle('overview',  OVERVIEW_STEPS.has(idx));
-      el.classList.toggle('featured',  isFeatured);
+      // Only show when fully zoomed in — avoids the dot visibly travelling
+      // across the screen during the overview → building camera animation
+      el.classList.toggle('visible',  isFeatured);
+      el.classList.toggle('overview', false);
+      el.classList.toggle('featured', isFeatured);
     });
 
     // Preview pins (GL layer): visible from step 2 onward
@@ -2148,6 +2228,7 @@
     document.getElementById('scroll-hint'),
     document.getElementById('all-props-cta'),
     ...document.querySelectorAll('.map-marker'),
+    ...document.querySelectorAll('.property-card'),
   ];
 
   const contentObserver = new IntersectionObserver((entries) => {
@@ -2192,6 +2273,34 @@
   updateParallax();
 
   // ── Contact form handler ──────────────────────────────────────
+  // ── Property image slider ─────────────────────────────────────
+  (function () {
+    const slides   = document.querySelectorAll('#prop-slider .card-slide');
+    const dots     = document.querySelectorAll('#slider-dots .slider-dot');
+    let current    = 0;
+    let autoTimer  = null;
+
+    function goto(idx) {
+      slides[current].classList.remove('active');
+      dots[current].classList.remove('active');
+      current = (idx + slides.length) % slides.length;
+      slides[current].classList.add('active');
+      dots[current].classList.add('active');
+      resetAuto();
+    }
+
+    function resetAuto() {
+      clearInterval(autoTimer);
+      autoTimer = setInterval(() => goto(current + 1), 4000);
+    }
+
+    window.sliderNext = () => goto(current + 1);
+    window.sliderPrev = () => goto(current - 1);
+    window.sliderGoto = (i) => goto(i);
+
+    resetAuto();
+  })();
+
   function handleContact() {
     const fields = document.querySelectorAll('.contact-field');
     const [name, email, phone, msg] = fields;
