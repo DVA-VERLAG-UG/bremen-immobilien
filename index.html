@@ -1060,6 +1060,215 @@
       color: rgba(255,255,255,0.4);
     }
 
+    /* ─ counter boxes ─ */
+    .cs-counter {
+      padding: 6rem 0 5rem;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .cs-counter-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+
+    .cs-counter-box {
+      padding: 3rem 2.5rem;
+      border: 1px solid rgba(200,169,110,0.12);
+      text-align: center;
+    }
+
+    .counter-num {
+      font-size: clamp(2.8rem, 5vw, 4.5rem);
+      font-weight: 300;
+      color: var(--gold);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      margin-bottom: 0.75rem;
+    }
+
+    .counter-label {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.38);
+    }
+
+    /* ─ triptych ─ */
+    .cs-triptych {
+      padding: 6rem 0 8rem;
+    }
+
+    .cs-triptych-title {
+      font-size: clamp(1.4rem, 2.5vw, 2rem);
+      font-weight: 300;
+      letter-spacing: 0.01em;
+      margin: 0.8rem 0 3.5rem;
+    }
+
+    .cs-triptych-panels {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 2px;
+    }
+
+    .triptych-panel {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.06);
+      padding: 2.8rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .trip-eyebrow {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.58rem;
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 2rem;
+    }
+
+    .trip-info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 0.8rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      gap: 1rem;
+    }
+
+    .trip-key {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.38);
+      white-space: nowrap;
+    }
+
+    .trip-val {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.88);
+      text-align: right;
+    }
+
+    .trip-divider {
+      height: 1px;
+      background: rgba(200,169,110,0.2);
+      margin: 2rem 0;
+    }
+
+    .trip-impression {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.82rem;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.45);
+      flex: 1;
+    }
+
+    .trip-video-wrap {
+      position: relative;
+      flex: 1;
+      min-height: 260px;
+      background: rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.05);
+      overflow: hidden;
+    }
+
+    .trip-video-wrap video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .trip-video-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 1.2rem 1.5rem;
+      background: linear-gradient(to top, rgba(8,8,14,0.9), transparent);
+      z-index: 2;
+    }
+
+    .trip-video-label {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .trip-video-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      z-index: 1;
+    }
+
+    .trip-video-placeholder p {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.22);
+    }
+
+    .trip-locked-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      flex: 1;
+      margin-bottom: 2rem;
+    }
+
+    .trip-locked-item {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding: 0.9rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.38);
+      letter-spacing: 0.02em;
+    }
+
+    .lock-icon {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+      color: rgba(200,169,110,0.45);
+    }
+
+    .trip-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+      margin-top: auto;
+      padding: 0.85rem 1.8rem;
+      border: 1px solid rgba(200,169,110,0.45);
+      color: var(--gold);
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.3s, color 0.3s;
+      align-self: flex-start;
+    }
+    .trip-cta:hover { background: var(--gold); color: var(--dark); }
+    .trip-cta svg { width: 10px; height: 10px; }
+
     /* ─ contact ─ */
     .cs-contact {
       padding: 8rem 0 10rem;
@@ -1193,6 +1402,18 @@
         grid-column: 1 / -1;
       }
 
+      .cs-counter-grid {
+        grid-template-columns: 1fr;
+        gap: 2px;
+      }
+      .cs-counter { padding: 4rem 0 3rem; }
+
+      .cs-triptych-panels {
+        grid-template-columns: 1fr;
+        gap: 2px;
+      }
+      .trip-video-wrap { min-height: 200px; }
+
       .cs-contact {
         grid-template-columns: 1fr;
         gap: 2.5rem;
@@ -1208,11 +1429,6 @@
       /* menu overlay: tighter font on small screens */
       .menu-link { font-size: clamp(1.6rem, 8vw, 2.6rem); }
       .menu-sub-link { font-size: 0.68rem; }
-    }
-
-    @media (max-width: 480px) {
-      .cs-highlights { grid-template-columns: 1fr; }
-      .cs-highlights .highlight-item:last-child { grid-column: auto; }
     }
 
     /* ── KEYFRAMES ───────────────────────────────────────── */
@@ -1448,15 +1664,6 @@
   <div style="height: 50vh; pointer-events: none;"></div>
 </div>
 
-<!-- ── ALLE OBJEKTE CTA ─────────────────────────────────────────── -->
-<div id="all-props-cta">
-  <a class="cta-all-link" href="immobilien.html">
-    Alle 7 Objekte ansehen
-    <svg viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M1.5 5.5H9.5M6 2L9.5 5.5L6 9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </a>
-</div>
 
 <!-- ── CONTENT SECTION ──────────────────────────────────────────── -->
 <div id="content-section">
@@ -1465,198 +1672,123 @@
   <section class="cs-intro">
     <div class="cs-container">
       <p class="cs-eyebrow reveal">Immobilien in Bremen</p>
-      <h2 class="cs-h2 reveal reveal-delay-1">Unsere Objekte.<br>Eine Stadt.</h2>
+      <h2 class="cs-h2 reveal reveal-delay-1">Portfolio.<br>Eine Stadt.</h2>
       <div class="cs-gold-line reveal reveal-delay-2"></div>
       <p class="cs-lead reveal reveal-delay-3">
-        Wir bieten sorgfältig ausgewählte Immobilien in Bremen —
-        gewerbliche Einheiten in bester Lage sowie Wohnobjekte mit
-        hervorragendem Preis-Leistungs-Verhältnis. Weitere Objekte folgen in Kürze.
+        Wir erwerben, entwickeln und veräußern Wohn- und Gewerbeimmobilien in Bremen —
+        mit Sorgfalt, Qualitätsanspruch und langfristiger Perspektive.
       </p>
     </div>
   </section>
 
-  <!-- Properties grid -->
-  <section class="cs-properties">
+  <!-- Counter -->
+  <section class="cs-counter">
     <div class="cs-container">
-      <p class="cs-section-label reveal">Die Objekte</p>
-      <div class="cs-prop-grid">
-
-        <!-- Property 1 -->
-        <div class="cs-prop-card reveal">
-          <div class="prop-img-wrap" data-parallax>
-            <img src="Schwachhausen/Front.png" alt="Schwachhauser Heerstraße 179" />
-          </div>
-          <div class="prop-overlay"></div>
-          <div class="prop-info">
-            <p class="prop-tag">Gewerbeimmobilie</p>
-            <p class="prop-name">Schwachhauser Heerstraße 179</p>
-            <p class="prop-meta">28211 Bremen · Schwachhausen</p>
-            <div class="prop-specs">
-              <div class="prop-spec">
-                <span class="prop-spec-val">152 m²</span>
-                <span class="prop-spec-key">Fläche</span>
-              </div>
-              <div class="prop-spec">
-                <span class="prop-spec-val">6</span>
-                <span class="prop-spec-key">Büroräume</span>
-              </div>
-              <div class="prop-spec">
-                <span class="prop-spec-val">2023</span>
-                <span class="prop-spec-key">Renoviert</span>
-              </div>
-            </div>
-            <a class="prop-cta" href="mailto:navidistanbullu@gmail.com?subject=Anfrage: Schwachhauser Heerstraße 179">Expose anfordern</a>
-          </div>
+      <div class="cs-counter-grid">
+        <div class="cs-counter-box reveal">
+          <p class="counter-num">2</p>
+          <p class="counter-label">Immobilien im Ankauf</p>
         </div>
-
-        <!-- Property 2 -->
-        <div class="cs-prop-card reveal reveal-delay-2">
-          <div class="prop-img-wrap" data-parallax>
-            <img src="Müdener/Front.png" alt="Müdener Strasse 31" />
-          </div>
-          <div class="prop-overlay"></div>
-          <div class="prop-info">
-            <p class="prop-tag">Etagenwohnung</p>
-            <p class="prop-name">Müdener Strasse 31</p>
-            <p class="prop-meta">28329 Bremen · Neue Vahr</p>
-            <div class="prop-specs">
-              <div class="prop-spec">
-                <span class="prop-spec-val">57 m²</span>
-                <span class="prop-spec-key">Wohnfläche</span>
-              </div>
-              <div class="prop-spec">
-                <span class="prop-spec-val">3</span>
-                <span class="prop-spec-key">Zimmer</span>
-              </div>
-              <div class="prop-spec">
-                <span class="prop-spec-val">Keine</span>
-                <span class="prop-spec-key">Käuferprovision</span>
-              </div>
-            </div>
-            <a class="prop-cta" href="mailto:navidistanbullu@gmail.com?subject=Anfrage: Müdener Strasse 31">Expose anfordern</a>
-          </div>
+        <div class="cs-counter-box reveal reveal-delay-1">
+          <p class="counter-num">1</p>
+          <p class="counter-label">Immobilien in Entwicklung</p>
         </div>
-
-        <!-- Property 3 -->
-        <div class="cs-prop-card reveal reveal-delay-3">
-          <div class="prop-img-wrap" data-parallax>
-            <img src="Bürgermeister/Front.jpeg" alt="Bürgermeister Spitta Allee 6" />
-          </div>
-          <div class="prop-overlay"></div>
-          <div class="prop-info">
-            <p class="prop-tag">Einfamilienhaus</p>
-            <p class="prop-name">Bürgermeister Spitta Allee 6</p>
-            <p class="prop-meta">28329 Bremen · Vahr</p>
-            <div class="prop-specs">
-              <div class="prop-spec">
-                <span class="prop-spec-val">~100 m²</span>
-                <span class="prop-spec-key">Wohnfläche</span>
-              </div>
-              <div class="prop-spec">
-                <span class="prop-spec-val">5</span>
-                <span class="prop-spec-key">Zimmer</span>
-              </div>
-              <div class="prop-spec">
-                <span class="prop-spec-val">Garage</span>
-                <span class="prop-spec-key">Stellplatz</span>
-              </div>
-            </div>
-            <a class="prop-cta" href="mailto:navidistanbullu@gmail.com?subject=Anfrage: Bürgermeister Spitta Allee 6">Expose anfordern</a>
-          </div>
+        <div class="cs-counter-box reveal reveal-delay-2">
+          <p class="counter-num">—</p>
+          <p class="counter-label">Immobilien im Verkauf</p>
         </div>
-
-        <!-- Preview 1 – Wilseder Berg -->
-        <div id="preview-card-1" class="cs-prop-card coming-soon reveal">
-          <div class="prop-img-placeholder">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-          </div>
-          <div class="prop-info">
-            <span class="prop-soon-badge">Demnächst</span>
-            <p class="prop-tag">Wohnobjekt</p>
-            <p class="prop-name">Wilseder Berg Str 7</p>
-            <p class="prop-meta">28329 Bremen</p>
-            <div class="prop-specs">
-              <div class="prop-spec"><span class="prop-spec-val">–</span><span class="prop-spec-key">Fläche</span></div>
-              <div class="prop-spec"><span class="prop-spec-val">–</span><span class="prop-spec-key">Zimmer</span></div>
-            </div>
-            <a class="prop-cta">Bald verfügbar</a>
-          </div>
-        </div>
-
-        <!-- Preview 2 – Visselhöverder -->
-        <div id="preview-card-2" class="cs-prop-card coming-soon reveal reveal-delay-2">
-          <div class="prop-img-placeholder">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-          </div>
-          <div class="prop-info">
-            <span class="prop-soon-badge">Demnächst</span>
-            <p class="prop-tag">Wohnobjekt</p>
-            <p class="prop-name">Visselhöverder Str 10–18</p>
-            <p class="prop-meta">28329 Bremen</p>
-            <div class="prop-specs">
-              <div class="prop-spec"><span class="prop-spec-val">–</span><span class="prop-spec-key">Fläche</span></div>
-              <div class="prop-spec"><span class="prop-spec-val">–</span><span class="prop-spec-key">Einheiten</span></div>
-            </div>
-            <a class="prop-cta">Bald verfügbar</a>
-          </div>
-        </div>
-
-        <!-- Preview 3 – Adam Stegerwald -->
-        <div id="preview-card-3" class="cs-prop-card coming-soon reveal reveal-delay-3">
-          <div class="prop-img-placeholder">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-          </div>
-          <div class="prop-info">
-            <span class="prop-soon-badge">Demnächst</span>
-            <p class="prop-tag">Wohnobjekt</p>
-            <p class="prop-name">Adam Stegerwald 34</p>
-            <p class="prop-meta">28329 Bremen</p>
-            <div class="prop-specs">
-              <div class="prop-spec"><span class="prop-spec-val">–</span><span class="prop-spec-key">Fläche</span></div>
-              <div class="prop-spec"><span class="prop-spec-val">–</span><span class="prop-spec-key">Zimmer</span></div>
-            </div>
-            <a class="prop-cta">Bald verfügbar</a>
-          </div>
-        </div>
-
-        <!-- Preview 4 – Ferdinand Lassalle -->
-        <div id="preview-card-4" class="cs-prop-card coming-soon reveal">
-          <div class="prop-img-placeholder">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-          </div>
-          <div class="prop-info">
-            <span class="prop-soon-badge">Demnächst</span>
-            <p class="prop-tag">Wohnobjekt</p>
-            <p class="prop-name">Ferdinand Lassalle Str 18</p>
-            <p class="prop-meta">28329 Bremen</p>
-            <div class="prop-specs">
-              <div class="prop-spec"><span class="prop-spec-val">–</span><span class="prop-spec-key">Fläche</span></div>
-              <div class="prop-spec"><span class="prop-spec-val">–</span><span class="prop-spec-key">Zimmer</span></div>
-            </div>
-            <a class="prop-cta">Bald verfügbar</a>
-          </div>
-        </div>
-
       </div>
     </div>
   </section>
 
-  <!-- Highlights strip -->
-  <section>
+  <!-- Triptych: Bürgermeister Spitta Allee 6 -->
+  <section class="cs-triptych">
     <div class="cs-container">
-      <div class="cs-highlights">
-        <div class="highlight-item reveal">
-          <p class="highlight-num">7</p>
-          <p class="highlight-desc">Objekte</p>
+      <p class="cs-section-label reveal">Aktuelle Entwicklung</p>
+      <h3 class="cs-triptych-title reveal reveal-delay-1">Bürgermeister Spitta Allee 6</h3>
+    </div>
+    <div class="cs-container">
+      <div class="cs-triptych-panels">
+
+        <!-- Left: Public info -->
+        <div class="triptych-panel triptych-left reveal">
+          <p class="trip-eyebrow">Öffentliche Informationen</p>
+          <div class="trip-info-row">
+            <span class="trip-key">Stadtteil / Lage</span>
+            <span class="trip-val">Vahr, Bremen</span>
+          </div>
+          <div class="trip-info-row">
+            <span class="trip-key">Größe</span>
+            <span class="trip-val">~100 m²</span>
+          </div>
+          <div class="trip-info-row">
+            <span class="trip-key">Zimmer</span>
+            <span class="trip-val">5</span>
+          </div>
+          <div class="trip-info-row">
+            <span class="trip-key">Stellplatz</span>
+            <span class="trip-val">Garage</span>
+          </div>
+          <div class="trip-info-row">
+            <span class="trip-key">Aktueller Stand</span>
+            <span class="trip-val">Renovierung läuft</span>
+          </div>
+          <div class="trip-divider"></div>
+          <p class="trip-impression">Ein ruhig gelegenes Einfamilienhaus in der Vahr — solide Bausubstanz, im Begriff mit Sorgfalt neu zu werden. Hochwertige Sanierung, keine Käuferprovision.</p>
         </div>
-        <div class="highlight-item reveal reveal-delay-2">
-          <p class="highlight-num">28329</p>
-          <p class="highlight-desc">Bremen</p>
+
+        <!-- Middle: Video teaser -->
+        <div class="triptych-panel triptych-middle reveal reveal-delay-1">
+          <p class="trip-eyebrow">Einblick</p>
+          <div class="trip-video-wrap">
+            <video autoplay loop muted playsinline>
+              <!-- <source src="Bürgermeister/teaser.mp4" type="video/mp4"> -->
+            </video>
+            <div class="trip-video-overlay">
+              <span class="trip-video-label">Renovierung im Gang</span>
+            </div>
+            <div class="trip-video-placeholder">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(200,169,110,0.5)" stroke-width="1.2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              <p>Video folgt in Kürze</p>
+            </div>
+          </div>
         </div>
-        <div class="highlight-item reveal reveal-delay-3">
-          <p class="highlight-num">0</p>
-          <p class="highlight-desc">Käuferprovision</p>
+
+        <!-- Right: Locked Objektakte -->
+        <div class="triptych-panel triptych-right reveal reveal-delay-2">
+          <p class="trip-eyebrow">Objektakte</p>
+          <ul class="trip-locked-list">
+            <li class="trip-locked-item">
+              <svg class="lock-icon" viewBox="0 0 16 16" fill="none"><rect x="3" y="7" width="10" height="8" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5.5 7V5.5a2.5 2.5 0 115 0V7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+              Genaue Adresse &amp; Lageplan
+            </li>
+            <li class="trip-locked-item">
+              <svg class="lock-icon" viewBox="0 0 16 16" fill="none"><rect x="3" y="7" width="10" height="8" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5.5 7V5.5a2.5 2.5 0 115 0V7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+              Vorher-Bilder (vollständig)
+            </li>
+            <li class="trip-locked-item">
+              <svg class="lock-icon" viewBox="0 0 16 16" fill="none"><rect x="3" y="7" width="10" height="8" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5.5 7V5.5a2.5 2.5 0 115 0V7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+              Virtuelle Raumtour
+            </li>
+            <li class="trip-locked-item">
+              <svg class="lock-icon" viewBox="0 0 16 16" fill="none"><rect x="3" y="7" width="10" height="8" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5.5 7V5.5a2.5 2.5 0 115 0V7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+              Grundriss &amp; Maße
+            </li>
+            <li class="trip-locked-item">
+              <svg class="lock-icon" viewBox="0 0 16 16" fill="none"><rect x="3" y="7" width="10" height="8" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5.5 7V5.5a2.5 2.5 0 115 0V7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+              Kaufpreis &amp; Konditionen
+            </li>
+            <li class="trip-locked-item">
+              <svg class="lock-icon" viewBox="0 0 16 16" fill="none"><rect x="3" y="7" width="10" height="8" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5.5 7V5.5a2.5 2.5 0 115 0V7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+              Energieausweis
+            </li>
+          </ul>
+          <a class="trip-cta" href="immobilien.html" target="_blank">
+            Objektakte anfordern
+            <svg viewBox="0 0 11 11" fill="none"><path d="M1.5 5.5H9.5M6 2L9.5 5.5L6 9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
         </div>
+
       </div>
     </div>
   </section>
