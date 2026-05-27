@@ -828,6 +828,23 @@
       z-index: 30;
       background: var(--dark);
       isolation: isolate;
+      overflow-x: hidden;
+    }
+
+    /* Sticky canvas wrapper — height:0 so it takes no layout space,
+       sticky so the canvas always sits at the top of the viewport
+       for the full scroll distance of the content section */
+    #cs-canvas-wrap {
+      position: sticky;
+      top: 0;
+      height: 0;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    #cs-canvas {
+      display: block;
+      /* sized by JS to match viewport */
     }
 
     /* ── ANIMATED BG GLOWS ──────────────────────────────────── */
@@ -835,60 +852,60 @@
       position: absolute;
       inset: 0;
       pointer-events: none;
-      z-index: 0;
+      z-index: -1;
       overflow: hidden;
     }
 
     .cs-glow {
       position: absolute;
       border-radius: 50%;
-      filter: blur(110px);
+      filter: blur(100px);
     }
 
     .cs-glow-1 {
-      width: 700px; height: 700px;
-      background: radial-gradient(circle, rgba(200,169,110,0.07) 0%, transparent 70%);
-      top: 0; left: -12%;
-      animation: glowDrift1 26s ease-in-out infinite alternate;
+      width: 800px; height: 800px;
+      background: radial-gradient(circle, rgba(200,169,110,0.11) 0%, transparent 65%);
+      top: 0; left: -15%;
+      animation: glowDrift1 18s ease-in-out infinite alternate;
     }
 
     .cs-glow-2 {
-      width: 600px; height: 500px;
-      background: radial-gradient(circle, rgba(18,18,60,0.22) 0%, transparent 70%);
-      top: 15%; right: -10%;
-      animation: glowDrift2 32s ease-in-out infinite alternate;
+      width: 700px; height: 600px;
+      background: radial-gradient(circle, rgba(14,14,55,0.28) 0%, transparent 65%);
+      top: 12%; right: -12%;
+      animation: glowDrift2 22s ease-in-out infinite alternate;
     }
 
     .cs-glow-3 {
-      width: 500px; height: 500px;
-      background: radial-gradient(circle, rgba(200,169,110,0.05) 0%, transparent 70%);
-      bottom: 8%; left: 35%;
-      animation: glowDrift3 22s ease-in-out infinite alternate;
+      width: 550px; height: 550px;
+      background: radial-gradient(circle, rgba(200,169,110,0.08) 0%, transparent 65%);
+      bottom: 10%; left: 30%;
+      animation: glowDrift3 15s ease-in-out infinite alternate;
     }
 
     .cs-glow-4 {
-      width: 400px; height: 400px;
-      background: radial-gradient(circle, rgba(10,10,50,0.18) 0%, transparent 70%);
-      bottom: 25%; left: 5%;
-      animation: glowDrift1 28s ease-in-out 6s infinite alternate;
+      width: 450px; height: 450px;
+      background: radial-gradient(circle, rgba(8,8,45,0.22) 0%, transparent 65%);
+      bottom: 30%; left: 3%;
+      animation: glowDrift1 20s ease-in-out 4s infinite alternate;
     }
 
     @keyframes glowDrift1 {
-      0%   { transform: translate(0, 0)   scale(1);    }
-      50%  { transform: translate(80px, -50px) scale(1.12); }
-      100% { transform: translate(30px,  70px) scale(0.95); }
+      0%   { transform: translate(0,    0)    scale(1);    }
+      40%  { transform: translate(90px,-60px) scale(1.14); }
+      100% { transform: translate(35px, 80px) scale(0.93); }
     }
 
     @keyframes glowDrift2 {
-      0%   { transform: translate(0, 0)   scale(1);    }
-      50%  { transform: translate(-60px, 40px) scale(1.08); }
-      100% { transform: translate(50px, -60px) scale(1.04); }
+      0%   { transform: translate(0,     0)    scale(1);    }
+      50%  { transform: translate(-70px, 50px) scale(1.1);  }
+      100% { transform: translate(55px, -70px) scale(1.05); }
     }
 
     @keyframes glowDrift3 {
-      0%   { transform: translate(0, 0)   scale(1);    }
-      50%  { transform: translate(-50px, -40px) scale(1.1); }
-      100% { transform: translate(60px,  30px) scale(0.92); }
+      0%   { transform: translate(0,     0)    scale(1);    }
+      45%  { transform: translate(-55px,-45px) scale(1.12); }
+      100% { transform: translate(65px,  35px) scale(0.9);  }
     }
 
     /* ── MAP → CONTENT FADE OVERLAY ────────────────────────── */
@@ -1835,7 +1852,12 @@
 <!-- ── CONTENT SECTION ──────────────────────────────────────────── -->
 <div id="content-section">
 
-  <!-- Animated background glows -->
+  <!-- Sticky canvas: particles animate in the visible viewport area -->
+  <div id="cs-canvas-wrap" aria-hidden="true">
+    <canvas id="cs-canvas"></canvas>
+  </div>
+
+  <!-- Drifting glow orbs (CSS animated, position absolute) -->
   <div id="cs-bg" aria-hidden="true">
     <div class="cs-glow cs-glow-1"></div>
     <div class="cs-glow cs-glow-2"></div>
@@ -2647,6 +2669,82 @@
     );
     window.location.href = `mailto:navidistanbullu@gmail.com?subject=${subject}&body=${body}`;
   }
+
+  // ── Content-section particle canvas ──────────────────────────
+  (function () {
+    const canvas  = document.getElementById('cs-canvas');
+    if (!canvas) return;
+    const ctx     = canvas.getContext('2d');
+    const section = document.getElementById('content-section');
+
+    let W, H;
+
+    function resize() {
+      W = canvas.width  = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize, { passive: true });
+    resize();
+
+    // Particle pool
+    const COUNT = 110;
+    const pts   = [];
+
+    function makeParticle(scatter) {
+      return {
+        x:      Math.random() * W,
+        y:      scatter ? Math.random() * H : H + 8,
+        r:      Math.random() * 1.3 + 0.3,
+        vy:     -(Math.random() * 0.28 + 0.07),
+        vx:     (Math.random() - 0.5) * 0.18,
+        alpha:  Math.random() * 0.3 + 0.04,
+        gold:   Math.random() > 0.42,
+        phase:  Math.random() * Math.PI * 2,
+        pSpeed: Math.random() * 0.009 + 0.003,
+      };
+    }
+
+    for (let i = 0; i < COUNT; i++) pts.push(makeParticle(true));
+
+    // Only run while content section is in view
+    let live = false, raf = null;
+
+    const io = new IntersectionObserver(entries => {
+      live = entries[0].isIntersecting;
+      if (live && !raf) raf = requestAnimationFrame(tick);
+    }, { threshold: 0 });
+    io.observe(section);
+
+    function tick() {
+      raf = null;
+      if (!live) return;
+
+      ctx.clearRect(0, 0, W, H);
+
+      for (let i = 0; i < pts.length; i++) {
+        const p = pts[i];
+
+        p.phase += p.pSpeed;
+        p.x     += p.vx + Math.sin(p.phase * 0.65) * 0.09;
+        p.y     += p.vy;
+
+        if (p.y < -8) {
+          pts[i] = makeParticle(false);
+          continue;
+        }
+
+        const a = p.alpha * (0.65 + 0.35 * Math.sin(p.phase));
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, 6.2832);
+        ctx.fillStyle = p.gold
+          ? `rgba(200,169,110,${a.toFixed(3)})`
+          : `rgba(220,220,240,${(a * 0.35).toFixed(3)})`;
+        ctx.fill();
+      }
+
+      raf = requestAnimationFrame(tick);
+    }
+  })();
 </script>
 </body>
 </html>
