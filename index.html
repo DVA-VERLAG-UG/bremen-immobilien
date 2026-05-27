@@ -724,6 +724,32 @@
     .menu-item:nth-child(1) .menu-link { transition-delay: 0.05s; }
     .menu-item:nth-child(2) .menu-link { transition-delay: 0.12s; }
     .menu-item:nth-child(3) .menu-link { transition-delay: 0.19s; }
+    .menu-item:nth-child(4) .menu-link { transition-delay: 0.26s; }
+    .menu-item:nth-child(5) .menu-link { transition-delay: 0.33s; }
+
+    /* explicit close button inside overlay */
+    .menu-close-btn {
+      position: fixed;
+      top: 1.4rem;
+      right: 2.5rem;
+      z-index: 160;
+      width: 44px; height: 44px;
+      background: none;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.5);
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.25s, color 0.25s;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease, border-color 0.25s, color 0.25s;
+    }
+    #menu-overlay.open ~ * .menu-close-btn,
+    #menu-overlay.open .menu-close-btn { opacity: 1; pointer-events: auto; }
+    .menu-close-btn:hover { border-color: var(--gold); color: var(--gold); }
 
     .menu-link::after {
       content: '';
@@ -801,6 +827,68 @@
       position: relative;
       z-index: 30;
       background: var(--dark);
+      isolation: isolate;
+    }
+
+    /* ── ANIMATED BG GLOWS ──────────────────────────────────── */
+    #cs-bg {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .cs-glow {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(110px);
+    }
+
+    .cs-glow-1 {
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(200,169,110,0.07) 0%, transparent 70%);
+      top: 0; left: -12%;
+      animation: glowDrift1 26s ease-in-out infinite alternate;
+    }
+
+    .cs-glow-2 {
+      width: 600px; height: 500px;
+      background: radial-gradient(circle, rgba(18,18,60,0.22) 0%, transparent 70%);
+      top: 15%; right: -10%;
+      animation: glowDrift2 32s ease-in-out infinite alternate;
+    }
+
+    .cs-glow-3 {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(200,169,110,0.05) 0%, transparent 70%);
+      bottom: 8%; left: 35%;
+      animation: glowDrift3 22s ease-in-out infinite alternate;
+    }
+
+    .cs-glow-4 {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(10,10,50,0.18) 0%, transparent 70%);
+      bottom: 25%; left: 5%;
+      animation: glowDrift1 28s ease-in-out 6s infinite alternate;
+    }
+
+    @keyframes glowDrift1 {
+      0%   { transform: translate(0, 0)   scale(1);    }
+      50%  { transform: translate(80px, -50px) scale(1.12); }
+      100% { transform: translate(30px,  70px) scale(0.95); }
+    }
+
+    @keyframes glowDrift2 {
+      0%   { transform: translate(0, 0)   scale(1);    }
+      50%  { transform: translate(-60px, 40px) scale(1.08); }
+      100% { transform: translate(50px, -60px) scale(1.04); }
+    }
+
+    @keyframes glowDrift3 {
+      0%   { transform: translate(0, 0)   scale(1);    }
+      50%  { transform: translate(-50px, -40px) scale(1.1); }
+      100% { transform: translate(60px,  30px) scale(0.92); }
     }
 
     /* ── MAP → CONTENT FADE OVERLAY ────────────────────────── */
@@ -1665,15 +1753,21 @@
 
 <!-- ── MENU OVERLAY ──────────────────────────────────────────── -->
 <div id="menu-overlay" role="dialog" aria-modal="true">
+  <button class="menu-close-btn" id="menu-close-btn" aria-label="Menü schließen">✕</button>
   <div class="menu-inner">
     <img class="menu-logo" src="Logos/Kuscu.jpeg" alt="Kuscu Immobilien" />
     <ul class="menu-nav">
+
+      <!-- Startseite -->
+      <li class="menu-item">
+        <button class="menu-link" onclick="closeMenu(); window.scrollTo({top:0,behavior:'smooth'})">Startseite</button>
+      </li>
 
       <!-- Objekte with submenu -->
       <li class="menu-item">
         <button class="menu-link" onclick="toggleSub('sub-objekte')">Objekte</button>
         <ul class="menu-sub" id="sub-objekte">
-          <li><button class="menu-sub-link" onclick="navTo('step-3')">Bürgermeister Spitta Allee 6</button></li>
+          <li><button class="menu-sub-link" onclick="navTo('step-3')">Spitta Allee · Vahr</button></li>
         </ul>
       </li>
 
@@ -1740,6 +1834,14 @@
 
 <!-- ── CONTENT SECTION ──────────────────────────────────────────── -->
 <div id="content-section">
+
+  <!-- Animated background glows -->
+  <div id="cs-bg" aria-hidden="true">
+    <div class="cs-glow cs-glow-1"></div>
+    <div class="cs-glow cs-glow-2"></div>
+    <div class="cs-glow cs-glow-3"></div>
+    <div class="cs-glow cs-glow-4"></div>
+  </div>
 
   <!-- Intro -->
   <section class="cs-intro">
@@ -2423,6 +2525,14 @@
   // ── Burger menu ───────────────────────────────────────────────
   const menuBtn     = document.getElementById('menu-btn');
   const menuOverlay = document.getElementById('menu-overlay');
+  const menuCloseBtn = document.getElementById('menu-close-btn');
+
+  function closeMenu() {
+    menuOverlay.classList.remove('open');
+    menuBtn.classList.remove('open');
+    menuBtn.setAttribute('aria-label', 'Menü öffnen');
+    document.body.style.overflow = '';
+  }
 
   menuBtn.addEventListener('click', () => {
     const isOpen = menuOverlay.classList.toggle('open');
@@ -2431,13 +2541,10 @@
     document.body.style.overflow = isOpen ? 'hidden' : '';
   });
 
-  // close on Escape
+  menuCloseBtn.addEventListener('click', closeMenu);
+
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && menuOverlay.classList.contains('open')) {
-      menuOverlay.classList.remove('open');
-      menuBtn.classList.remove('open');
-      document.body.style.overflow = '';
-    }
+    if (e.key === 'Escape' && menuOverlay.classList.contains('open')) closeMenu();
   });
 
   function toggleSub(id) {
@@ -2446,9 +2553,7 @@
   }
 
   function navTo(id) {
-    menuOverlay.classList.remove('open');
-    menuBtn.classList.remove('open');
-    document.body.style.overflow = '';
+    closeMenu();
     document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
   }
 
