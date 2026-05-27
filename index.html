@@ -1269,6 +1269,73 @@
     .trip-cta:hover { background: var(--gold); color: var(--dark); }
     .trip-cta svg { width: 10px; height: 10px; }
 
+    .trip-cta-ghost {
+      border-color: rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.45);
+      margin-top: 0.6rem;
+    }
+    .trip-cta-ghost:hover { background: rgba(255,255,255,0.08); color: #fff; border-color: rgba(255,255,255,0.35); }
+
+    .trip-cta-group {
+      display: flex;
+      flex-direction: column;
+      margin-top: auto;
+    }
+
+    /* ─ referral strip ─ */
+    .cs-referral {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 6rem 0;
+    }
+
+    .cs-referral-inner {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 4rem;
+      align-items: center;
+      border: 1px solid rgba(200,169,110,0.18);
+      padding: 3.5rem 4rem;
+      background: rgba(200,169,110,0.03);
+    }
+
+    .referral-h3 {
+      font-size: clamp(1.2rem, 2.2vw, 1.65rem);
+      font-weight: 300;
+      line-height: 1.35;
+      margin: 0.7rem 0 1rem;
+    }
+
+    .referral-body {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.82rem;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.45);
+      max-width: 480px;
+    }
+
+    .referral-body strong {
+      color: var(--gold);
+      font-weight: 400;
+    }
+
+    .referral-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+      white-space: nowrap;
+      padding: 1rem 2.2rem;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.3s, color 0.3s;
+    }
+    .referral-cta:hover { background: var(--gold); color: var(--dark); }
+    .referral-cta svg { width: 10px; height: 10px; flex-shrink: 0; }
+
     /* ─ contact ─ */
     .cs-contact {
       padding: 8rem 0 10rem;
@@ -1413,6 +1480,12 @@
         gap: 2px;
       }
       .trip-video-wrap { min-height: 200px; }
+
+      .cs-referral-inner {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+        padding: 2.5rem 1.75rem;
+      }
 
       .cs-contact {
         grid-template-columns: 1fr;
@@ -1783,12 +1856,39 @@
               Energieausweis
             </li>
           </ul>
-          <a class="trip-cta" href="immobilien.html" target="_blank">
-            Objektakte anfordern
-            <svg viewBox="0 0 11 11" fill="none"><path d="M1.5 5.5H9.5M6 2L9.5 5.5L6 9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
+          <div class="trip-cta-group">
+            <a class="trip-cta" href="immobilien.html" target="_blank">
+              Objektakte anschauen
+              <svg viewBox="0 0 11 11" fill="none"><path d="M1.5 5.5H9.5M6 2L9.5 5.5L6 9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+            <a class="trip-cta trip-cta-ghost" href="immobilien.html" target="_blank">
+              Alle Immobilien anschauen
+              <svg viewBox="0 0 11 11" fill="none"><path d="M1.5 5.5H9.5M6 2L9.5 5.5L6 9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
         </div>
 
+      </div>
+    </div>
+  </section>
+
+  <!-- Referral / Tipgeber -->
+  <section class="cs-referral">
+    <div class="cs-container">
+      <div class="cs-referral-inner reveal">
+        <div class="referral-text">
+          <p class="cs-eyebrow">Tipgeber-Bonus</p>
+          <h3 class="referral-h3">Sie möchten verkaufen —<br>oder kennen jemanden, der es möchte?</h3>
+          <p class="referral-body">
+            Sprechen Sie uns an. Bei einem erfolgreichen Abschluss zahlen wir Ihnen bis zu
+            <strong>1.000 €</strong> Tipgeber-Bonus — ganz gleich, ob Sie selbst verkaufen
+            oder uns einen Kontakt vermitteln.
+          </p>
+        </div>
+        <a class="referral-cta" href="mailto:navidistanbullu@gmail.com?subject=Tipgeber-Bonus">
+          Jetzt melden
+          <svg viewBox="0 0 11 11" fill="none"><path d="M1.5 5.5H9.5M6 2L9.5 5.5L6 9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
       </div>
     </div>
   </section>
