@@ -916,6 +916,7 @@
       background: var(--dark);
       opacity: 0;
       pointer-events: none;
+      will-change: opacity;
     }
 
     /* longer gradient so the fade-in lands on an already-dark base */
@@ -1752,6 +1753,163 @@
       letter-spacing: 0.38em !important;
       color: rgba(255,255,255,0.38) !important;
     }
+
+    /* ══ PART 2 — ENHANCED VISUAL SYSTEM ═══════════════════════ */
+
+    .cs-glow-5 {
+      width: 700px; height: 500px;
+      background: radial-gradient(circle, rgba(30,18,90,0.42) 0%, transparent 65%);
+      top: 38%; right: -5%;
+      animation: glowDrift2 28s ease-in-out 9s infinite alternate;
+    }
+    .cs-glow-6 {
+      width: 480px; height: 480px;
+      background: radial-gradient(circle, rgba(200,169,110,0.07) 0%, transparent 65%);
+      bottom: 18%; right: 12%;
+      animation: glowDrift3 21s ease-in-out 4s infinite alternate;
+    }
+    .cs-glow-7 {
+      width: 1100px; height: 750px;
+      background: radial-gradient(ellipse, rgba(10,7,42,0.52) 0%, transparent 55%);
+      top: 50%; left: 42%;
+      transform: translateX(-50%);
+      animation: glowDrift1 32s ease-in-out 8s infinite alternate;
+    }
+
+    #cs-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(200,169,110,0.024) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(200,169,110,0.024) 1px, transparent 1px);
+      background-size: 88px 88px;
+      pointer-events: none; z-index: 0;
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%);
+      mask-image: linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%);
+    }
+
+    .cs-ray {
+      position: absolute; width: 1px; pointer-events: none; z-index: 0; opacity: 0;
+      background: linear-gradient(to bottom, transparent 0%, rgba(200,169,110,0.38) 30%, rgba(200,169,110,0.38) 70%, transparent 100%);
+    }
+    .cs-ray-1 { height: 36vh; top:  6%; left:  16%; transform: rotate(-24deg); animation: rayPulse  9s ease-in-out 1.5s infinite; }
+    .cs-ray-2 { height: 30vh; top: 28%; right: 25%; transform: rotate( 17deg); animation: rayPulse 12s ease-in-out   5s infinite; }
+    .cs-ray-3 { height: 44vh; bottom: 12%; left: 54%; transform: rotate(-9deg); animation: rayPulse 15s ease-in-out   8s infinite; }
+    @keyframes rayPulse { 0%, 100% { opacity: 0; } 30%, 70% { opacity: 1; } }
+
+    .cs-watermark {
+      position: absolute; top: 2rem; left: 50%; transform: translateX(-50%);
+      font-family: 'Georgia', serif;
+      font-size: clamp(7rem, 22vw, 18rem); font-weight: 700;
+      color: transparent; -webkit-text-stroke: 1px rgba(200,169,110,0.05);
+      letter-spacing: 0.2em; user-select: none; pointer-events: none;
+      white-space: nowrap; z-index: 0; will-change: transform;
+    }
+
+    /* ── MARQUEE ─────────────────────────────────────────────── */
+    .cs-marquee-strip {
+      overflow: hidden;
+      border-top: 1px solid rgba(200,169,110,0.1);
+      border-bottom: 1px solid rgba(200,169,110,0.1);
+      padding: 0.9rem 0; position: relative; z-index: 2;
+    }
+    .cs-marquee-track { display: flex; width: max-content; animation: marqueeScroll 32s linear infinite; }
+    .cs-marquee-group { display: flex; align-items: center; flex-shrink: 0; }
+    .cs-marquee-item {
+      display: inline-flex; align-items: center; gap: 0.75rem; padding: 0 2rem;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.58rem; letter-spacing: 0.45em; text-transform: uppercase;
+      color: rgba(255,255,255,0.18); white-space: nowrap;
+    }
+    .cs-marquee-item.hi { color: rgba(200,169,110,0.5); }
+    .cs-marquee-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--gold); opacity: 0.4; flex-shrink: 0; }
+    @keyframes marqueeScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* ── COUNTER BOXES ───────────────────────────────────────── */
+    .cs-counter-box {
+      position: relative; overflow: hidden;
+      transition: border-color 0.45s ease, box-shadow 0.45s ease; cursor: default;
+    }
+    .cs-counter-box:hover {
+      border-color: rgba(200,169,110,0.4) !important;
+      box-shadow: 0 0 60px rgba(200,169,110,0.1), inset 0 0 40px rgba(200,169,110,0.05);
+    }
+    .cs-counter-box::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(108deg, transparent 35%, rgba(255,255,255,0.055) 50%, transparent 65%);
+      transform: translateX(-130%);
+      transition: transform 0.85s cubic-bezier(0.16,1,0.3,1); pointer-events: none;
+    }
+    .cs-counter-box:hover::after { transform: translateX(130%); }
+
+    .counter-glow {
+      position: absolute; width: 220px; height: 220px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(200,169,110,0.13) 0%, transparent 65%);
+      top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none;
+      animation: cGlowPulse 3.8s ease-in-out infinite;
+    }
+    @keyframes cGlowPulse {
+      0%, 100% { opacity: 0.45; transform: translate(-50%, -50%) scale(1); }
+      50%       { opacity: 0.9;  transform: translate(-50%, -50%) scale(1.22); }
+    }
+
+    .cs-counter-box:nth-child(1) { animation: floatBox 7s ease-in-out 0s   infinite; }
+    .cs-counter-box:nth-child(2) { animation: floatBox 7s ease-in-out 2.3s infinite; }
+    .cs-counter-box:nth-child(3) { animation: floatBox 7s ease-in-out 4.6s infinite; }
+    .cs-counter-box:hover        { animation-play-state: paused; }
+    @keyframes floatBox { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+
+    /* ── TRIPTYCH 3D TILT + GLARE ────────────────────────────── */
+    .triptych-panel {
+      position: relative; overflow: hidden;
+      transition: box-shadow 0.4s ease, transform 0.12s ease;
+      will-change: transform;
+    }
+    .triptych-panel:hover { box-shadow: 0 22px 65px rgba(0,0,0,0.6), 0 0 0 1px rgba(200,169,110,0.24); }
+    .triptych-panel::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 130% 90% at var(--gx, 50%) var(--gy, 50%), rgba(255,255,255,0.07) 0%, transparent 65%);
+      opacity: 0; transition: opacity 0.35s ease; pointer-events: none; z-index: 10;
+    }
+    .triptych-panel:hover::before { opacity: 1; }
+
+    /* ── REFERRAL ────────────────────────────────────────────── */
+    .cs-referral-inner { position: relative; overflow: hidden; animation: refBorderPulse 4.5s ease-in-out infinite !important; }
+    @keyframes refBorderPulse {
+      0%, 100% { border-color: rgba(200,169,110,0.18); }
+      50%       { border-color: rgba(200,169,110,0.46); box-shadow: 0 0 70px rgba(200,169,110,0.07); }
+    }
+    .referral-stripe {
+      position: absolute; top: -120px; right: -120px; width: 280px; height: 280px; border-radius: 50%;
+      background: conic-gradient(from 120deg, transparent 0%, rgba(200,169,110,0.06) 18%, transparent 36%);
+      pointer-events: none; animation: stRot 14s linear infinite;
+    }
+    @keyframes stRot { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+    /* ── ANIMATED SEPARATOR ──────────────────────────────────── */
+    .cs-sep {
+      position: relative; height: 1px; overflow: hidden;
+      background: linear-gradient(to right, transparent, rgba(200,169,110,0.15), transparent);
+    }
+    .cs-sep::after {
+      content: ''; position: absolute; top: 0; left: -60%; width: 60%; height: 100%;
+      background: linear-gradient(to right, transparent, rgba(200,169,110,0.7), transparent);
+      animation: sepSweep 5.5s ease-in-out infinite;
+    }
+    @keyframes sepSweep { from { left: -60%; } to { left: 160%; } }
+
+    .cs-counter  { border-top: none; }
+    .cs-referral { border-top: none; }
+    .cs-contact  { border-top: none; }
+    .contact-field:focus { box-shadow: 0 2px 22px rgba(200,169,110,0.13); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .cs-counter-box, .cs-counter-box:nth-child(1),
+      .cs-counter-box:nth-child(2), .cs-counter-box:nth-child(3) { animation: none !important; }
+      .cs-marquee-track { animation: none !important; }
+      .cs-ray { animation: none !important; opacity: 0 !important; }
+      .referral-stripe, .counter-glow { animation: none !important; }
+      .cs-sep::after { animation: none !important; }
+    }
   </style>
 </head>
 <body>
@@ -1863,7 +2021,17 @@
     <div class="cs-glow cs-glow-2"></div>
     <div class="cs-glow cs-glow-3"></div>
     <div class="cs-glow cs-glow-4"></div>
+    <div class="cs-glow cs-glow-5"></div>
+    <div class="cs-glow cs-glow-6"></div>
+    <div class="cs-glow cs-glow-7"></div>
   </div>
+
+  <!-- Grid overlay, light rays, watermark -->
+  <div id="cs-grid" aria-hidden="true"></div>
+  <div class="cs-ray cs-ray-1" aria-hidden="true"></div>
+  <div class="cs-ray cs-ray-2" aria-hidden="true"></div>
+  <div class="cs-ray cs-ray-3" aria-hidden="true"></div>
+  <div class="cs-watermark" aria-hidden="true">BREMEN</div>
 
   <!-- Intro -->
   <section class="cs-intro">
@@ -1883,20 +2051,57 @@
     <div class="cs-container">
       <div class="cs-counter-grid">
         <div class="cs-counter-box reveal">
-          <p class="counter-num">2</p>
+          <span class="counter-glow" aria-hidden="true"></span>
+          <p class="counter-num" data-target="2">2</p>
           <p class="counter-label">Immobilien im Ankauf</p>
         </div>
         <div class="cs-counter-box reveal reveal-delay-1">
-          <p class="counter-num">1</p>
+          <span class="counter-glow" aria-hidden="true"></span>
+          <p class="counter-num" data-target="1">1</p>
           <p class="counter-label">Immobilien in Entwicklung</p>
         </div>
         <div class="cs-counter-box reveal reveal-delay-2">
+          <span class="counter-glow" aria-hidden="true"></span>
           <p class="counter-num">—</p>
           <p class="counter-label">Immobilien im Verkauf</p>
         </div>
       </div>
     </div>
   </section>
+
+  <!-- Animated separator -->
+  <div class="cs-sep"></div>
+
+  <!-- Marquee strip -->
+  <div class="cs-marquee-strip" aria-hidden="true">
+    <div class="cs-marquee-track">
+      <div class="cs-marquee-group">
+        <span class="cs-marquee-item hi">Kuscu Immobilien<span class="cs-marquee-dot"></span></span>
+        <span class="cs-marquee-item">Bremen<span class="cs-marquee-dot"></span></span>
+        <span class="cs-marquee-item">Ankauf<span class="cs-marquee-dot"></span></span>
+        <span class="cs-marquee-item hi">Entwicklung<span class="cs-marquee-dot"></span></span>
+        <span class="cs-marquee-item">Verkauf<span class="cs-marquee-dot"></span></span>
+        <span class="cs-marquee-item">Freie Hansestadt<span class="cs-marquee-dot"></span></span>
+        <span class="cs-marquee-item hi">Hochwertige Sanierung<span class="cs-marquee-dot"></span></span>
+        <span class="cs-marquee-item">Keine Käuferprovision<span class="cs-marquee-dot"></span></span>
+        <span class="cs-marquee-item">Vahr · Bremen<span class="cs-marquee-dot"></span></span>
+        <span class="cs-marquee-item hi">Premium Objekte<span class="cs-marquee-dot"></span></span>
+      </div>
+      <!-- duplicate for seamless loop -->
+      <div class="cs-marquee-group">
+        <span class="cs-marquee-item hi">Kuscu Immobilien<span class="cs-marquee-dot"></span></span>
+        <span class="cs-marquee-item">Bremen<span class="cs-marquee-dot"></span></span>
+        <span class="cs-marquee-item">Ankauf<span class="cs-marquee-dot"></span></span>
+        <span class="cs-marquee-item hi">Entwicklung<span class="cs-marquee-dot"></span></span>
+        <span class="cs-marquee-item">Verkauf<span class="cs-marquee-dot"></span></span>
+        <span class="cs-marquee-item">Freie Hansestadt<span class="cs-marquee-dot"></span></span>
+        <span class="cs-marquee-item hi">Hochwertige Sanierung<span class="cs-marquee-dot"></span></span>
+        <span class="cs-marquee-item">Keine Käuferprovision<span class="cs-marquee-dot"></span></span>
+        <span class="cs-marquee-item">Vahr · Bremen<span class="cs-marquee-dot"></span></span>
+        <span class="cs-marquee-item hi">Premium Objekte<span class="cs-marquee-dot"></span></span>
+      </div>
+    </div>
+  </div>
 
   <!-- Triptych: Bürgermeister Spitta Allee 6 -->
   <section class="cs-triptych">
@@ -1996,10 +2201,14 @@
     </div>
   </section>
 
+  <!-- Animated separator -->
+  <div class="cs-sep"></div>
+
   <!-- Referral / Tipgeber -->
   <section class="cs-referral">
     <div class="cs-container">
       <div class="cs-referral-inner reveal">
+        <div class="referral-stripe" aria-hidden="true"></div>
         <div class="referral-text">
           <p class="cs-eyebrow">Tipgeber-Bonus</p>
           <h3 class="referral-h3">Sie möchten verkaufen —<br>oder kennen jemanden, der es möchte?</h3>
@@ -2016,6 +2225,9 @@
       </div>
     </div>
   </section>
+
+  <!-- Animated separator -->
+  <div class="cs-sep"></div>
 
   <!-- Contact -->
   <section>
@@ -2151,7 +2363,7 @@
   const PROPERTIES = [
     {
       id:     'card-3',
-      coords: [8.871257448102298, 53.09072998810619],
+      coords: [8.871257448102298, 53.09093],
       image:  'Bürgermeister/Front.jpeg',
       label:  'Bürgermeister Spitta Allee 6',
       step:   3,
@@ -2169,7 +2381,7 @@
     // 2: Bremen overview — all pins visible
     { center: [8.882, 53.0755],  zoom: 12.2, pitch: 48, bearing: -8, duration: 4000 },
     // 3: Bürgermeister Spitta Allee — close enough to see the building
-    { center: [8.871257448102298, 53.09072998810619], zoom: 18.2, pitch: 55, bearing: 12, duration: 3200 },
+    { center: [8.871257448102298, 53.09093], zoom: 18.2, pitch: 55, bearing: 12, duration: 3200 },
   ];
 
   // Mobile overrides
@@ -2339,11 +2551,11 @@
       'source-layer': 'building',
       filter: ['==', 1, 0], // nothing highlighted initially
       paint: {
-        'fill-extrusion-color': '#c8a96e',
-        'fill-extrusion-height': ['max', ['coalesce', ['get', 'height'], 0], 9],
+        'fill-extrusion-color': '#f0c040',
+        'fill-extrusion-height': ['+', ['max', ['coalesce', ['get', 'height'], 0], 9], 4],
         'fill-extrusion-base': ['coalesce', ['get', 'min_height'], 0],
-        'fill-extrusion-opacity': 0.85,
-        'fill-extrusion-vertical-gradient': true,
+        'fill-extrusion-opacity': 1.0,
+        'fill-extrusion-vertical-gradient': false,
         'fill-extrusion-opacity-transition': { duration: 800 },
       },
     });
@@ -2396,16 +2608,6 @@
     });
   }
 
-  function scheduleCameraUpdate() {
-    if (rafId) return;
-    rafId = requestAnimationFrame(() => {
-      const raw = window.scrollY / window.innerHeight;
-      if (raw < 0.1) startGlobeRotation();
-      lerpCamera();
-      rafId = null;
-    });
-  }
-
   // ── Map → content fade ────────────────────────────────────────
   const mapFadeEl      = document.getElementById('map-fade-overlay');
   const contentEl      = document.getElementById('content-section');
@@ -2422,14 +2624,19 @@
     buildingPanel.style.opacity = Math.max(0, 1 - progress * 2.2);
   }
 
-  window.addEventListener('scroll', () => {
-    scheduleCameraUpdate();
-    updateMapFade();
-  }, { passive: true });
-  window.addEventListener('resize', () => {
-    scheduleCameraUpdate();
-    updateMapFade();
-  }, { passive: true });
+  function scheduleCameraUpdate() {
+    if (rafId) return;
+    rafId = requestAnimationFrame(() => {
+      const raw = window.scrollY / window.innerHeight;
+      if (raw < 0.1) startGlobeRotation();
+      lerpCamera();
+      updateMapFade();
+      rafId = null;
+    });
+  }
+
+  window.addEventListener('scroll', scheduleCameraUpdate, { passive: true });
+  window.addEventListener('resize', scheduleCameraUpdate, { passive: true });
 
   // ── Update UI for a given step ────────────────────────────────
   function applyStep(idx) {
@@ -2628,7 +2835,12 @@
     });
   }
 
-  window.addEventListener('scroll', updateParallax, { passive: true });
+  let parallaxRaf = null;
+  function scheduleParallax() {
+    if (parallaxRaf) return;
+    parallaxRaf = requestAnimationFrame(() => { updateParallax(); parallaxRaf = null; });
+  }
+  window.addEventListener('scroll', scheduleParallax, { passive: true });
   updateParallax();
 
   // ── Contact form handler ──────────────────────────────────────
@@ -2670,7 +2882,7 @@
     window.location.href = `mailto:navidistanbullu@gmail.com?subject=${subject}&body=${body}`;
   }
 
-  // ── Content-section particle canvas ──────────────────────────
+  // ── Content-section particle canvas (enhanced with connections) ──
   (function () {
     const canvas  = document.getElementById('cs-canvas');
     if (!canvas) return;
@@ -2678,37 +2890,31 @@
     const section = document.getElementById('content-section');
 
     let W, H;
-
-    function resize() {
-      W = canvas.width  = window.innerWidth;
-      H = canvas.height = window.innerHeight;
-    }
+    function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
     window.addEventListener('resize', resize, { passive: true });
     resize();
 
-    // Particle pool
-    const COUNT = 110;
-    const pts   = [];
+    const COUNT = 130;
+    const CONNECT_DIST = 110;
+    const pts = [];
 
     function makeParticle(scatter) {
       return {
-        x:      Math.random() * W,
-        y:      scatter ? Math.random() * H : H + 8,
-        r:      Math.random() * 1.3 + 0.3,
-        vy:     -(Math.random() * 0.28 + 0.07),
-        vx:     (Math.random() - 0.5) * 0.18,
-        alpha:  Math.random() * 0.3 + 0.04,
-        gold:   Math.random() > 0.42,
-        phase:  Math.random() * Math.PI * 2,
+        x: Math.random() * W,
+        y: scatter ? Math.random() * H : H + 8,
+        r: Math.random() * 1.6 + 0.3,
+        vy: -(Math.random() * 0.26 + 0.06),
+        vx: (Math.random() - 0.5) * 0.16,
+        alpha: Math.random() * 0.32 + 0.05,
+        gold: Math.random() > 0.4,
+        phase: Math.random() * Math.PI * 2,
         pSpeed: Math.random() * 0.009 + 0.003,
       };
     }
 
     for (let i = 0; i < COUNT; i++) pts.push(makeParticle(true));
 
-    // Only run while content section is in view
     let live = false, raf = null;
-
     const io = new IntersectionObserver(entries => {
       live = entries[0].isIntersecting;
       if (live && !raf) raf = requestAnimationFrame(tick);
@@ -2718,32 +2924,99 @@
     function tick() {
       raf = null;
       if (!live) return;
-
       ctx.clearRect(0, 0, W, H);
 
       for (let i = 0; i < pts.length; i++) {
         const p = pts[i];
-
         p.phase += p.pSpeed;
-        p.x     += p.vx + Math.sin(p.phase * 0.65) * 0.09;
-        p.y     += p.vy;
+        p.x += p.vx + Math.sin(p.phase * 0.65) * 0.09;
+        p.y += p.vy;
+        if (p.y < -8) { pts[i] = makeParticle(false); }
+      }
 
-        if (p.y < -8) {
-          pts[i] = makeParticle(false);
-          continue;
+      // Connection lines (draw behind particles)
+      for (let i = 0; i < pts.length; i++) {
+        for (let j = i + 1; j < pts.length; j++) {
+          const dx = pts[i].x - pts[j].x;
+          const dy = pts[i].y - pts[j].y;
+          const d2 = dx * dx + dy * dy;
+          if (d2 < CONNECT_DIST * CONNECT_DIST) {
+            const a = (1 - Math.sqrt(d2) / CONNECT_DIST) * 0.1;
+            ctx.beginPath();
+            ctx.moveTo(pts[i].x, pts[i].y);
+            ctx.lineTo(pts[j].x, pts[j].y);
+            ctx.strokeStyle = `rgba(200,169,110,${a})`;
+            ctx.lineWidth = 0.4;
+            ctx.stroke();
+          }
         }
+      }
 
+      // Particles
+      for (let i = 0; i < pts.length; i++) {
+        const p = pts[i];
         const a = p.alpha * (0.65 + 0.35 * Math.sin(p.phase));
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, 6.2832);
-        ctx.fillStyle = p.gold
-          ? `rgba(200,169,110,${a.toFixed(3)})`
-          : `rgba(220,220,240,${(a * 0.35).toFixed(3)})`;
+        ctx.fillStyle = p.gold ? `rgba(200,169,110,${a})` : `rgba(220,220,240,${a * 0.35})`;
         ctx.fill();
       }
 
       raf = requestAnimationFrame(tick);
     }
+  })();
+
+  // ── Counter animation ────────────────────────────────────────
+  function countUp(el, target, duration) {
+    const start = performance.now();
+    const run = (now) => {
+      const t = Math.min((now - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - t, 3);
+      el.textContent = Math.round(ease * target);
+      if (t < 1) requestAnimationFrame(run);
+    };
+    el.textContent = '0';
+    requestAnimationFrame(run);
+  }
+
+  const counterObs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      const target = parseInt(el.dataset.target, 10);
+      if (!isNaN(target)) countUp(el, target, 1800);
+      counterObs.unobserve(el);
+    });
+  }, { threshold: 0.6 });
+
+  document.querySelectorAll('.counter-num[data-target]').forEach(el => counterObs.observe(el));
+
+  // ── Triptych 3D tilt + glare ─────────────────────────────────
+  document.querySelectorAll('.triptych-panel').forEach(panel => {
+    panel.addEventListener('mousemove', (e) => {
+      const r = panel.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width;
+      const y = (e.clientY - r.top)  / r.height;
+      panel.style.transform = `perspective(900px) rotateX(${(y - 0.5) * -10}deg) rotateY(${(x - 0.5) * 10}deg) scale(1.015)`;
+      panel.style.setProperty('--gx', `${x * 100}%`);
+      panel.style.setProperty('--gy', `${y * 100}%`);
+    });
+    panel.addEventListener('mouseleave', () => {
+      panel.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg) scale(1)';
+    });
+  });
+
+  // ── Watermark parallax ───────────────────────────────────────
+  (function () {
+    const wm = document.querySelector('.cs-watermark');
+    const cs = document.getElementById('content-section');
+    if (!wm || !cs) return;
+    function update() {
+      const scrolled = Math.max(0, -cs.getBoundingClientRect().top);
+      wm.style.transform = `translateX(-50%) translateY(${scrolled * 0.18}px)`;
+    }
+    window.addEventListener('scroll', () => requestAnimationFrame(update), { passive: true });
+    update();
   })();
 </script>
 </body>
