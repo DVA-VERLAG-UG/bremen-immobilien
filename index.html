@@ -32,6 +32,20 @@
       z-index: 0;
     }
 
+    /* ── VIDEO OVERLAY ───────────────────────────────────── */
+    /* Sits above the map (z:0) but below vignette/grain/letterbox
+       (z:1-2, later in DOM). Scrubbed by scroll to mask slow tile load. */
+    #map-video {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+      opacity: 0;
+      pointer-events: none;
+    }
+
     .mapboxgl-ctrl-bottom-left,
     .mapboxgl-ctrl-bottom-right { opacity: 0.35; }
 
@@ -1973,6 +1987,17 @@
 
 <!-- ── MAP ──────────────────────────────────────────────────── -->
 <div id="map"></div>
+<!-- ── VIDEO OVERLAY ─────────────────────────────────────────── -->
+<!-- Preloaded and scrubbed by scroll; covers slow tile-load phase.
+     Swap src for a newly recorded video if the camera path changes. -->
+<video id="map-video"
+       src="video/intro.webm"
+       preload="auto"
+       muted
+       playsinline
+       aria-hidden="true">
+</video>
+
 <div id="map-fade-overlay"></div>
 
 <!-- ── PREMIUM GLOBE OVERLAYS ──────────────────────────────── -->
@@ -2608,6 +2633,44 @@
     });
   }
 
+  // ── Video overlay — scrub to mask slow tile loading ───────────
+  // Thresholds in "raw" units (scrollY / innerHeight).
+  // Adjust these four values to tune the crossfade timing:
+  const VID_FADE_IN_START  = 0.45;  // video starts fading in
+  const VID_FADE_IN_END    = 0.75;  // video fully covers map
+  const VID_FADE_OUT_START = 1.75;  // video starts fading out (Bremen loaded)
+  const VID_FADE_OUT_END   = 2.15;  // API fully visible for building zoom
+  const VID_RAW_MAX        = 2.0;   // raw value at which video ends (Bremen overview)
+
+  const mapVideoEl = document.getElementById('map-video');
+  let videoReady = false;
+
+  mapVideoEl.addEventListener('canplaythrough', () => {
+    videoReady = true;
+    mapVideoEl.pause();
+  }, { once: true });
+
+  mapVideoEl.addEventListener('loadedmetadata', () => {
+    mapVideoEl.currentTime = 0;
+  }, { once: true });
+
+  function updateVideoOverlay(raw) {
+    let opacity = 0;
+    if (raw >= VID_FADE_IN_START && raw < VID_FADE_IN_END) {
+      opacity = (raw - VID_FADE_IN_START) / (VID_FADE_IN_END - VID_FADE_IN_START);
+    } else if (raw >= VID_FADE_IN_END && raw <= VID_FADE_OUT_START) {
+      opacity = 1;
+    } else if (raw > VID_FADE_OUT_START && raw <= VID_FADE_OUT_END) {
+      opacity = 1 - (raw - VID_FADE_OUT_START) / (VID_FADE_OUT_END - VID_FADE_OUT_START);
+    }
+    mapVideoEl.style.opacity = opacity;
+    if (videoReady && mapVideoEl.duration && opacity > 0) {
+      const vidProg = Math.max(0, Math.min(1, raw / VID_RAW_MAX));
+      mapVideoEl.currentTime = vidProg * mapVideoEl.duration;
+    }
+  }
+
+
   // ── Map → content fade ────────────────────────────────────────
   const mapFadeEl      = document.getElementById('map-fade-overlay');
   const contentEl      = document.getElementById('content-section');
@@ -2631,6 +2694,7 @@
       if (raw < 0.1) startGlobeRotation();
       lerpCamera();
       updateMapFade();
+      updateVideoOverlay(raw);
       rafId = null;
     });
   }
