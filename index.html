@@ -32,19 +32,6 @@
       z-index: 0;
     }
 
-    /* ── FRAME CANVAS OVERLAY ────────────────────────────── */
-    /* Sits above the map (z:0) but below vignette/grain/letterbox
-       (z:1-2, later in DOM). Frame is drawn synchronously on scroll. */
-    #map-frames {
-      position: fixed;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 1;
-      opacity: 0;
-      pointer-events: none;
-    }
-
     .mapboxgl-ctrl-bottom-left,
     .mapboxgl-ctrl-bottom-right { opacity: 0.35; }
 
@@ -1991,12 +1978,6 @@
 
 <!-- ── MAP ──────────────────────────────────────────────────── -->
 <div id="map"></div>
-<!-- ── FRAME CANVAS OVERLAY ───────────────────────────────────── -->
-<!-- 249 JPEG frames (24 fps, 1280 px wide) preloaded into memory.
-     drawImage() is synchronous — zero decode lag vs video.currentTime seeks.
-     Re-generate frames with: ffmpeg -i video/intro.webm -vf "fps=24,scale=1280:-2" -q:v 6 video/frames/f%04d.jpg -->
-<canvas id="map-frames" aria-hidden="true"></canvas>
-
 <div id="map-fade-overlay"></div>
 
 <!-- ── PREMIUM GLOBE OVERLAYS ──────────────────────────────── -->
@@ -2688,83 +2669,6 @@
     });
   }
 
-  // ── Frame-sequence overlay — zero-latency scroll scrubbing ──────
-  //
-  // Crossfade thresholds (raw = scrollY / innerHeight, 0 = top, ~3 = end):
-  //   Raise VID_FADE_IN_START  → video kicks in later
-  //   Lower VID_FADE_OUT_END   → return to API sooner
-  const VID_FADE_IN_START  = 0.45;
-  const VID_FADE_IN_END    = 0.75;
-  const VID_FADE_OUT_START = 1.75;
-  const VID_FADE_OUT_END   = 2.15;
-  const VID_RAW_MAX        = 2.0;   // raw value covered by the frame sequence
-
-  const FRAME_COUNT  = 312;         // total frames (30fps × ~10.4 s)
-  const FRAME_PATH   = i => `video/frames/f${String(i).padStart(4,'0')}.jpg`;
-
-  const framesCanvas = document.getElementById('map-frames');
-  const fCtx         = framesCanvas.getContext('2d');
-  const frameImgs    = new Array(FRAME_COUNT);
-  let   framesLoaded = 0;
-
-  // Size canvas to viewport; also re-draw last frame so resize looks right
-  let lastFrameIdx = 0;
-  function resizeFrameCanvas() {
-    framesCanvas.width  = window.innerWidth;
-    framesCanvas.height = window.innerHeight;
-    if (framesLoaded > 0 && frameImgs[lastFrameIdx]?.complete) {
-      drawFrameCover(frameImgs[lastFrameIdx]);
-    }
-  }
-  window.addEventListener('resize', resizeFrameCanvas, { passive: true });
-  resizeFrameCanvas();
-
-  // object-fit: cover — fills canvas without distortion
-  function drawFrameCover(img) {
-    const cw = framesCanvas.width, ch = framesCanvas.height;
-    const iw = img.naturalWidth,   ih = img.naturalHeight;
-    const scale = Math.max(cw / iw, ch / ih);
-    const sw = iw * scale, sh = ih * scale;
-    fCtx.drawImage(img, (cw - sw) / 2, (ch - sh) / 2, sw, sh);
-  }
-
-  // Preload all frames in parallel; browser opens ~6 connections at once
-  for (let i = 0; i < FRAME_COUNT; i++) {
-    const img = new Image();
-    img.onload = () => { framesLoaded++; };
-    img.src = FRAME_PATH(i + 1);   // files are 1-indexed: f0001.jpg … f0249.jpg
-    frameImgs[i] = img;
-  }
-
-  function updateVideoOverlay(raw) {
-    // ── opacity ramp ──────────────────────────────────────────────
-    let opacity = 0;
-    if (raw >= VID_FADE_IN_START && raw < VID_FADE_IN_END) {
-      opacity = (raw - VID_FADE_IN_START) / (VID_FADE_IN_END - VID_FADE_IN_START);
-    } else if (raw >= VID_FADE_IN_END && raw <= VID_FADE_OUT_START) {
-      opacity = 1;
-    } else if (raw > VID_FADE_OUT_START && raw <= VID_FADE_OUT_END) {
-      opacity = 1 - (raw - VID_FADE_OUT_START) / (VID_FADE_OUT_END - VID_FADE_OUT_START);
-    }
-
-    framesCanvas.style.opacity = opacity;
-    if (opacity === 0 || framesLoaded === 0) return;
-
-    // ── pick frame ────────────────────────────────────────────────
-    const vidProg = Math.max(0, Math.min(1, raw / VID_RAW_MAX));
-    const idx     = Math.min(Math.round(vidProg * (FRAME_COUNT - 1)), FRAME_COUNT - 1);
-
-    // Only draw if this frame (or nearest loaded neighbour) is ready
-    const target = frameImgs[idx]?.complete ? idx
-                 : frameImgs[lastFrameIdx]?.complete ? lastFrameIdx
-                 : -1;
-    if (target === -1) return;
-
-    lastFrameIdx = target;
-    drawFrameCover(frameImgs[target]);
-  }
-
-
   // ── Map → content fade ────────────────────────────────────────
   const mapFadeEl      = document.getElementById('map-fade-overlay');
   const contentEl      = document.getElementById('content-section');
@@ -2788,7 +2692,6 @@
       if (raw < 0.1) startGlobeRotation();
       lerpCamera();
       updateMapFade();
-      updateVideoOverlay(raw);
       rafId = null;
     });
   }
