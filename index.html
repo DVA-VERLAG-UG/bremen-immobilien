@@ -1726,6 +1726,10 @@
       background-size: 180px 180px;
       animation: grainShift 0.08s steps(1) infinite;
     }
+    /* PERF: Grain-Animation außerhalb des Globus-Steps pausieren —
+       das ständige Repainting eines 200%-Elements kostet Compositing-
+       Leistung, während die Map rendert. Statisches Grain bleibt sichtbar. */
+    #film-grain.paused { animation-play-state: paused; }
     @keyframes grainShift {
       0%   { transform: translate(0,     0); }
       25%  { transform: translate(-9px, -7px); }
@@ -1922,6 +1926,7 @@
       .cs-ray { animation: none !important; opacity: 0 !important; }
       .referral-stripe, .counter-glow { animation: none !important; }
       .cs-sep::after { animation: none !important; }
+      #film-grain { animation: none !important; }
     }
   </style>
 </head>
@@ -2400,13 +2405,14 @@
     // 2: Bremen overview — all pins visible
     { center: [8.882, 53.0755],  zoom: 12.2, pitch: 48, bearing: -8, duration: 4000 },
     // 3: Bürgermeister Spitta Allee — close enough to see the building
-    { center: [8.871257448102298, 53.09093], zoom: 18.2, pitch: 55, bearing: 12, duration: 3200 },
+    // PERF: zoom 18.2 → 17.4 — halbiert grob die Detail-Tile-Last
+    { center: [8.871257448102298, 53.09093], zoom: 17.4, pitch: 55, bearing: 12, duration: 3200 },
   ];
 
   // Mobile overrides
   const CAMERA_MOBILE = {
     2: { zoom: 11.0, pitch: 35 },
-    3: { zoom: 17.2, pitch: 48 },
+    3: { zoom: 16.6, pitch: 48 },
   };
 
   // ── Init map ──────────────────────────────────────────────────
@@ -2419,13 +2425,24 @@
     bearing:     CAMERA[0].bearing,
     projection:  'globe',
     interactive: false,
-    antialias:   true,
+    antialias:   false, // PERF: MSAA aus — großer FPS-Gewinn, minimal sichtbar
   });
+
+  // PERF: 3D-Gebäude erst aktivieren, wenn die Kamera nah genug ist.
+  // Auf dem Globus / in Europa-Zoom rendert der Standard-Style sie sonst
+  // umsonst mit und lädt die schweren 3D-Tiles schon beim ersten Frame.
+  let want3D = false;
+  function set3DObjects(on) {
+    want3D = on;
+    if (map.isStyleLoaded()) {
+      map.setConfigProperty('basemap', 'show3dObjects', on);
+    }
+  }
 
   map.on('style.load', () => {
     // Standard style: night lighting preset keeps the dark cinematic look
     map.setConfigProperty('basemap', 'lightPreset', 'night');
-    map.setConfigProperty('basemap', 'show3dObjects', true);
+    map.setConfigProperty('basemap', 'show3dObjects', want3D); // PERF: startet aus
     map.setConfigProperty('basemap', 'showPointOfInterestLabels', false);
     map.setConfigProperty('basemap', 'showTransitLabels', false);
 
@@ -2434,7 +2451,7 @@
       'high-color':     'rgb(8, 28, 90)',
       'horizon-blend':  0.022,
       'space-color':    'rgb(1, 1, 8)',
-      'star-intensity': 1.0,
+      'star-intensity': 0.5, // PERF: 1.0 → 0.5, kaum sichtbarer Unterschied
     });
   });
 
@@ -2447,6 +2464,7 @@
   const buildingPanel  = document.getElementById('building-panel');
   const buildingImgEl  = document.getElementById('building-img-el');
   const buildingLabel  = document.getElementById('building-img-label');
+  const filmGrain      = document.getElementById('film-grain');
 
   // ── State ─────────────────────────────────────────────────────
   let currentStep  = 0;
@@ -2580,6 +2598,48 @@
     });
   });
 
+  // ── PERF: Ziel-Tiles im Hintergrund vorladen ──────────────────
+  // Nach dem ersten "idle" (Globus fertig geladen) besucht eine
+  // unsichtbare Mini-Map die Ziel-Kamera von Step 3. Die Tiles landen
+  // im Browser-Cache und sind beim echten Reinzoomen sofort da.
+  map.once('idle', () => {
+    // Bei Datensparmodus oder sehr langsamer Verbindung überspringen
+    const conn = navigator.connection;
+    if (conn && (conn.saveData || /(^|-)2g/.test(conn.effectiveType || ''))) return;
+
+    const holder = document.createElement('div');
+    holder.style.cssText = 'position:fixed;left:-9999px;top:0;width:512px;height:512px;visibility:hidden;';
+    document.body.appendChild(holder);
+
+    const target = CAMERA[CAMERA.length - 1];
+    const prewarm = new mapboxgl.Map({
+      container:   holder,
+      style:       'mapbox://styles/mapbox/standard',
+      center:      target.center,
+      zoom:        target.zoom,
+      pitch:       target.pitch,
+      bearing:     target.bearing,
+      interactive: false,
+      antialias:   false,
+    });
+
+    // 3D-Gebäude aktivieren, damit auch die schweren Gebäude-Tiles
+    // fürs Ziel gecacht werden
+    prewarm.on('style.load', () => {
+      prewarm.setConfigProperty('basemap', 'show3dObjects', true);
+    });
+
+    let cleaned = false;
+    const cleanup = () => {
+      if (cleaned) return;
+      cleaned = true;
+      try { prewarm.remove(); } catch (e) {}
+      holder.remove();
+    };
+    prewarm.once('idle', cleanup);
+    setTimeout(cleanup, 15000); // Sicherheitsnetz
+  });
+
   // ── Scroll-scrubbed camera ────────────────────────────────────
   function resolvedCamera(idx) {
     const i    = Math.max(0, Math.min(idx, CAMERA.length - 1));
@@ -2603,6 +2663,7 @@
 
   function lerpCamera() {
     const raw     = window.scrollY / window.innerHeight;
+
     const fromIdx = Math.min(Math.floor(raw), CAMERA.length - 1);
     const toIdx   = Math.min(fromIdx + 1,     CAMERA.length - 1);
     const t       = smoothstep(Math.max(0, Math.min(1, raw - fromIdx)));
@@ -2738,6 +2799,12 @@
   // ── Update UI for a given step ────────────────────────────────
   function applyStep(idx) {
     currentStep = idx;
+
+    // PERF: 3D-Gebäude erst laden/rendern, wenn wir nah genug dran sind
+    set3DObjects(idx >= 2);
+
+    // PERF: Film-Grain nur auf dem Globus animieren — sonst statisch
+    filmGrain.classList.toggle('paused', idx !== 0);
 
     // Progress dots
     progressDots.forEach((d, i) => d.classList.toggle('active', i === idx));
@@ -2991,7 +3058,9 @@
     window.addEventListener('resize', resize, { passive: true });
     resize();
 
-    const COUNT = 130;
+    // PERF: 130 → 85 Partikel. Die Verbindungslinien sind O(n²) —
+    // 85 Partikel ≈ 3.600 statt 8.400 Distanzchecks pro Frame.
+    const COUNT = 85;
     const CONNECT_DIST = 110;
     const pts = [];
 
