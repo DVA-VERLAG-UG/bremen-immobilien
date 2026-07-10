@@ -966,11 +966,10 @@
       Melden Sie sich hier an, um den 360°-VR-Rundgang zu sehen und die
       restlichen Informationen samt Exposé zu erhalten.
     </p>
-    <form id="gate-form" name="produktkarte-zugang" method="POST" data-netlify="true" netlify-honeypot="bot-field">
-      <input type="hidden" name="form-name" value="produktkarte-zugang" />
+    <form id="gate-form" name="produktkarte-zugang" method="POST">
       <input type="hidden" name="objekt" value="Vahr · Bremen (Bürgermeister Spitta Allee 6)" />
       <p class="gate-hp">
-        <label>Bitte nicht ausfüllen: <input name="bot-field" /></label>
+        <label>Bitte nicht ausfüllen: <input type="checkbox" name="botcheck" /></label>
       </p>
       <input class="gate-input" type="email" name="email" required
              placeholder="Ihre E-Mail-Adresse" autocomplete="email" />
@@ -1107,29 +1106,44 @@
     document.body.style.overflow = 'hidden';
   }
 
+  // Web3Forms: kostenlosen Access Key auf https://web3forms.com erstellen
+  // (E-Mail-Adresse eingeben, Key kommt sofort per Mail) und hier einfügen:
+  const WEB3FORMS_ACCESS_KEY = 'HIER_ACCESS_KEY_EINFUEGEN';
+
   gateForm.addEventListener('submit', async e => {
     e.preventDefault();
     gateError.style.display = 'none';
     gateSubmit.disabled = true;
     gateSubmit.textContent = 'Wird gesendet…';
 
+    const isLocal = ['localhost', '127.0.0.1'].includes(location.hostname)
+                    || location.protocol === 'file:';
+
     try {
-      const res = await fetch('/', {
+      if (WEB3FORMS_ACCESS_KEY.startsWith('HIER_')) {
+        throw new Error('Access Key fehlt');
+      }
+      const data = new FormData(gateForm);
+      data.append('access_key', WEB3FORMS_ACCESS_KEY);
+      data.append('subject', 'Neue Anmeldung: Produktkarte Vahr · Bremen');
+      data.append('from_name', 'Kuscu Immobilien Website');
+      const res = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(new FormData(gateForm)).toString()
+        body: data
       });
-      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const json = await res.json();
+      if (!json.success) throw new Error(json.message || 'Übermittlung fehlgeschlagen');
       localStorage.setItem(GATE_KEY, '1');
       unlockGate();
     } catch (err) {
-      // Lokal (ohne Netlify-Backend) trotzdem freischalten, damit testbar
-      const isLocal = ['localhost', '127.0.0.1'].includes(location.hostname)
-                      || location.protocol === 'file:';
       if (isLocal) {
+        // Lokal trotzdem freischalten, damit die Seite testbar bleibt
         localStorage.setItem(GATE_KEY, '1');
         unlockGate();
       } else {
+        gateError.textContent = WEB3FORMS_ACCESS_KEY.startsWith('HIER_')
+          ? 'Formular noch nicht konfiguriert — der Web3Forms Access Key fehlt.'
+          : 'Übermittlung fehlgeschlagen — bitte versuchen Sie es erneut.';
         gateError.style.display = 'block';
         gateSubmit.disabled = false;
         gateSubmit.textContent = 'Zugang freischalten';
