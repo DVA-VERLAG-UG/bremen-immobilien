@@ -480,6 +480,171 @@
     .btn-expose-ghost:hover { border-color: rgba(255,255,255,0.35); color: rgba(255,255,255,0.65); }
     .btn-expose-ghost svg { width: 14px; height: 14px; flex-shrink: 0; }
 
+    /* ── 360° RUNDGANG ───────────────────────────────────────── */
+    .vr-section {
+      border: 1px solid rgba(255,255,255,0.06);
+      padding: 3.5rem;
+    }
+
+    .vr-title {
+      font-size: clamp(1.6rem, 2.8vw, 2.4rem);
+      font-weight: 400;
+      line-height: 1.2;
+      margin-bottom: 0.45rem;
+    }
+
+    .vr-desc {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.82rem;
+      line-height: 1.85;
+      color: rgba(255,255,255,0.42);
+      max-width: 440px;
+      margin-bottom: 2.2rem;
+    }
+
+    .vr-frame-box {
+      max-width: 900px;
+      border: 1px solid var(--border);
+      background: #0c0c18;
+    }
+
+    .vr-frame-box iframe {
+      display: block;
+      width: 100%;
+      height: 560px;
+      border: none;
+    }
+
+    .vr-hint {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.55rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+      margin-top: 1rem;
+    }
+
+    /* ── E-MAIL GATE (Produktkarte) ──────────────────────────── */
+    #gate-overlay {
+      position: fixed; inset: 0; z-index: 90;
+      background: rgba(8,8,14,0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 90px 1.25rem 2rem;
+      overflow-y: auto;
+    }
+    body.gate-unlocked #gate-overlay { display: none; }
+    body.gated .listings {
+      filter: blur(10px);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .gate-card {
+      max-width: 440px;
+      width: 100%;
+      margin: auto;
+      border: 1px solid rgba(200,169,110,0.2);
+      background: rgba(8,8,14,0.85);
+      padding: 2.75rem 2.5rem;
+      text-align: center;
+    }
+
+    .gate-eyebrow {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.58rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.1rem;
+    }
+
+    .gate-title {
+      font-size: 1.4rem;
+      font-weight: 400;
+      line-height: 1.3;
+      margin-bottom: 1.4rem;
+    }
+
+    .gate-photo {
+      border: 1px solid rgba(255,255,255,0.08);
+      margin-bottom: 1.5rem;
+    }
+    .gate-photo img {
+      width: 100%;
+      height: 170px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .gate-text {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.42);
+      line-height: 1.75;
+      margin-bottom: 1.8rem;
+    }
+
+    .gate-input {
+      width: 100%;
+      padding: 0.95rem 1.1rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: #fff;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.03em;
+      margin-bottom: 0.75rem;
+      outline: none;
+      transition: border-color 0.25s;
+    }
+    .gate-input::placeholder { color: rgba(255,255,255,0.25); }
+    .gate-input:focus { border-color: var(--gold); }
+
+    .gate-submit {
+      width: 100%;
+      padding: 0.95rem;
+      border: 1px solid var(--gold);
+      background: transparent;
+      color: var(--gold);
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.3s, color 0.3s;
+    }
+    .gate-submit:hover:not(:disabled) { background: var(--gold); color: var(--dark); }
+    .gate-submit:disabled { opacity: 0.5; cursor: wait; }
+
+    .gate-error {
+      display: none;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      color: #d98c8c;
+      margin-top: 0.9rem;
+    }
+
+    .gate-note {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.58rem;
+      color: rgba(255,255,255,0.2);
+      letter-spacing: 0.08em;
+      line-height: 1.6;
+      margin-top: 1.1rem;
+    }
+
+    .gate-hp { display: none; }
+
+    @media (max-width: 580px) {
+      .gate-card { padding: 2rem 1.5rem; }
+      .gate-photo img { height: 130px; }
+    }
+
     /* ── REVEAL ──────────────────────────────────────────────── */
     .reveal {
       opacity: 0;
@@ -527,6 +692,8 @@
       .listing-img-panel { aspect-ratio: 4/3; position: relative; }
       .listing-info-panel { border-left: none; border-top: 1px solid rgba(255,255,255,0.06); padding: 2.5rem 1.75rem; }
       .listing-specs { grid-template-columns: repeat(2, auto); gap: 1.2rem 2rem; }
+      .vr-section { padding: 2.5rem 1.75rem; }
+      .vr-frame-box iframe { height: 480px; }
     }
 
     @media (max-width: 580px) {
@@ -535,6 +702,8 @@
       .listings { padding: 0 1.25rem 6rem; }
       footer { flex-direction: column; gap: 0.5rem; text-align: center; padding: 2rem 1.25rem; }
       .listing-thumbs { display: none; }
+      .vr-section { padding: 2rem 1.25rem; }
+      .vr-frame-box iframe { height: 50vh; }
     }
   </style>
 </head>
@@ -708,6 +877,28 @@
     </div>
   </article>
 
+  <!-- ── 360° RUNDGANG ── -->
+  <section class="vr-section reveal" id="rundgang">
+    <p class="listing-eyebrow reveal reveal-d1">Virtueller Rundgang</p>
+    <h2 class="vr-title reveal reveal-d2">360° Rundgang</h2>
+    <div class="listing-divider reveal reveal-d3"></div>
+    <p class="vr-desc reveal reveal-d3">
+      Erkunden Sie das Haus in aller Ruhe — Raum für Raum, in alle
+      Richtungen. Ziehen Sie das Bild, um sich umzusehen, und folgen
+      Sie den Pfeilen in den nächsten Raum.
+    </p>
+    <div class="vr-frame-box reveal reveal-d4">
+      <iframe
+        id="vr-iframe"
+        data-src="vr-tour/index.html"
+        title="360° Rundgang durch das Haus"
+        loading="lazy"
+        allowfullscreen
+        allow="fullscreen; gyroscope; accelerometer"></iframe>
+    </div>
+    <p class="vr-hint reveal reveal-d5">Klicken &amp; ziehen zum Umsehen</p>
+  </section>
+
 </main>
 
 <!-- ── PRODUKTKARTE MODAL ──────────────────────────────────────── -->
@@ -760,6 +951,36 @@
       letter-spacing:0.1em;">
       Zugang wird nach kurzer Prüfung freigeschaltet.
     </p>
+  </div>
+</div>
+
+<!-- ── E-MAIL GATE (Produktkarte) ──────────────────────────────── -->
+<div id="gate-overlay">
+  <div class="gate-card">
+    <p class="gate-eyebrow">Produktkarte</p>
+    <h3 class="gate-title">Vahr · Bremen</h3>
+    <div class="gate-photo">
+      <img src="Bürgermeister/Full.jpeg" alt="Einfamilienhaus Vahr — Gesamtansicht" />
+    </div>
+    <p class="gate-text">
+      Melden Sie sich hier an, um den 360°-VR-Rundgang zu sehen und die
+      restlichen Informationen samt Exposé zu erhalten.
+    </p>
+    <form id="gate-form" name="produktkarte-zugang" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+      <input type="hidden" name="form-name" value="produktkarte-zugang" />
+      <input type="hidden" name="objekt" value="Vahr · Bremen (Bürgermeister Spitta Allee 6)" />
+      <p class="gate-hp">
+        <label>Bitte nicht ausfüllen: <input name="bot-field" /></label>
+      </p>
+      <input class="gate-input" type="email" name="email" required
+             placeholder="Ihre E-Mail-Adresse" autocomplete="email" />
+      <button class="gate-submit" type="submit">Zugang freischalten</button>
+      <p class="gate-error" id="gate-error">Übermittlung fehlgeschlagen — bitte versuchen Sie es erneut.</p>
+      <p class="gate-note">
+        Ihre E-Mail-Adresse wird ausschließlich zur Kontaktaufnahme
+        zu diesem Objekt verwendet.
+      </p>
+    </form>
   </div>
 </div>
 
@@ -864,6 +1085,57 @@
     modalOverlay.style.display = 'none';
     document.body.style.overflow = '';
   }
+
+  // ── E-Mail-Gate (Produktkarte) ─────────────────────────────────
+  const GATE_KEY   = 'produktkarteUnlocked';
+  const gateForm   = document.getElementById('gate-form');
+  const gateError  = document.getElementById('gate-error');
+  const gateSubmit = gateForm.querySelector('.gate-submit');
+  const vrIframe   = document.getElementById('vr-iframe');
+
+  function unlockGate() {
+    document.body.classList.remove('gated');
+    document.body.classList.add('gate-unlocked');
+    document.body.style.overflow = '';
+    if (vrIframe && !vrIframe.src) vrIframe.src = vrIframe.dataset.src;
+  }
+
+  if (localStorage.getItem(GATE_KEY) === '1') {
+    unlockGate();
+  } else {
+    document.body.classList.add('gated');
+    document.body.style.overflow = 'hidden';
+  }
+
+  gateForm.addEventListener('submit', async e => {
+    e.preventDefault();
+    gateError.style.display = 'none';
+    gateSubmit.disabled = true;
+    gateSubmit.textContent = 'Wird gesendet…';
+
+    try {
+      const res = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(new FormData(gateForm)).toString()
+      });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      localStorage.setItem(GATE_KEY, '1');
+      unlockGate();
+    } catch (err) {
+      // Lokal (ohne Netlify-Backend) trotzdem freischalten, damit testbar
+      const isLocal = ['localhost', '127.0.0.1'].includes(location.hostname)
+                      || location.protocol === 'file:';
+      if (isLocal) {
+        localStorage.setItem(GATE_KEY, '1');
+        unlockGate();
+      } else {
+        gateError.style.display = 'block';
+        gateSubmit.disabled = false;
+        gateSubmit.textContent = 'Zugang freischalten';
+      }
+    }
+  });
 
   // ── Reveal on scroll ───────────────────────────────────────────
   const ro = new IntersectionObserver(entries => {

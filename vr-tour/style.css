@@ -1,0 +1,164 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+  background: #000;
+}
+
+#panorama {
+  width: 100vw;
+  height: 100vh;
+}
+
+#tour-title {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.55);
+  color: white;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* =========================
+   EDITOR PANEL
+========================= */
+
+#editor-panel {
+  position: absolute;
+  top: 70px;
+  right: 20px;
+  width: 320px;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.82);
+  color: white;
+  padding: 14px;
+  border-radius: 10px;
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+}
+
+#editor-panel h3 {
+  margin: 0 0 10px 0;
+  font-size: 16px;
+}
+
+#editor-panel label {
+  display: block;
+  margin-top: 8px;
+  margin-bottom: 4px;
+}
+
+#editor-panel select,
+#editor-panel input,
+#editor-panel button,
+#editor-panel textarea {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 5px;
+  padding: 7px;
+}
+
+#editor-panel button {
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  background: #ffffff;
+  color: #000000;
+  font-weight: bold;
+}
+
+#editor-panel textarea {
+  height: 120px;
+  resize: none;
+  font-family: Consolas, monospace;
+  font-size: 11px;
+}
+
+.editor-info {
+  background: rgba(255, 255, 255, 0.12);
+  padding: 8px;
+  border-radius: 6px;
+  line-height: 1.5;
+  margin-top: 8px;
+}
+
+.editor-note {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #ddd;
+}
+
+.editor-warning {
+  color: #ffd36b;
+  font-size: 12px;
+  margin-top: 8px;
+}
+
+/* =========================
+   HOTSPOT - SAYDAM ZEMİN HALKASI
+========================= */
+
+.pnlm-hotspot-base {
+  width: 54px !important;
+  height: 32px !important;
+
+  border-radius: 50% !important;
+
+  background: rgba(255, 255, 255, 0.025) !important;
+
+  border: 5px solid rgba(255, 255, 255, 0.32) !important;
+  box-sizing: border-box !important;
+
+  box-shadow:
+    0 0 10px rgba(0, 0, 0, 0.28),
+    0 0 18px rgba(255, 255, 255, 0.18) !important;
+
+  cursor: pointer !important;
+}
+
+/* İç ikonları kapat */
+.pnlm-hotspot-base::before {
+  display: none !important;
+  content: "" !important;
+}
+
+/* İç ikinci halka */
+.pnlm-hotspot-base::after {
+  content: "" !important;
+  display: block !important;
+
+  position: absolute;
+  left: 50%;
+  top: 50%;
+
+  width: 28px;
+  height: 15px;
+
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.22);
+
+  transform: translate(-50%, -50%);
+  box-sizing: border-box;
+}
+
+/* Eski ikon gizle */
+.pnlm-hotspot-base img {
+  display: none !important;
+}
+
+/* Hover */
+.pnlm-hotspot-base:hover {
+  border-color: rgba(255, 255, 255, 0.48) !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+
+  box-shadow:
+    0 0 12px rgba(0, 0, 0, 0.35),
+    0 0 24px rgba(255, 255, 255, 0.28) !important;
+}

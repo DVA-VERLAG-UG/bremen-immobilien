@@ -1328,6 +1328,59 @@
       color: rgba(255,255,255,0.22);
     }
 
+    .trip-photo-wrap {
+      position: relative;
+      flex: 1;
+      min-height: 260px;
+      display: block;
+      border: 1px solid rgba(255,255,255,0.05);
+      overflow: hidden;
+      text-decoration: none;
+    }
+
+    .trip-photo-wrap img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.8s cubic-bezier(0.16,1,0.3,1);
+    }
+    .trip-photo-wrap:hover img { transform: scale(1.04); }
+
+    .trip-photo-overlay {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 1.2rem 1.5rem;
+      background: linear-gradient(to top, rgba(8,8,14,0.92), transparent);
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .trip-photo-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--gold);
+      flex-shrink: 0;
+      animation: tripDotPulse 2.2s ease-in-out infinite;
+    }
+    @keyframes tripDotPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(200,169,110,0.45); }
+      50%      { box-shadow: 0 0 0 6px rgba(200,169,110,0); }
+    }
+
+    .trip-photo-label {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+      transition: color 0.25s;
+    }
+    .trip-photo-wrap:hover .trip-photo-label { color: var(--gold); }
+
     .trip-locked-list {
       list-style: none;
       display: flex;
@@ -1586,6 +1639,7 @@
         gap: 2px;
       }
       .trip-video-wrap { min-height: 200px; }
+      .trip-photo-wrap { min-height: 200px; }
 
       .cs-referral-inner {
         grid-template-columns: 1fr;
@@ -2144,21 +2198,16 @@
           <p class="trip-impression">Ein ruhig gelegenes Einfamilienhaus in der Vahr — solide Bausubstanz, im Begriff mit Sorgfalt neu zu werden. Hochwertige Sanierung, keine Käuferprovision.</p>
         </div>
 
-        <!-- Middle: Video teaser -->
+        <!-- Middle: Photo teaser -->
         <div class="triptych-panel triptych-middle reveal reveal-delay-1">
           <p class="trip-eyebrow">Einblick</p>
-          <div class="trip-video-wrap">
-            <video autoplay loop muted playsinline>
-              <!-- <source src="Bürgermeister/teaser.mp4" type="video/mp4"> -->
-            </video>
-            <div class="trip-video-overlay">
-              <span class="trip-video-label">Renovierung im Gang</span>
+          <a class="trip-photo-wrap" href="immobilien.html">
+            <img src="Bürgermeister/Full.jpeg" alt="Bürgermeister Spitta Allee 6 — Gesamtansicht" />
+            <div class="trip-photo-overlay">
+              <span class="trip-photo-dot"></span>
+              <span class="trip-photo-label">Klicke hier für das Exposé</span>
             </div>
-            <div class="trip-video-placeholder">
-              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(200,169,110,0.5)" stroke-width="1.2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-              <p>Video folgt in Kürze</p>
-            </div>
-          </div>
+          </a>
         </div>
 
         <!-- Right: Locked Objektakte -->
