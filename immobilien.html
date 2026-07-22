@@ -15,6 +15,7 @@
     }
 
     html { scroll-behavior: smooth; }
+    #rundgang, #lage, #ablauf, #listing-bsa6 { scroll-margin-top: 100px; }
 
     body {
       background: var(--dark);
@@ -1328,7 +1329,10 @@
       Melden Sie sich hier an, um den 360°-VR-Rundgang zu sehen und die
       restlichen Informationen samt Exposé zu erhalten.
     </p>
-    <form id="gate-form" name="produktkarte-zugang" method="POST">
+    <!-- data-netlify: wird aktiv, sobald die Seite bei Netlify gehostet wird;
+         aktuell übermittelt das JavaScript die Daten über Web3Forms per E-Mail -->
+    <form id="gate-form" name="produktkarte-zugang" method="POST" data-netlify="true" netlify-honeypot="botcheck">
+      <input type="hidden" name="form-name" value="produktkarte-zugang" />
       <input type="hidden" name="objekt" value="Vahr · Bremen (Bürgermeister Spitta Allee 6)" />
       <p class="gate-hp">
         <label>Bitte nicht ausfüllen: <input type="checkbox" name="botcheck" /></label>
@@ -1447,7 +1451,7 @@
 
   btnPK.addEventListener('click', e => {
     e.preventDefault();
-    if (localStorage.getItem('produktkarteUnlocked') === '1') {
+    if (isUnlocked()) {
       modalOverlay.style.display = 'flex';
       document.body.style.overflow = 'hidden';
     } else {
@@ -1465,7 +1469,13 @@
   }
 
   // ── E-Mail-Gate (Produktkarte) ─────────────────────────────────
-  const GATE_KEY    = 'produktkarteUnlocked';
+  // sessionStorage: Freischaltung gilt nur für die laufende Browser-Sitzung,
+  // jeder neue Besuch erfordert wieder eine E-Mail-Adresse.
+  const GATE_KEY    = 'rundgangZugang';
+
+  function isUnlocked() {
+    return sessionStorage.getItem(GATE_KEY) === '1';
+  }
   const gateOverlay = document.getElementById('gate-overlay');
   const gateCard    = document.getElementById('gate-card');
   const gateClose   = document.getElementById('gate-close');
@@ -1493,7 +1503,7 @@
   }
 
   function showGateSuccess() {
-    localStorage.setItem(GATE_KEY, '1');
+    sessionStorage.setItem(GATE_KEY, '1');
     gateCard.classList.add('success');
     applyUnlockedState();
     setTimeout(() => {
@@ -1504,7 +1514,7 @@
     }, 2200);
   }
 
-  if (localStorage.getItem(GATE_KEY) === '1') applyUnlockedState();
+  if (isUnlocked()) applyUnlockedState();
 
   vrLock.addEventListener('click', openGate);
   gateClose.addEventListener('click', closeGate);

@@ -1058,6 +1058,26 @@
     .reveal-delay-3 { transition-delay: 0.35s; }
     .reveal-delay-4 { transition-delay: 0.5s; }
 
+    /* Richtungs- & Zoom-Varianten für Scroll-Einblendungen */
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-48px);
+      transition: opacity 0.85s ease, transform 0.95s cubic-bezier(0.16,1,0.3,1);
+    }
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(48px);
+      transition: opacity 0.85s ease, transform 0.95s cubic-bezier(0.16,1,0.3,1);
+    }
+    .reveal-zoom {
+      opacity: 0;
+      transform: scale(0.94);
+      transition: opacity 0.85s ease, transform 1s cubic-bezier(0.16,1,0.3,1);
+    }
+    .reveal-left.in-view,
+    .reveal-right.in-view { opacity: 1; transform: translateX(0); }
+    .reveal-zoom.in-view  { opacity: 1; transform: scale(1); }
+
     /* ─ intro ─ */
     .cs-intro {
       padding: 10rem 0 4rem;
@@ -1104,19 +1124,24 @@
       padding: 0 0 3rem;
       text-align: center;
     }
+    .cs-glimpse .cs-container { max-width: 1500px; }
     .cs-glimpse .cs-eyebrow { margin-bottom: 2rem; }
     .glimpse-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: 1fr 1fr;
       gap: 2px;
       text-align: left;
     }
     .glimpse-item {
       position: relative;
-      aspect-ratio: 4/3;
+      aspect-ratio: 3/2;
       overflow: hidden;
       border: 1px solid rgba(255,255,255,0.06);
       background: #0c0c18;
+    }
+    .glimpse-item:first-child {
+      grid-column: 1 / -1;
+      aspect-ratio: 21/9;
     }
     .glimpse-item img {
       width: 100%; height: 100%;
@@ -1127,11 +1152,11 @@
     .glimpse-cap {
       position: absolute;
       bottom: 0; left: 0; right: 0;
-      padding: 0.9rem 1.1rem;
+      padding: 1.1rem 1.4rem;
       background: linear-gradient(to top, rgba(8,8,14,0.88), transparent);
       font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.64rem;
-      letter-spacing: 0.22em;
+      font-size: 0.74rem;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
       color: rgba(255,255,255,0.62);
     }
@@ -1358,7 +1383,7 @@
 
     .cs-triptych-panels {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-columns: 0.82fr 1.36fr 0.82fr;
       gap: 2px;
     }
 
@@ -1372,8 +1397,8 @@
 
     .trip-eyebrow {
       font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.58rem;
-      letter-spacing: 0.45em;
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
       text-transform: uppercase;
       color: var(--gold);
       margin-bottom: 2rem;
@@ -1390,10 +1415,10 @@
 
     .trip-key {
       font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.65rem;
-      letter-spacing: 0.15em;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.55);
+      color: rgba(255,255,255,0.6);
       white-space: nowrap;
     }
 
@@ -1411,9 +1436,9 @@
 
     .trip-impression {
       font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.82rem;
-      line-height: 1.8;
-      color: rgba(255,255,255,0.68);
+      font-size: 0.9rem;
+      line-height: 1.85;
+      color: rgba(255,255,255,0.7);
       flex: 1;
     }
 
@@ -1474,7 +1499,7 @@
     .trip-photo-wrap {
       position: relative;
       flex: 1;
-      min-height: 260px;
+      min-height: 520px;
       display: block;
       border: 1px solid rgba(255,255,255,0.05);
       overflow: hidden;
@@ -1540,8 +1565,8 @@
       padding: 0.9rem 0;
       border-bottom: 1px solid rgba(255,255,255,0.06);
       font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.78rem;
-      color: rgba(255,255,255,0.58);
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.65);
       letter-spacing: 0.02em;
     }
 
@@ -1758,7 +1783,7 @@
 
       .cs-glimpse   { padding: 0 0 2rem; }
       .glimpse-grid { grid-template-columns: 1fr; gap: 2px; }
-      .glimpse-item { aspect-ratio: 16/10; }
+      .glimpse-item, .glimpse-item:first-child { aspect-ratio: 16/10; }
 
       .cs-prop-grid {
         grid-template-columns: 1fr;
@@ -1785,8 +1810,8 @@
         grid-template-columns: 1fr;
         gap: 2px;
       }
-      .trip-video-wrap { min-height: 200px; }
-      .trip-photo-wrap { min-height: 200px; }
+      .trip-video-wrap { min-height: 260px; }
+      .trip-photo-wrap { min-height: 320px; }
 
       .cs-referral-inner {
         grid-template-columns: 1fr;
@@ -2104,6 +2129,11 @@
       .referral-stripe, .counter-glow { animation: none !important; }
       .cs-sep::after { animation: none !important; }
       #film-grain { animation: none !important; }
+      .reveal, .reveal-left, .reveal-right, .reveal-zoom {
+        transition: none !important;
+        transform: none !important;
+        opacity: 1 !important;
+      }
     }
   </style>
 </head>
@@ -2252,15 +2282,15 @@
     <div class="cs-container">
       <p class="cs-eyebrow reveal">Ein Einblick</p>
       <div class="glimpse-grid">
-        <figure class="glimpse-item reveal">
+        <figure class="glimpse-item reveal-zoom">
           <img src="Bürgermeister/Front.jpeg" alt="Bürgermeister Spitta Allee 6 – Frontansicht" loading="lazy" />
           <figcaption class="glimpse-cap">Frontansicht</figcaption>
         </figure>
-        <figure class="glimpse-item reveal reveal-delay-1">
+        <figure class="glimpse-item reveal-left reveal-delay-1">
           <img src="Bürgermeister/Back.jpeg" alt="Bürgermeister Spitta Allee 6 – Rückseite" loading="lazy" />
           <figcaption class="glimpse-cap">Rückseite</figcaption>
         </figure>
-        <figure class="glimpse-item reveal reveal-delay-2">
+        <figure class="glimpse-item reveal-right reveal-delay-2">
           <img src="Bürgermeister/Full.jpeg" alt="Bürgermeister Spitta Allee 6 – Gesamtansicht" loading="lazy" />
           <figcaption class="glimpse-cap">Gesamtansicht</figcaption>
         </figure>
@@ -2272,17 +2302,17 @@
   <section class="cs-counter">
     <div class="cs-container">
       <div class="cs-counter-grid">
-        <div class="cs-counter-box reveal">
+        <div class="cs-counter-box reveal-zoom">
           <span class="counter-glow" aria-hidden="true"></span>
           <p class="counter-num" data-target="2">2</p>
           <p class="counter-label">Immobilien im Ankauf</p>
         </div>
-        <div class="cs-counter-box reveal reveal-delay-1">
+        <div class="cs-counter-box reveal-zoom reveal-delay-1">
           <span class="counter-glow" aria-hidden="true"></span>
           <p class="counter-num" data-target="1">1</p>
           <p class="counter-label">Immobilien in Entwicklung</p>
         </div>
-        <div class="cs-counter-box reveal reveal-delay-2">
+        <div class="cs-counter-box reveal-zoom reveal-delay-2">
           <span class="counter-glow" aria-hidden="true"></span>
           <p class="counter-num">—</p>
           <p class="counter-label">Immobilien im Verkauf</p>
@@ -2335,7 +2365,7 @@
       <div class="cs-triptych-panels">
 
         <!-- Left: Public info -->
-        <div class="triptych-panel triptych-left reveal">
+        <div class="triptych-panel triptych-left reveal-left">
           <p class="trip-eyebrow">Öffentliche Informationen</p>
           <div class="trip-info-row">
             <span class="trip-key">Stadtteil / Lage</span>
@@ -2362,9 +2392,9 @@
         </div>
 
         <!-- Middle: Photo teaser -->
-        <div class="triptych-panel triptych-middle reveal reveal-delay-1">
+        <div class="triptych-panel triptych-middle reveal-zoom reveal-delay-1">
           <p class="trip-eyebrow">Einblick</p>
-          <a class="trip-photo-wrap" href="immobilien.html">
+          <a class="trip-photo-wrap" href="immobilien.html#rundgang">
             <img src="Bürgermeister/Full.jpeg" alt="Bürgermeister Spitta Allee 6 — Gesamtansicht" />
             <div class="trip-photo-overlay">
               <span class="trip-photo-dot"></span>
@@ -2374,7 +2404,7 @@
         </div>
 
         <!-- Right: Locked Objektakte -->
-        <div class="triptych-panel triptych-right reveal reveal-delay-2">
+        <div class="triptych-panel triptych-right reveal-right reveal-delay-2">
           <p class="trip-eyebrow">Objektakte</p>
           <ul class="trip-locked-list">
             <li class="trip-locked-item">
@@ -2403,7 +2433,7 @@
             </li>
           </ul>
           <div class="trip-cta-group">
-            <a class="trip-cta" href="immobilien.html" target="_blank">
+            <a class="trip-cta" href="immobilien.html#rundgang" target="_blank">
               Objektakte anschauen
               <svg viewBox="0 0 11 11" fill="none"><path d="M1.5 5.5H9.5M6 2L9.5 5.5L6 9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </a>
@@ -2444,7 +2474,7 @@
              Foto ersetzen (Porträt oder Team vor dem Objekt), z. B.:
              <img src="Logos/team.jpeg" alt="Das Team von Kuscu Immobilien"
                   style="width:100%;display:block" /> -->
-        <div class="about-visual">
+        <div class="about-visual reveal-right reveal-delay-1">
           <div class="about-monogram">K</div>
           <ul class="about-values">
             <li>Sorgfältige Sanierung</li>
@@ -3143,7 +3173,8 @@
     });
   }, { threshold: 0.15 });
 
-  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+  document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-zoom')
+    .forEach(el => revealObserver.observe(el));
 
   // ── Parallax on property images ───────────────────────────────
   const parallaxEls = document.querySelectorAll('[data-parallax]');
