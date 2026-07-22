@@ -53,6 +53,36 @@
     }
     .nav-logo:hover img { opacity: 1; }
 
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2.2rem;
+    }
+    .nav-links a {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: rgba(255,255,255,0.55);
+      padding: 0.4rem 0;
+      position: relative;
+      transition: color 0.25s;
+    }
+    .nav-links a:hover { color: #fff; }
+    .nav-links a.active { color: var(--gold); }
+    .nav-links a.active::after {
+      content: '';
+      position: absolute;
+      left: 0; bottom: 0;
+      width: 100%; height: 1px;
+      background: var(--gold);
+      opacity: 0.6;
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+    }
+
     /* ── BURGER ──────────────────────────────────────────────── */
     #menu-btn {
       width: 44px; height: 44px;
@@ -174,7 +204,7 @@
     .page-sub {
       font-family: 'Helvetica Neue', Arial, sans-serif;
       font-size: 0.88rem;
-      color: rgba(255,255,255,0.38);
+      color: rgba(255,255,255,0.68);
       line-height: 1.75;
       max-width: 440px;
     }
@@ -254,8 +284,8 @@
     }
 
     .listing-badge.status {
-      border-color: rgba(255,255,255,0.1);
-      color: rgba(255,255,255,0.45);
+      border-color: rgba(255,255,255,0.18);
+      color: rgba(255,255,255,0.62);
     }
 
     /* image slider nav */
@@ -292,7 +322,7 @@
       font-family: 'Helvetica Neue', Arial, sans-serif;
       font-size: 0.58rem;
       letter-spacing: 0.2em;
-      color: rgba(255,255,255,0.35);
+      color: rgba(255,255,255,0.55);
     }
 
     /* thumbnail strip */
@@ -350,7 +380,7 @@
     .listing-city {
       font-family: 'Helvetica Neue', Arial, sans-serif;
       font-size: 0.75rem;
-      color: rgba(255,255,255,0.32);
+      color: rgba(255,255,255,0.55);
       letter-spacing: 0.06em;
       margin-bottom: 0;
     }
@@ -379,17 +409,17 @@
 
     .lspec-key {
       font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.52rem;
+      font-size: 0.62rem;
       letter-spacing: 0.3em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.28);
+      color: rgba(255,255,255,0.5);
     }
 
     .listing-desc {
       font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.82rem;
+      font-size: 0.88rem;
       line-height: 1.85;
-      color: rgba(255,255,255,0.42);
+      color: rgba(255,255,255,0.68);
       margin-bottom: 1.5rem;
       max-width: 400px;
     }
@@ -403,12 +433,12 @@
 
     .ltag {
       font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.52rem;
+      font-size: 0.6rem;
       letter-spacing: 0.22em;
       text-transform: uppercase;
       padding: 0.3rem 0.7rem;
-      border: 1px solid rgba(255,255,255,0.1);
-      color: rgba(255,255,255,0.35);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: rgba(255,255,255,0.58);
       border-radius: 1px;
     }
 
@@ -423,15 +453,15 @@
 
     .listing-price-label {
       font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.55rem;
+      font-size: 0.6rem;
       letter-spacing: 0.35em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.25);
+      color: rgba(255,255,255,0.45);
     }
 
     .listing-price-val {
       font-size: 1.1rem;
-      color: rgba(255,255,255,0.7);
+      color: rgba(255,255,255,0.85);
     }
 
     .listing-cta-group {
@@ -465,9 +495,9 @@
       align-items: center;
       gap: 0.7rem;
       padding: 0.9rem 1.8rem;
-      border: 1px solid rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.25);
       background: transparent;
-      color: rgba(255,255,255,0.38);
+      color: rgba(255,255,255,0.6);
       font-family: 'Helvetica Neue', Arial, sans-serif;
       font-size: 0.6rem;
       letter-spacing: 0.32em;
@@ -495,9 +525,9 @@
 
     .vr-desc {
       font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.82rem;
+      font-size: 0.88rem;
       line-height: 1.85;
-      color: rgba(255,255,255,0.42);
+      color: rgba(255,255,255,0.68);
       max-width: 440px;
       margin-bottom: 2.2rem;
     }
@@ -517,33 +547,29 @@
 
     .vr-hint {
       font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.55rem;
+      font-size: 0.62rem;
       letter-spacing: 0.3em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.25);
+      color: rgba(255,255,255,0.45);
       margin-top: 1rem;
     }
 
     /* ── E-MAIL GATE (Produktkarte) ──────────────────────────── */
     #gate-overlay {
-      position: fixed; inset: 0; z-index: 90;
+      position: fixed; inset: 0; z-index: 200;
       background: rgba(8,8,14,0.88);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
-      display: flex;
+      display: none;
       align-items: flex-start;
       justify-content: center;
       padding: 90px 1.25rem 2rem;
       overflow-y: auto;
     }
-    body.gate-unlocked #gate-overlay { display: none; }
-    body.gated .listings {
-      filter: blur(10px);
-      pointer-events: none;
-      user-select: none;
-    }
+    #gate-overlay.open { display: flex; }
 
     .gate-card {
+      position: relative;
       max-width: 440px;
       width: 100%;
       margin: auto;
@@ -640,9 +666,225 @@
 
     .gate-hp { display: none; }
 
+    .gate-close {
+      position: absolute;
+      top: 0.9rem; right: 0.9rem;
+      width: 38px; height: 38px;
+      background: none;
+      border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.5);
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color 0.25s, color 0.25s;
+    }
+    .gate-close:hover { border-color: var(--gold); color: var(--gold); }
+
+    .gate-consent {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      text-align: left;
+      margin: 0.9rem 0 0.9rem;
+      cursor: pointer;
+    }
+    .gate-consent input {
+      margin-top: 2px;
+      accent-color: var(--gold);
+      flex-shrink: 0;
+      width: 14px; height: 14px;
+      cursor: pointer;
+    }
+    .gate-consent span {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.62rem;
+      line-height: 1.6;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 0.02em;
+    }
+    .gate-consent a { color: var(--gold); text-decoration: none; }
+    .gate-consent a:hover { text-decoration: underline; }
+
+    .gate-success { display: none; padding: 1.5rem 0 0.5rem; }
+    .gate-success svg { width: 42px; height: 42px; margin-bottom: 1.2rem; }
+    .gate-success h3 {
+      font-size: 1.4rem;
+      font-weight: 400;
+      margin-bottom: 0.7rem;
+    }
+    .gate-success p {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.75;
+    }
+    .gate-card.success #gate-form,
+    .gate-card.success .gate-text,
+    .gate-card.success .gate-photo { display: none; }
+    .gate-card.success .gate-success { display: block; }
+
+    /* ── VR LOCK (Vorschau im Rundgang-Kasten) ───────────────── */
+    .vr-lock {
+      position: relative;
+      height: 560px;
+      overflow: hidden;
+      cursor: pointer;
+      display: block;
+      width: 100%;
+      border: none;
+      padding: 0;
+      background: #0c0c18;
+      text-align: center;
+      font-family: 'Georgia', 'Times New Roman', serif;
+    }
+    .vr-lock img {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      opacity: 0.45;
+      transition: opacity 0.4s ease, transform 0.8s cubic-bezier(0.16,1,0.3,1);
+    }
+    .vr-lock:hover img { opacity: 0.6; transform: scale(1.03); }
+    .vr-lock-inner {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.1rem;
+      padding: 2rem;
+      background: radial-gradient(ellipse at center, rgba(8,8,14,0.25), rgba(8,8,14,0.62));
+    }
+    .vr-lock-play {
+      width: 76px; height: 76px;
+      border-radius: 50%;
+      border: 1px solid var(--gold);
+      background: rgba(8,8,14,0.55);
+      color: var(--gold);
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.3s, transform 0.3s;
+      backdrop-filter: blur(4px);
+    }
+    .vr-lock:hover .vr-lock-play { background: var(--gold); color: var(--dark); transform: scale(1.06); }
+    .vr-lock-play svg { width: 22px; height: 22px; margin-left: 3px; }
+    .vr-lock-title {
+      font-size: 1.35rem;
+      font-weight: 400;
+      color: #fff;
+    }
+    .vr-lock-sub {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      color: rgba(255,255,255,0.65);
+      max-width: 380px;
+      line-height: 1.7;
+    }
+
+    /* ── ABLAUF (3 Schritte) ─────────────────────────────────── */
+    .ablauf-section {
+      border: 1px solid rgba(255,255,255,0.06);
+      padding: 3.5rem;
+    }
+    .ablauf-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2.5rem;
+      margin-top: 2.5rem;
+    }
+    .ablauf-num {
+      display: block;
+      font-size: 1.9rem;
+      color: var(--gold);
+      opacity: 0.85;
+      margin-bottom: 0.9rem;
+    }
+    .ablauf-step h3 {
+      font-size: 1.05rem;
+      font-weight: 400;
+      margin-bottom: 0.6rem;
+    }
+    .ablauf-step p {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.8rem;
+      line-height: 1.75;
+      color: rgba(255,255,255,0.6);
+    }
+
+    /* ── LAGE & TAGEBUCH ─────────────────────────────────────── */
+    .lage-section {
+      border: 1px solid rgba(255,255,255,0.06);
+      padding: 3.5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+    }
+    .lage-text {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.88rem;
+      line-height: 1.85;
+      color: rgba(255,255,255,0.68);
+      max-width: 440px;
+      margin-bottom: 1.6rem;
+    }
+    .tagebuch {
+      list-style: none;
+      margin-top: 0.4rem;
+    }
+    .tagebuch li {
+      position: relative;
+      padding: 0 0 1.6rem 1.9rem;
+      border-left: 1px solid rgba(255,255,255,0.12);
+      margin-left: 5px;
+    }
+    .tagebuch li:last-child { padding-bottom: 0.2rem; }
+    .tagebuch li::before {
+      content: '';
+      position: absolute;
+      left: -5.5px; top: 4px;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--dark);
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+    .tagebuch li.done::before  { background: var(--gold); border-color: var(--gold); }
+    .tagebuch li.active::before {
+      background: var(--dark);
+      border-color: var(--gold);
+      box-shadow: 0 0 0 4px rgba(200,169,110,0.18);
+    }
+    .tagebuch-title {
+      display: block;
+      font-size: 1rem;
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 0.25rem;
+    }
+    .tagebuch-status {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+    }
+    .tagebuch li.done .tagebuch-status,
+    .tagebuch li.active .tagebuch-status { color: var(--gold); }
+
+    @media (max-width: 900px) {
+      .lage-section { grid-template-columns: 1fr; gap: 3rem; padding: 2.5rem 1.75rem; }
+      .ablauf-section { padding: 2.5rem 1.75rem; }
+      .ablauf-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .vr-lock { height: 480px; }
+    }
+
     @media (max-width: 580px) {
       .gate-card { padding: 2rem 1.5rem; }
       .gate-photo img { height: 130px; }
+      .lage-section, .ablauf-section { padding: 2rem 1.25rem; }
+      .vr-lock { height: 50vh; }
+      .vr-lock-title { font-size: 1.15rem; }
     }
 
     /* ── REVEAL ──────────────────────────────────────────────── */
@@ -679,9 +921,26 @@
     }
     .footer-copy {
       font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.58rem;
-      color: rgba(255,255,255,0.18);
+      font-size: 0.62rem;
+      color: rgba(255,255,255,0.4);
     }
+
+    .footer-links {
+      display: flex;
+      align-items: center;
+      gap: 1.8rem;
+      flex-wrap: wrap;
+    }
+    .footer-links a {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: rgba(255,255,255,0.45);
+      transition: color 0.25s;
+    }
+    .footer-links a:hover { color: var(--gold); }
 
     /* ── RESPONSIVE ──────────────────────────────────────────── */
     @media (max-width: 900px) {
@@ -712,6 +971,11 @@
 <!-- ── NAV ────────────────────────────────────────────────────── -->
 <nav>
   <a class="nav-logo" href="index.html"><img src="Logos/Kuscu.jpeg" alt="Kuscu Immobilien" /></a>
+  <div class="nav-links">
+    <a href="index.html">Startseite</a>
+    <a href="immobilien.html" class="active">Immobilien</a>
+    <a href="kontakt.html">Kontakt</a>
+  </div>
   <button id="menu-btn" aria-label="Menü öffnen">
     <span class="burger-line"></span>
     <span class="burger-line"></span>
@@ -877,6 +1141,82 @@
     </div>
   </article>
 
+  <!-- ── LAGE & SANIERUNGS-TAGEBUCH ── -->
+  <section class="lage-section reveal" id="lage">
+    <div>
+      <p class="listing-eyebrow reveal reveal-d1">Die Lage</p>
+      <h2 class="vr-title reveal reveal-d2">Zuhause in der Vahr</h2>
+      <div class="listing-divider reveal reveal-d3"></div>
+      <p class="lage-text reveal reveal-d3">
+        Die Vahr gehört zu den grünsten Stadtteilen Bremens: viel Raum
+        zum Durchatmen, der Vahrer See gleich um die Ecke und der
+        traditionsreiche Golfplatz des Club zur Vahr vor der Tür.
+        Einkäufe erledigen Sie in der Berliner Freiheit, die Straßenbahn
+        bringt Sie ohne Umsteigen in die Innenstadt — und Kitas wie
+        Schulen liegen in Gehweite.
+      </p>
+      <div class="listing-tags reveal reveal-d4">
+        <span class="ltag">Vahrer See</span>
+        <span class="ltag">Berliner Freiheit</span>
+        <span class="ltag">Straßenbahn-Anschluss</span>
+        <span class="ltag">Golfclub zur Vahr</span>
+        <span class="ltag">Kitas &amp; Schulen</span>
+      </div>
+    </div>
+    <div>
+      <p class="listing-eyebrow reveal reveal-d1">Sanierungs-Tagebuch</p>
+      <h2 class="vr-title reveal reveal-d2">Schritt für Schritt, mit Sorgfalt</h2>
+      <div class="listing-divider reveal reveal-d3"></div>
+      <!-- TODO: Status & Meilensteine an den tatsächlichen Stand anpassen.
+           Klassen: done = abgeschlossen, active = in Arbeit, ohne = geplant -->
+      <ul class="tagebuch reveal reveal-d4">
+        <li class="done">
+          <span class="tagebuch-title">Ankauf &amp; Planung</span>
+          <span class="tagebuch-status">Abgeschlossen</span>
+        </li>
+        <li class="active">
+          <span class="tagebuch-title">Sanierung &amp; Ausbau</span>
+          <span class="tagebuch-status">In Arbeit</span>
+        </li>
+        <li>
+          <span class="tagebuch-title">Feinschliff &amp; Garten</span>
+          <span class="tagebuch-status">Geplant</span>
+        </li>
+        <li>
+          <span class="tagebuch-title">Fertigstellung &amp; Übergabe</span>
+          <span class="tagebuch-status">Geplant</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ── SO LÄUFT ES AB ── -->
+  <section class="ablauf-section reveal" id="ablauf">
+    <p class="listing-eyebrow reveal reveal-d1">So läuft es ab</p>
+    <h2 class="vr-title reveal reveal-d2">In drei Schritten zur Besichtigung</h2>
+    <div class="listing-divider reveal reveal-d3"></div>
+    <div class="ablauf-grid">
+      <div class="ablauf-step reveal reveal-d3">
+        <span class="ablauf-num">01</span>
+        <h3>Anmelden</h3>
+        <p>Hinterlassen Sie Ihre E-Mail-Adresse — kostenlos und unverbindlich.
+           Mehr brauchen wir nicht.</p>
+      </div>
+      <div class="ablauf-step reveal reveal-d4">
+        <span class="ablauf-num">02</span>
+        <h3>Rundgang &amp; Exposé</h3>
+        <p>Erkunden Sie das Haus im 360°-Rundgang in Ihrem eigenen Tempo
+           und erhalten Sie das vollständige Exposé.</p>
+      </div>
+      <div class="ablauf-step reveal reveal-d5">
+        <span class="ablauf-num">03</span>
+        <h3>Besichtigung</h3>
+        <p>Gefällt Ihnen, was Sie sehen? Dann vereinbaren wir gern einen
+           persönlichen Termin vor Ort.</p>
+      </div>
+    </div>
+  </section>
+
   <!-- ── 360° RUNDGANG ── -->
   <section class="vr-section reveal" id="rundgang">
     <p class="listing-eyebrow reveal reveal-d1">Virtueller Rundgang</p>
@@ -888,13 +1228,25 @@
       Sie den Pfeilen in den nächsten Raum.
     </p>
     <div class="vr-frame-box reveal reveal-d4">
+      <button class="vr-lock" id="vr-lock" type="button">
+        <img src="Bürgermeister/Full.jpeg" alt="" aria-hidden="true" />
+        <span class="vr-lock-inner">
+          <span class="vr-lock-play" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 21 12 6 21 6 3"/></svg>
+          </span>
+          <span class="vr-lock-title">360°-Rundgang freischalten</span>
+          <span class="vr-lock-sub">Kostenlos mit Ihrer E-Mail-Adresse — Sie erhalten
+            außerdem das vollständige Exposé.</span>
+        </span>
+      </button>
       <iframe
         id="vr-iframe"
         data-src="vr-tour/index.html"
         title="360° Rundgang durch das Haus"
         loading="lazy"
         allowfullscreen
-        allow="fullscreen; gyroscope; accelerometer"></iframe>
+        allow="fullscreen; gyroscope; accelerometer"
+        style="display:none"></iframe>
     </div>
     <p class="vr-hint reveal reveal-d5">Klicken &amp; ziehen zum Umsehen</p>
   </section>
@@ -956,9 +1308,19 @@
 
 <!-- ── E-MAIL GATE (Produktkarte) ──────────────────────────────── -->
 <div id="gate-overlay">
-  <div class="gate-card">
+  <div class="gate-card" id="gate-card">
+    <button class="gate-close" id="gate-close" aria-label="Schließen">✕</button>
     <p class="gate-eyebrow">Produktkarte</p>
     <h3 class="gate-title">Vahr · Bremen</h3>
+    <div class="gate-success" id="gate-success" aria-live="polite">
+      <svg viewBox="0 0 52 52" fill="none">
+        <circle cx="26" cy="26" r="25" stroke="#c8a96e" stroke-width="1.2"/>
+        <path d="M15 27l7.5 7.5L37 20" stroke="#c8a96e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <h3>Danke!</h3>
+      <p>Ihr Zugang ist freigeschaltet — viel Freude beim Rundgang
+         durch das Haus.</p>
+    </div>
     <div class="gate-photo">
       <img src="Bürgermeister/Full.jpeg" alt="Einfamilienhaus Vahr — Gesamtansicht" />
     </div>
@@ -973,6 +1335,12 @@
       </p>
       <input class="gate-input" type="email" name="email" required
              placeholder="Ihre E-Mail-Adresse" autocomplete="email" />
+      <label class="gate-consent">
+        <input type="checkbox" name="datenschutz-einwilligung" required />
+        <span>Ich habe die <a href="datenschutz.html" target="_blank">Datenschutzerklärung</a>
+        gelesen und bin damit einverstanden, dass meine E-Mail-Adresse zur
+        Kontaktaufnahme zu diesem Objekt gespeichert wird.</span>
+      </label>
       <button class="gate-submit" type="submit">Zugang freischalten</button>
       <p class="gate-error" id="gate-error">Übermittlung fehlgeschlagen — bitte versuchen Sie es erneut.</p>
       <p class="gate-note">
@@ -986,7 +1354,14 @@
 <!-- ── FOOTER ──────────────────────────────────────────────────── -->
 <footer>
   <img class="footer-brand" src="Logos/Kuscu.jpeg" alt="Kuscu Immobilien" />
-  <span class="footer-copy">© 2025 · Alle Rechte vorbehalten</span>
+  <div class="footer-links">
+    <a href="mailto:navidistanbullu@gmail.com">navidistanbullu@gmail.com</a>
+    <!-- TODO: Telefonnummer eintragen, z. B.:
+    <a href="tel:+49421XXXXXXX">+49 421 XXX XX XX</a> -->
+    <a href="impressum.html">Impressum</a>
+    <a href="datenschutz.html">Datenschutz</a>
+  </div>
+  <span class="footer-copy">© 2026 Kuscu Immobilien · Alle Rechte vorbehalten</span>
 </footer>
 
 <script>
@@ -1072,8 +1447,12 @@
 
   btnPK.addEventListener('click', e => {
     e.preventDefault();
-    modalOverlay.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
+    if (localStorage.getItem('produktkarteUnlocked') === '1') {
+      modalOverlay.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    } else {
+      openGate();
+    }
   });
 
   modalClose.addEventListener('click', closeModal);
@@ -1086,25 +1465,53 @@
   }
 
   // ── E-Mail-Gate (Produktkarte) ─────────────────────────────────
-  const GATE_KEY   = 'produktkarteUnlocked';
-  const gateForm   = document.getElementById('gate-form');
-  const gateError  = document.getElementById('gate-error');
-  const gateSubmit = gateForm.querySelector('.gate-submit');
-  const vrIframe   = document.getElementById('vr-iframe');
+  const GATE_KEY    = 'produktkarteUnlocked';
+  const gateOverlay = document.getElementById('gate-overlay');
+  const gateCard    = document.getElementById('gate-card');
+  const gateClose   = document.getElementById('gate-close');
+  const gateForm    = document.getElementById('gate-form');
+  const gateError   = document.getElementById('gate-error');
+  const gateSubmit  = gateForm.querySelector('.gate-submit');
+  const vrIframe    = document.getElementById('vr-iframe');
+  const vrLock      = document.getElementById('vr-lock');
 
-  function unlockGate() {
-    document.body.classList.remove('gated');
-    document.body.classList.add('gate-unlocked');
-    document.body.style.overflow = '';
-    if (vrIframe && !vrIframe.src) vrIframe.src = vrIframe.dataset.src;
+  function applyUnlockedState() {
+    vrLock.style.display = 'none';
+    if (!vrIframe.src) vrIframe.src = vrIframe.dataset.src;
+    vrIframe.style.display = 'block';
   }
 
-  if (localStorage.getItem(GATE_KEY) === '1') {
-    unlockGate();
-  } else {
-    document.body.classList.add('gated');
+  function openGate() {
+    gateCard.classList.remove('success');
+    gateOverlay.classList.add('open');
     document.body.style.overflow = 'hidden';
   }
+
+  function closeGate() {
+    gateOverlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function showGateSuccess() {
+    localStorage.setItem(GATE_KEY, '1');
+    gateCard.classList.add('success');
+    applyUnlockedState();
+    setTimeout(() => {
+      closeGate();
+      gateSubmit.disabled = false;
+      gateSubmit.textContent = 'Zugang freischalten';
+      document.getElementById('rundgang').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 2200);
+  }
+
+  if (localStorage.getItem(GATE_KEY) === '1') applyUnlockedState();
+
+  vrLock.addEventListener('click', openGate);
+  gateClose.addEventListener('click', closeGate);
+  gateOverlay.addEventListener('click', e => { if (e.target === gateOverlay) closeGate(); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && gateOverlay.classList.contains('open')) closeGate();
+  });
 
   // Web3Forms: kostenlosen Access Key auf https://web3forms.com erstellen
   // (E-Mail-Adresse eingeben, Key kommt sofort per Mail) und hier einfügen:
@@ -1133,13 +1540,11 @@
       });
       const json = await res.json();
       if (!json.success) throw new Error(json.message || 'Übermittlung fehlgeschlagen');
-      localStorage.setItem(GATE_KEY, '1');
-      unlockGate();
+      showGateSuccess();
     } catch (err) {
       if (isLocal) {
         // Lokal trotzdem freischalten, damit die Seite testbar bleibt
-        localStorage.setItem(GATE_KEY, '1');
-        unlockGate();
+        showGateSuccess();
       } else {
         gateError.textContent = WEB3FORMS_ACCESS_KEY.startsWith('HIER_')
           ? 'Formular noch nicht konfiguriert — der Web3Forms Access Key fehlt.'

@@ -1060,14 +1060,14 @@
 
     /* ─ intro ─ */
     .cs-intro {
-      padding: 10rem 0 7rem;
+      padding: 10rem 0 4rem;
       text-align: center;
     }
 
     .cs-eyebrow {
       font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.68rem;
-      letter-spacing: 0.45em;
+      font-size: 0.74rem;
+      letter-spacing: 0.32em;
       text-transform: uppercase;
       color: var(--gold);
       margin-bottom: 1.5rem;
@@ -1082,9 +1082,9 @@
 
     .cs-lead {
       font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 1rem;
-      line-height: 1.8;
-      color: rgba(255,255,255,0.5);
+      font-size: 1.05rem;
+      line-height: 1.85;
+      color: rgba(255,255,255,0.66);
       max-width: 600px;
       margin: 0 auto;
     }
@@ -1098,6 +1098,43 @@
       transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .cs-gold-line.in-view { width: 80px; }
+
+    /* ─ glimpse photo strip ─ */
+    .cs-glimpse {
+      padding: 0 0 3rem;
+      text-align: center;
+    }
+    .cs-glimpse .cs-eyebrow { margin-bottom: 2rem; }
+    .glimpse-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      text-align: left;
+    }
+    .glimpse-item {
+      position: relative;
+      aspect-ratio: 4/3;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.06);
+      background: #0c0c18;
+    }
+    .glimpse-item img {
+      width: 100%; height: 100%;
+      object-fit: cover; display: block;
+      transition: transform 1.1s cubic-bezier(0.16,1,0.3,1);
+    }
+    .glimpse-item:hover img { transform: scale(1.045); }
+    .glimpse-cap {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 0.9rem 1.1rem;
+      background: linear-gradient(to top, rgba(8,8,14,0.88), transparent);
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.64rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.62);
+    }
 
     /* ─ properties grid ─ */
     .cs-properties {
@@ -1274,7 +1311,7 @@
 
     /* ─ counter boxes ─ */
     .cs-counter {
-      padding: 6rem 0 5rem;
+      padding: 2rem 0 5rem;
       border-top: 1px solid rgba(255,255,255,0.06);
     }
 
@@ -1293,7 +1330,7 @@
     .counter-num {
       font-size: clamp(2.8rem, 5vw, 4.5rem);
       font-weight: 300;
-      color: var(--gold);
+      color: rgba(200,169,110,0.82);
       letter-spacing: -0.02em;
       line-height: 1;
       margin-bottom: 0.75rem;
@@ -1301,10 +1338,10 @@
 
     .counter-label {
       font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.62rem;
-      letter-spacing: 0.3em;
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.55);
+      color: rgba(255,255,255,0.6);
     }
 
     /* ─ triptych ─ */
@@ -1715,9 +1752,13 @@
       /* content section */
       .cs-container { padding: 0 1.25rem; }
 
-      .cs-intro { padding: 6rem 0 3.5rem; }
+      .cs-intro { padding: 6rem 0 2.5rem; }
       .cs-h2    { font-size: clamp(1.6rem, 6vw, 2.4rem); }
-      .cs-lead  { font-size: 0.88rem; }
+      .cs-lead  { font-size: 0.92rem; }
+
+      .cs-glimpse   { padding: 0 0 2rem; }
+      .glimpse-grid { grid-template-columns: 1fr; gap: 2px; }
+      .glimpse-item { aspect-ratio: 16/10; }
 
       .cs-prop-grid {
         grid-template-columns: 1fr;
@@ -1976,15 +2017,15 @@
       border-bottom: 1px solid rgba(200,169,110,0.1);
       padding: 0.9rem 0; position: relative; z-index: 2;
     }
-    .cs-marquee-track { display: flex; width: max-content; animation: marqueeScroll 32s linear infinite; }
+    .cs-marquee-track { display: flex; width: max-content; animation: marqueeScroll 70s linear infinite; }
     .cs-marquee-group { display: flex; align-items: center; flex-shrink: 0; }
     .cs-marquee-item {
       display: inline-flex; align-items: center; gap: 0.75rem; padding: 0 2rem;
       font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.58rem; letter-spacing: 0.45em; text-transform: uppercase;
-      color: rgba(255,255,255,0.18); white-space: nowrap;
+      font-size: 0.64rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: rgba(255,255,255,0.3); white-space: nowrap;
     }
-    .cs-marquee-item.hi { color: rgba(200,169,110,0.5); }
+    .cs-marquee-item.hi { color: rgba(200,169,110,0.6); }
     .cs-marquee-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--gold); opacity: 0.4; flex-shrink: 0; }
     @keyframes marqueeScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
@@ -2007,20 +2048,9 @@
 
     .counter-glow {
       position: absolute; width: 220px; height: 220px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(200,169,110,0.13) 0%, transparent 65%);
+      background: radial-gradient(circle, rgba(200,169,110,0.16) 0%, transparent 65%);
       top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none;
-      animation: cGlowPulse 3.8s ease-in-out infinite;
     }
-    @keyframes cGlowPulse {
-      0%, 100% { opacity: 0.45; transform: translate(-50%, -50%) scale(1); }
-      50%       { opacity: 0.9;  transform: translate(-50%, -50%) scale(1.22); }
-    }
-
-    .cs-counter-box:nth-child(1) { animation: floatBox 7s ease-in-out 0s   infinite; }
-    .cs-counter-box:nth-child(2) { animation: floatBox 7s ease-in-out 2.3s infinite; }
-    .cs-counter-box:nth-child(3) { animation: floatBox 7s ease-in-out 4.6s infinite; }
-    .cs-counter-box:hover        { animation-play-state: paused; }
-    @keyframes floatBox { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
 
     /* ── TRIPTYCH 3D TILT + GLARE ────────────────────────────── */
     .triptych-panel {
@@ -2214,6 +2244,27 @@
         Wir erwerben, entwickeln und veräußern Wohn- und Gewerbeimmobilien in Bremen —
         mit Sorgfalt, Qualitätsanspruch und langfristiger Perspektive.
       </p>
+    </div>
+  </section>
+
+  <!-- Foto-Einblick -->
+  <section class="cs-glimpse">
+    <div class="cs-container">
+      <p class="cs-eyebrow reveal">Ein Einblick</p>
+      <div class="glimpse-grid">
+        <figure class="glimpse-item reveal">
+          <img src="Bürgermeister/Front.jpeg" alt="Bürgermeister Spitta Allee 6 – Frontansicht" loading="lazy" />
+          <figcaption class="glimpse-cap">Frontansicht</figcaption>
+        </figure>
+        <figure class="glimpse-item reveal reveal-delay-1">
+          <img src="Bürgermeister/Back.jpeg" alt="Bürgermeister Spitta Allee 6 – Rückseite" loading="lazy" />
+          <figcaption class="glimpse-cap">Rückseite</figcaption>
+        </figure>
+        <figure class="glimpse-item reveal reveal-delay-2">
+          <img src="Bürgermeister/Full.jpeg" alt="Bürgermeister Spitta Allee 6 – Gesamtansicht" loading="lazy" />
+          <figcaption class="glimpse-cap">Gesamtansicht</figcaption>
+        </figure>
+      </div>
     </div>
   </section>
 
