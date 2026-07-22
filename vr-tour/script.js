@@ -969,7 +969,7 @@ const tourScenes = buildScenes();
 
 const viewer = pannellum.viewer("panorama", {
   default: {
-    firstScene: "room04",
+    firstScene: "entranceHall03",
     sceneFadeDuration: 0,
     autoLoad: true,
     showControls: true,
@@ -980,7 +980,7 @@ const viewer = pannellum.viewer("panorama", {
 
 let navigationHistory = [];
 
-document.getElementById("tour-title").innerText = tourScenes.room04.title;
+document.getElementById("tour-title").innerText = tourScenes.entranceHall03.title;
 
 viewer.on("scenechange", function (sceneId) {
   document.getElementById("tour-title").innerText = tourScenes[sceneId].title;
