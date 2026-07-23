@@ -471,6 +471,17 @@ const savedConfig = {
         "targetYaw": 12.72,
         "targetPitch": -5,
         "targetHfov": 120
+      },
+      {
+        "id": "hs_1780800000001",
+        "pitch": -35,
+        "yaw": 30,
+        "type": "scene",
+        "text": "Kitchen 2",
+        "sceneId": "kitchen02",
+        "targetYaw": 37.24,
+        "targetPitch": 0.76,
+        "targetHfov": 120
       }
     ],
     "hall02ToRoom01": [
@@ -522,6 +533,30 @@ const savedConfig = {
         "sceneId": "room04ToHall02",
         "targetYaw": -24.79,
         "targetPitch": -6.31,
+        "targetHfov": 120
+      }
+    ],
+    "room04ToHall02": [
+      {
+        "id": "hs_1780800000002",
+        "pitch": -35,
+        "yaw": -135,
+        "type": "scene",
+        "text": "Kitchen 2",
+        "sceneId": "kitchen02",
+        "targetYaw": 37.24,
+        "targetPitch": 0.76,
+        "targetHfov": 120
+      },
+      {
+        "id": "hs_1780800000003",
+        "pitch": -40,
+        "yaw": -20,
+        "type": "scene",
+        "text": "Bathroom 2",
+        "sceneId": "bathroom02",
+        "targetYaw": 136.7,
+        "targetPitch": -19.37,
         "targetHfov": 120
       }
     ],
