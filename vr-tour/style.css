@@ -27,6 +27,180 @@ html, body {
 }
 
 /* =========================
+   ROOM NAV (Besucher: freie Raumwahl)
+========================= */
+
+#tour-nav-controls {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  z-index: 20;
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  font-family: Arial, sans-serif;
+}
+
+#room-nav {
+  position: relative;
+}
+
+#tour-back-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(0, 0, 0, 0.55);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: background 0.2s, border-color 0.2s, opacity 0.2s;
+}
+#tour-back-btn:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.75);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+#tour-back-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+#tour-back-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+@media (max-width: 640px) {
+  #tour-nav-controls { bottom: 12px; left: 12px; }
+  #tour-back-btn { padding: 9px 12px; font-size: 13px; }
+}
+
+#room-nav-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.55);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: background 0.2s, border-color 0.2s;
+}
+#room-nav-toggle:hover,
+#room-nav.open #room-nav-toggle {
+  background: rgba(0, 0, 0, 0.75);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+#room-nav-toggle svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+#room-nav-panel {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 0;
+  width: 460px;
+  max-width: calc(100vw - 24px);
+  max-height: min(72vh, 520px);
+  overflow-y: auto;
+  background: rgba(0, 0, 0, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  padding: 10px;
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+#room-nav.open #room-nav-panel {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+#room-nav-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.room-nav-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.room-nav-thumb {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3;
+  background: rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1.5px solid transparent;
+  transition: border-color 0.15s;
+}
+.room-nav-thumb img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transform: scale(1.15); /* zentraler Ausschnitt statt verzerrtem Fisheye-Rand */
+  transition: transform 0.3s ease;
+}
+.room-nav-item:hover .room-nav-thumb img { transform: scale(1.22); }
+
+.room-nav-label {
+  display: block;
+  padding: 7px 2px 2px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.75);
+  text-align: left;
+  transition: color 0.15s;
+}
+
+.room-nav-check {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 20px;
+  height: 20px;
+  opacity: 0;
+  filter: drop-shadow(0 1px 3px rgba(0,0,0,0.5));
+  transition: opacity 0.15s;
+}
+
+.room-nav-item:hover .room-nav-thumb { border-color: rgba(255, 255, 255, 0.35); }
+
+.room-nav-item.active .room-nav-thumb { border-color: #fff; }
+.room-nav-item.active .room-nav-check { opacity: 1; }
+.room-nav-item.active .room-nav-label { color: #fff; font-weight: bold; }
+
+@media (max-width: 640px) {
+  #room-nav-toggle { padding: 9px 13px; font-size: 13px; }
+  #room-nav-panel { width: 380px; padding: 8px; }
+  #room-nav-list { gap: 6px; }
+  .room-nav-label { font-size: 12px; }
+}
+
+@media (max-width: 420px) {
+  #room-nav-list { grid-template-columns: 1fr 1fr; gap: 6px; }
+  .room-nav-thumb { aspect-ratio: 16 / 11; }
+}
+
+/* =========================
    EDITOR PANEL
 ========================= */
 

@@ -80,6 +80,25 @@ const sceneList = [
   { id: "garden28", title: "Garden 28", panorama: "assets/panos/Garden_28.jpg" }
 ];
 
+// Kuratierte Liste für die "Alle Räume"-Schnellauswahl (Besucher-Navigation).
+// Ein Eintrag pro tatsächlichem Raum statt aller Zwischenaufnahmen —
+// so kann man jederzeit direkt dorthin springen, ohne dem Pfeil-Pfad zu folgen.
+const roomMenu = [
+  { id: "entranceHall01", label: "Eingangshalle" },
+  { id: "entrance01", label: "Eingang außen" },
+  { id: "kitchen02", label: "Küche" },
+  { id: "room01_2", label: "Zimmer 1" },
+  { id: "room02", label: "Zimmer 2" },
+  { id: "room03", label: "Zimmer 3" },
+  { id: "room04", label: "Zimmer 4" },
+  { id: "bathroom02", label: "Bad (Erdgeschoss)" },
+  { id: "bathroom02_2", label: "Bad (Obergeschoss)" },
+  { id: "balcony02", label: "Balkon" },
+  { id: "garden02", label: "Garten – Eingang" },
+  { id: "garden14", label: "Garten – Mitte" },
+  { id: "garden26", label: "Garten – Ende" }
+];
+
 const savedConfig = {
   "views": {},
   "hotspots": {
@@ -985,7 +1004,114 @@ document.getElementById("tour-title").innerText = tourScenes.entranceHall03.titl
 viewer.on("scenechange", function (sceneId) {
   document.getElementById("tour-title").innerText = tourScenes[sceneId].title;
   updateSimplePanelLabels();
+  updateRoomNavActive(sceneId);
+  updateBackButtonState();
 });
+
+// ── Besucher-Navigation: "Zurück" + "Alle Räume" (unabhängig von EDIT_MODE) ──
+const scenesById = Object.fromEntries(sceneList.map(s => [s.id, s]));
+
+function createTourNavControls() {
+  const controls = document.createElement("div");
+  controls.id = "tour-nav-controls";
+
+  const backBtn = document.createElement("button");
+  backBtn.id = "tour-back-btn";
+  backBtn.disabled = true;
+  backBtn.innerHTML = `
+    <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <path d="M12.5 4.5L6 10l6.5 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    Zurück
+  `;
+  backBtn.addEventListener("click", goPreviousHotspot);
+  controls.appendChild(backBtn);
+
+  document.body.appendChild(controls);
+  createRoomNavPanel(controls);
+}
+
+function updateBackButtonState() {
+  const backBtn = document.getElementById("tour-back-btn");
+  if (backBtn) backBtn.disabled = navigationHistory.length === 0;
+}
+
+function createRoomNavPanel(controls) {
+  const wrap = document.createElement("div");
+  wrap.id = "room-nav";
+  wrap.innerHTML = `
+    <button id="room-nav-toggle" aria-expanded="false">
+      <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <rect x="2.5" y="2.5" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.4"/>
+        <rect x="11.5" y="2.5" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.4"/>
+        <rect x="2.5" y="11.5" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.4"/>
+        <rect x="11.5" y="11.5" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.4"/>
+      </svg>
+      Alle Räume
+    </button>
+    <div id="room-nav-panel">
+      <div id="room-nav-list"></div>
+    </div>
+  `;
+  controls.appendChild(wrap);
+
+  const list = wrap.querySelector("#room-nav-list");
+  roomMenu.forEach(room => {
+    const scene = scenesById[room.id];
+
+    const btn = document.createElement("button");
+    btn.className = "room-nav-item";
+    btn.dataset.sceneId = room.id;
+    btn.innerHTML = `
+      <span class="room-nav-thumb">
+        <img data-src="${scene.panorama}" alt="" />
+        <svg class="room-nav-check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <circle cx="8" cy="8" r="7.5" fill="#fff"/>
+          <path d="M4.8 8.2l2.1 2.1 4.3-4.5" stroke="#000" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <span class="room-nav-label">${room.label}</span>
+    `;
+    btn.addEventListener("click", function () {
+      loadSceneSafe(room.id, null, null, null, true);
+      wrap.classList.remove("open");
+      toggle.setAttribute("aria-expanded", "false");
+    });
+    list.appendChild(btn);
+  });
+
+  const toggle = wrap.querySelector("#room-nav-toggle");
+  let thumbsLoaded = false;
+  toggle.addEventListener("click", function () {
+    const isOpen = wrap.classList.toggle("open");
+    toggle.setAttribute("aria-expanded", String(isOpen));
+    if (isOpen && !thumbsLoaded) {
+      // Vorschaubilder erst laden, sobald das Menü tatsächlich geöffnet wird
+      list.querySelectorAll("img[data-src]").forEach(img => {
+        img.src = img.dataset.src;
+        img.removeAttribute("data-src");
+      });
+      thumbsLoaded = true;
+    }
+  });
+
+  document.addEventListener("click", function (e) {
+    if (!wrap.contains(e.target)) {
+      wrap.classList.remove("open");
+      toggle.setAttribute("aria-expanded", "false");
+    }
+  });
+
+  updateRoomNavActive(viewer.getScene());
+}
+
+function updateRoomNavActive(sceneId) {
+  document.querySelectorAll(".room-nav-item").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.sceneId === sceneId);
+  });
+}
+
+createTourNavControls();
 
 function loadSceneSafe(sceneId, pitch = null, yaw = null, hfov = null, saveHistory = false) {
   const currentScene = viewer.getScene();
@@ -1009,8 +1135,6 @@ function loadSceneSafe(sceneId, pitch = null, yaw = null, hfov = null, saveHisto
 
 function goPreviousHotspot() {
   if (navigationHistory.length === 0) {
-    alert("No previous hotspot available.");
-  
     return;
   }
 
