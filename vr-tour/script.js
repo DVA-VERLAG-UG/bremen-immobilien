@@ -1,1019 +1,679 @@
 const EDIT_MODE = false;
 
 const sceneList = [
-  { id: "entranceHall01", title: "Entrance Hall 1", panorama: "assets/panos/01_Entrance_Hall.jpg" },
-  { id: "entranceHall02", title: "Entrance Hall 2", panorama: "assets/panos/02_Entrance_Hall.jpg" },
-  { id: "entranceHall03", title: "Entrance Hall 3", panorama: "assets/panos/03_Entrance_Hall.jpg" },
-  { id: "entranceHall04", title: "Entrance Hall 4", panorama: "assets/panos/04_Entrance_Hall.jpg" },
-  { id: "entranceHall05", title: "Entrance Hall 5", panorama: "assets/panos/05_Entrance_Hall.jpg" },
-  { id: "entranceHall06", title: "Entrance Hall 6", panorama: "assets/panos/06_Entrance_Hall.jpg" },
-  { id: "entranceHall07", title: "Entrance Hall 7", panorama: "assets/panos/07_Entrance_Hall.jpg" },
-  { id: "entranceHall08", title: "Entrance Hall 8", panorama: "assets/panos/08_Entrance_Hall.jpg" },
-  { id: "entranceHall09", title: "Entrance Hall 9", panorama: "assets/panos/09_Entrance_Hall.jpg" },
-  { id: "entranceHall10", title: "Entrance Hall 10", panorama: "assets/panos/010_Entrance_Hall.jpg" },
-  { id: "entranceHallToHallway01", title: "Entrance Hall to Hallway 1", panorama: "assets/panos/011_Entrance_Hall to Hallway_1.jpg" },
+  { id: "stock1_entranceHall01", title: "Eingangshalle 1", panorama: "assets/panos/1Stock/01_Entrance_Hall.jpg" },
+  { id: "stock1_entranceHall02", title: "Eingangshalle 2", panorama: "assets/panos/1Stock/02_Entrance_Hall.jpg" },
+  { id: "stock1_entranceHallToHallway", title: "Eingangshalle → Diele", panorama: "assets/panos/1Stock/03_Entrance_Hall to Hallway_1.jpg" },
 
-  { id: "hallwayToKitchen01", title: "Hallway to Kitchen 1", panorama: "assets/panos/Hallway_1 to Kitchen_1.jpg" },
-  { id: "kitchen02", title: "Kitchen 2", panorama: "assets/panos/Kitchen_2.jpg" },
-  { id: "kitchen03", title: "Kitchen 3", panorama: "assets/panos/Kitchen_3.jpg" },
-  { id: "kitchenToHall02", title: "Kitchen to Hall 2", panorama: "assets/panos/Kitchen_3 to Hall2_1.jpg" },
+  { id: "stock1_kitchen", title: "Küche", panorama: "assets/panos/1Stock/Kitchen_2.jpg" },
+  { id: "stock1_room02", title: "Zimmer 2", panorama: "assets/panos/1Stock/Room_2.jpg" },
+  { id: "stock1_room04ToHall", title: "Zimmer 4 → Flur", panorama: "assets/panos/1Stock/Room_4 to Hall2_2.jpg" },
 
-  { id: "hall02ToRoom01", title: "Hall 2 to Room 1", panorama: "assets/panos/Hall_2_1 to Room_1.jpg" },
-  { id: "room02", title: "Room 2", panorama: "assets/panos/Room_2.jpg" },
-  { id: "room03", title: "Room 3", panorama: "assets/panos/Room_3.jpg" },
-  { id: "room04", title: "Room 4", panorama: "assets/panos/Room_4.jpg" },
-  { id: "room04ToHall02", title: "Room 4 to Hall 2", panorama: "assets/panos/Room_4 to Hall2_2.jpg" },
-  { id: "hall02_3", title: "Hall 2-3", panorama: "assets/panos/Hall2_3.jpg" },
-  { id: "hall02ToBathroom01", title: "Hall 2 to Bathroom 1", panorama: "assets/panos/Hall2_3 to Bathroom_1.jpg" },
+  { id: "stock1_bathroom", title: "Bad", panorama: "assets/panos/1Stock/Bathroom_2.jpg" },
+  { id: "stock1_bathroomToRoom1", title: "Bad → Zimmer 1", panorama: "assets/panos/1Stock/Bathroom_3 to Room1_1.jpg" },
 
-  { id: "bathroom02", title: "Bathroom 2", panorama: "assets/panos/Bathroom_2.jpg" },
-  { id: "bathroom03", title: "Bathroom 3", panorama: "assets/panos/Bathroom_3.jpg" },
-  { id: "bathroom03ToRoom01", title: "Bathroom 3 to Room 1", panorama: "assets/panos/Bathroom_3 to Room1_1.jpg" },
+  { id: "stock1_entranceOutside", title: "Eingang außen", panorama: "assets/panos/1Stock/Entrance_1.jpg" },
+  { id: "stock1_entranceToGarden", title: "Eingang → Garten", panorama: "assets/panos/1Stock/Entrance_3 to Garden_1.jpg" },
 
-  { id: "room01_2", title: "Room 1-2", panorama: "assets/panos/Room1_2.jpg" },
-  { id: "room01_3", title: "Room 1-3", panorama: "assets/panos/Room1_3.jpg" },
-  { id: "room01_4", title: "Room 1-4", panorama: "assets/panos/Room1_4.jpg" },
-  { id: "room01_5", title: "Room 1-5", panorama: "assets/panos/Room1_5.jpg" },
-  { id: "room01_6", title: "Room 1-6", panorama: "assets/panos/Room1_6.jpg" },
-  { id: "room01_7", title: "Room 1-7", panorama: "assets/panos/Room1_7.jpg" },
-  { id: "room01ToBathroom02", title: "Room 1 to Bathroom 2", panorama: "assets/panos/Room1_7 to Bathroom2_1.jpg" },
+  { id: "stock1_garden03", title: "Garten 3", panorama: "assets/panos/1Stock/Garden_3.jpg" },
+  { id: "stock1_garden07", title: "Garten 7", panorama: "assets/panos/1Stock/Garden_7.jpg" },
+  { id: "stock1_garden10", title: "Garten 10", panorama: "assets/panos/1Stock/Garden_10.jpg" },
+  { id: "stock1_garden16", title: "Garten 16", panorama: "assets/panos/1Stock/Garden_16.jpg" },
+  { id: "stock1_garden21", title: "Garten 21", panorama: "assets/panos/1Stock/Garden_21.jpg" },
+  { id: "stock1_garden23", title: "Garten 23", panorama: "assets/panos/1Stock/Garden_23.jpg" },
+  { id: "stock1_garden25", title: "Garten 25", panorama: "assets/panos/1Stock/Garden_25.jpg" },
+  { id: "stock1_garden27", title: "Garten 27", panorama: "assets/panos/1Stock/Garden_27.jpg" },
 
-  { id: "bathroom02_2", title: "Bathroom 2-2", panorama: "assets/panos/Bathroom2_2.jpg" },
-  { id: "bathroom02_3", title: "Bathroom 2-3", panorama: "assets/panos/Bathroom2_3.jpg" },
-  { id: "bathroom02_4", title: "Bathroom 2-4", panorama: "assets/panos/Bathroom2_4.jpg" },
-  { id: "bathroom02ToBalcony01", title: "Bathroom 2 to Balcony 1", panorama: "assets/panos/Bathroom2_4 to Balcony_1.jpg" },
-
-  { id: "balcony02", title: "Balcony 2", panorama: "assets/panos/Balcony_2.jpg" },
-  { id: "balcony03", title: "Balcony 3", panorama: "assets/panos/Balcony_3.jpg" },
-
-  { id: "entrance01", title: "Entrance 1", panorama: "assets/panos/Entrance_1.jpg" },
-  { id: "entrance02", title: "Entrance 2", panorama: "assets/panos/Entrance_2.jpg" },
-  { id: "entrance03", title: "Entrance 3", panorama: "assets/panos/Entrance_3.jpg" },
-  { id: "entranceToGarden01", title: "Entrance to Garden 1", panorama: "assets/panos/Entrance_3 to Garden_1.jpg" },
-
-  { id: "garden02", title: "Garden 2", panorama: "assets/panos/Garden_2.jpg" },
-  { id: "garden03", title: "Garden 3", panorama: "assets/panos/Garden_3.jpg" },
-  { id: "garden04", title: "Garden 4", panorama: "assets/panos/Garden_4.jpg" },
-  { id: "garden05", title: "Garden 5", panorama: "assets/panos/Garden_5.jpg" },
-  { id: "garden06", title: "Garden 6", panorama: "assets/panos/Garden_6.jpg" },
-  { id: "garden07", title: "Garden 7", panorama: "assets/panos/Garden_7.jpg" },
-  { id: "garden08", title: "Garden 8", panorama: "assets/panos/Garden_8.jpg" },
-  { id: "garden09", title: "Garden 9", panorama: "assets/panos/Garden_9.jpg" },
-  { id: "garden10", title: "Garden 10", panorama: "assets/panos/Garden_10.jpg" },
-  { id: "garden11", title: "Garden 11", panorama: "assets/panos/Garden_11.jpg" },
-  { id: "garden12", title: "Garden 12", panorama: "assets/panos/Garden_12.jpg" },
-  { id: "garden13", title: "Garden 13", panorama: "assets/panos/Garden_13.jpg" },
-  { id: "garden14", title: "Garden 14", panorama: "assets/panos/Garden_14.jpg" },
-  { id: "garden15", title: "Garden 15", panorama: "assets/panos/Garden_15.jpg" },
-  { id: "garden16", title: "Garden 16", panorama: "assets/panos/Garden_16.jpg" },
-  { id: "garden17", title: "Garden 17", panorama: "assets/panos/Garden_17.jpg" },
-  { id: "garden18", title: "Garden 18", panorama: "assets/panos/Garden_18.jpg" },
-  { id: "garden19", title: "Garden 19", panorama: "assets/panos/Garden_19.jpg" },
-  { id: "garden20", title: "Garden 20", panorama: "assets/panos/Garden_20.jpg" },
-  { id: "garden21", title: "Garden 21", panorama: "assets/panos/Garden_21.jpg" },
-  { id: "garden22", title: "Garden 22", panorama: "assets/panos/Garden_22.jpg" },
-  { id: "garden23", title: "Garden 23", panorama: "assets/panos/Garden_23.jpg" },
-  { id: "garden24", title: "Garden 24", panorama: "assets/panos/Garden_24.jpg" },
-  { id: "garden25", title: "Garden 25", panorama: "assets/panos/Garden_25.jpg" },
-  { id: "garden26", title: "Garden 26", panorama: "assets/panos/Garden_26.jpg" },
-  { id: "garden27", title: "Garden 27", panorama: "assets/panos/Garden_27.jpg" },
-  { id: "garden28", title: "Garden 28", panorama: "assets/panos/Garden_28.jpg" }
+  { id: "stock2_bathroom", title: "Bad", panorama: "assets/panos/2Stock/Bathroom2_2.jpg" },
+  { id: "stock2_bathroomToBalcony", title: "Bad → Balkon", panorama: "assets/panos/2Stock/Bathroom2_4 to Balcony_1.jpg" },
+  { id: "stock2_room1_a", title: "Zimmer 1", panorama: "assets/panos/2Stock/Room1_2.jpg" },
+  { id: "stock2_room1_b", title: "Zimmer 1 (2)", panorama: "assets/panos/2Stock/Room1_5.jpg" },
 ];
 
 // Kuratierte Liste für die "Alle Räume"-Schnellauswahl (Besucher-Navigation).
-// Ein Eintrag pro tatsächlichem Raum statt aller Zwischenaufnahmen —
-// so kann man jederzeit direkt dorthin springen, ohne dem Pfeil-Pfad zu folgen.
-const roomMenu = [
-  { id: "entranceHall01", label: "Eingangshalle" },
-  { id: "entrance01", label: "Eingang außen" },
-  { id: "kitchen02", label: "Küche" },
-  { id: "room01_2", label: "Zimmer 1" },
-  { id: "room02", label: "Zimmer 2" },
-  { id: "room03", label: "Zimmer 3" },
-  { id: "room04", label: "Zimmer 4" },
-  { id: "bathroom02", label: "Bad (Erdgeschoss)" },
-  { id: "bathroom02_2", label: "Bad (Obergeschoss)" },
-  { id: "balcony02", label: "Balkon" },
-  { id: "garden02", label: "Garten – Eingang" },
-  { id: "garden14", label: "Garten – Mitte" },
-  { id: "garden26", label: "Garten – Ende" }
-];
+// Noch unverändert 1:1 aus sceneList übernommen (22 Einträge) — bei Bedarf
+// später auf eine kleinere Auswahl kürzen, sobald die Wege feststehen.
+const roomMenu = sceneList.map(s => ({ id: s.id, label: s.title }));
 
 const savedConfig = {
   "views": {},
   "hotspots": {
-    "entranceHall01": [
+    "stock1_entranceHallToHallway": [
       {
-        "id": "hs_1780406083245",
-        "pitch": -33.08,
-        "yaw": -11.89,
+        "id": "hs_1785412148975",
+        "pitch": -10.21,
+        "yaw": 105.79,
         "type": "scene",
-        "text": "Entrance Hall 2",
-        "sceneId": "entranceHall02",
-        "targetYaw": 0,
-        "targetPitch": 0,
+        "text": "Garten 25",
+        "sceneId": "stock1_garden25",
+        "targetYaw": -21.72,
+        "targetPitch": -3.99,
         "targetHfov": 120
       },
       {
-        "id": "hs_1780688579010",
-        "pitch": -28.16,
-        "yaw": 86.28,
+        "id": "hs_1785412156465",
+        "pitch": -17.4,
+        "yaw": 144.53,
         "type": "scene",
-        "text": "Entrance Hall 9",
-        "sceneId": "entranceHall09",
-        "targetYaw": -106.32,
-        "targetPitch": -2.97,
+        "text": "Eingangshalle 1",
+        "sceneId": "stock1_entranceHall01",
+        "targetYaw": -21.72,
+        "targetPitch": -3.99,
         "targetHfov": 120
       },
       {
-        "id": "hs_1780964120800",
-        "pitch": -29.78,
-        "yaw": -175.36,
+        "id": "hs_1785412162683",
+        "pitch": -17.7,
+        "yaw": -178.64,
         "type": "scene",
-        "text": "Garden 25",
-        "sceneId": "garden25",
-        "targetYaw": -129.4,
-        "targetPitch": -5.1,
+        "text": "Eingangshalle 2",
+        "sceneId": "stock1_entranceHall02",
+        "targetYaw": -21.72,
+        "targetPitch": -3.99,
         "targetHfov": 120
       },
       {
-        "id": "hs_1780964131696",
-        "pitch": -17.54,
-        "yaw": 108.34,
+        "id": "hs_1785412240066",
+        "pitch": -26.83,
+        "yaw": -42.11,
         "type": "scene",
-        "text": "Garden 27",
-        "sceneId": "garden27",
-        "targetYaw": -129.4,
-        "targetPitch": -5.1,
+        "text": "Zimmer 4 → Flur",
+        "sceneId": "stock1_room04ToHall",
+        "targetYaw": -21.72,
+        "targetPitch": -3.99,
         "targetHfov": 120
       }
     ],
-    "entranceHall02": [
+    "stock1_entranceHall01": [
       {
-        "id": "hs_1780406105701",
-        "pitch": -32.89,
-        "yaw": -177.84,
+        "id": "hs_1785411903698",
+        "pitch": -18.56,
+        "yaw": -2.82,
         "type": "scene",
-        "text": "Entrance Hall 1",
-        "sceneId": "entranceHall01",
-        "targetYaw": 172.59,
-        "targetPitch": -6.36,
+        "text": "Eingangshalle 2",
+        "sceneId": "stock1_entranceHall02",
+        "targetYaw": -21.72,
+        "targetPitch": -3.99,
         "targetHfov": 120
       },
       {
-        "id": "hs_1780406148293",
-        "pitch": -34.82,
-        "yaw": -7.74,
+        "id": "hs_1785412055058",
+        "pitch": -24.29,
+        "yaw": 145.63,
         "type": "scene",
-        "text": "Entrance Hall 3",
-        "sceneId": "entranceHall03",
-        "targetYaw": -19.79,
-        "targetPitch": -3.61,
-        "targetHfov": 120
-      }
-    ],
-    "entranceHall03": [
-      {
-        "id": "hs_1780406171757",
-        "pitch": -44.32,
-        "yaw": 174.37,
-        "type": "scene",
-        "text": "Entrance Hall 2",
-        "sceneId": "entranceHall02",
-        "targetYaw": 175.84,
-        "targetPitch": -0.24,
+        "text": "Garten 25",
+        "sceneId": "stock1_garden25",
+        "targetYaw": -21.72,
+        "targetPitch": -3.99,
         "targetHfov": 120
       },
       {
-        "id": "hs_1780406244957",
-        "pitch": -35.37,
-        "yaw": -32.09,
+        "id": "hs_1785412125921",
+        "pitch": -15.85,
+        "yaw": 42.86,
         "type": "scene",
-        "text": "Entrance Hall 4",
-        "sceneId": "entranceHall04",
-        "targetYaw": -17,
-        "targetPitch": -22.33,
+        "text": "Eingangshalle → Diele",
+        "sceneId": "stock1_entranceHallToHallway",
+        "targetYaw": -21.72,
+        "targetPitch": -3.99,
         "targetHfov": 120
       }
     ],
-    "entranceHall04": [
+    "stock1_garden25": [
       {
-        "id": "hs_1780406269333",
-        "pitch": -37.46,
-        "yaw": 149.06,
+        "id": "hs_1785412072930",
+        "pitch": -16.18,
+        "yaw": -94.28,
         "type": "scene",
-        "text": "Entrance Hall 3",
-        "sceneId": "entranceHall03",
-        "targetYaw": 162.55,
-        "targetPitch": -6.37,
+        "text": "Eingangshalle 1",
+        "sceneId": "stock1_entranceHall01",
+        "targetYaw": -21.72,
+        "targetPitch": -3.99,
         "targetHfov": 120
       },
       {
-        "id": "hs_1780406333534",
-        "pitch": -37.18,
-        "yaw": 41.49,
+        "id": "hs_1785412968622",
+        "pitch": -15.63,
+        "yaw": -127.9,
         "type": "scene",
-        "text": "Entrance Hall 5",
-        "sceneId": "entranceHall05",
-        "targetYaw": -15.04,
-        "targetPitch": -3.04,
-        "targetHfov": 120
-      }
-    ],
-    "entranceHall05": [
-      {
-        "id": "hs_1780406352853",
-        "pitch": -39.42,
-        "yaw": 164.98,
-        "type": "scene",
-        "text": "Entrance Hall 4",
-        "sceneId": "entranceHall04",
-        "targetYaw": -37.26,
-        "targetPitch": -9.99,
+        "text": "Garten 23",
+        "sceneId": "stock1_garden23",
+        "targetYaw": -7.17,
+        "targetPitch": -28.95,
         "targetHfov": 120
       },
       {
-        "id": "hs_1780406490269",
-        "pitch": -46.85,
-        "yaw": 60.31,
+        "id": "hs_1785413030267",
+        "pitch": -16.36,
+        "yaw": 9.44,
         "type": "scene",
-        "text": "Entrance Hall 6",
-        "sceneId": "entranceHall06",
-        "targetYaw": 2.35,
-        "targetPitch": -3.48,
+        "text": "Garten 27",
+        "sceneId": "stock1_garden27",
+        "targetYaw": -7.17,
+        "targetPitch": -28.95,
         "targetHfov": 120
       }
     ],
-    "entranceHall06": [
+    "stock1_entranceHall02": [
       {
-        "id": "hs_1780406518253",
-        "pitch": -45.35,
-        "yaw": 168.92,
+        "id": "hs_1785412093294",
+        "pitch": -22.28,
+        "yaw": 73.25,
         "type": "scene",
-        "text": "Entrance Hall 5",
-        "sceneId": "entranceHall05",
-        "targetYaw": -106.27,
-        "targetPitch": -6.35,
+        "text": "Eingangshalle → Diele",
+        "sceneId": "stock1_entranceHallToHallway",
+        "targetYaw": -21.72,
+        "targetPitch": -3.99,
         "targetHfov": 120
       },
       {
-        "id": "hs_1780406558805",
-        "pitch": -42.51,
-        "yaw": -34.14,
+        "id": "hs_1785412102453",
+        "pitch": -25.53,
+        "yaw": 161.73,
         "type": "scene",
-        "text": "Entrance Hall 7",
-        "sceneId": "entranceHall07",
-        "targetYaw": 33.86,
-        "targetPitch": -0.35,
-        "targetHfov": 120
-      }
-    ],
-    "entranceHall07": [
-      {
-        "id": "hs_1780406576669",
-        "pitch": -40.22,
-        "yaw": -163.41,
-        "type": "scene",
-        "text": "Entrance Hall 6",
-        "sceneId": "entranceHall06",
-        "targetYaw": 174.15,
-        "targetPitch": -10.11,
+        "text": "Eingangshalle 1",
+        "sceneId": "stock1_entranceHall01",
+        "targetYaw": -21.72,
+        "targetPitch": -3.99,
         "targetHfov": 120
       },
       {
-        "id": "hs_1780406638133",
-        "pitch": -39.45,
-        "yaw": 3.06,
+        "id": "hs_1785412114757",
+        "pitch": -10.47,
+        "yaw": 154,
         "type": "scene",
-        "text": "Entrance Hall 8",
-        "sceneId": "entranceHall08",
-        "targetYaw": 34.13,
-        "targetPitch": -5.83,
+        "text": "Garten 25",
+        "sceneId": "stock1_garden25",
+        "targetYaw": -21.72,
+        "targetPitch": -3.99,
+        "targetHfov": 120
+      }
+    ],
+    "stock1_room04ToHall": [
+      {
+        "id": "hs_1785412262167",
+        "pitch": -20.31,
+        "yaw": -167.84,
+        "type": "scene",
+        "text": "Zimmer 2",
+        "sceneId": "stock1_room02",
+        "targetYaw": -21.72,
+        "targetPitch": -3.99,
         "targetHfov": 120
       },
       {
-        "id": "hs_1780707184298",
-        "pitch": -33.77,
-        "yaw": -79.71,
+        "id": "hs_1785412290476",
+        "pitch": -23.78,
+        "yaw": -137.89,
         "type": "scene",
-        "text": "Entrance Hall 10",
-        "sceneId": "entranceHall10",
-        "targetYaw": 7.73,
-        "targetPitch": -6.49,
-        "targetHfov": 120
-      }
-    ],
-    "entranceHall08": [
-      {
-        "id": "hs_1780406664380",
-        "pitch": -47.42,
-        "yaw": 171.33,
-        "type": "scene",
-        "text": "Entrance Hall 7",
-        "sceneId": "entranceHall07",
-        "targetYaw": -172.64,
-        "targetPitch": -10.41,
+        "text": "Küche",
+        "sceneId": "stock1_kitchen",
+        "targetYaw": -21.72,
+        "targetPitch": -3.99,
         "targetHfov": 120
       },
       {
-        "id": "hs_1780406702085",
-        "pitch": -41.73,
-        "yaw": 42.77,
+        "id": "hs_1785412306535",
+        "pitch": -27.35,
+        "yaw": -109.59,
         "type": "scene",
-        "text": "Entrance Hall 9",
-        "sceneId": "entranceHall09",
-        "targetYaw": 0.2,
-        "targetPitch": -3.82,
+        "text": "Eingangshalle → Diele",
+        "sceneId": "stock1_entranceHallToHallway",
+        "targetYaw": -21.72,
+        "targetPitch": -3.99,
         "targetHfov": 120
       },
       {
-        "id": "hs_1780406790508",
-        "pitch": -34.27,
-        "yaw": -141.33,
+        "id": "hs_1785412477249",
+        "pitch": -29.69,
+        "yaw": -59.6,
         "type": "scene",
-        "text": "Entrance Hall 10",
-        "sceneId": "entranceHall10",
-        "targetYaw": -15.93,
-        "targetPitch": -9.52,
-        "targetHfov": 120
-      }
-    ],
-    "entranceHall09": [
-      {
-        "id": "hs_1780406719717",
-        "pitch": -47.79,
-        "yaw": -146.7,
-        "type": "scene",
-        "text": "Entrance Hall 8",
-        "sceneId": "entranceHall08",
-        "targetYaw": -110.3,
-        "targetPitch": -6.38,
+        "text": "Bad",
+        "sceneId": "stock1_bathroom",
+        "targetYaw": -21.72,
+        "targetPitch": -3.99,
         "targetHfov": 120
       },
       {
-        "id": "hs_1780688454224",
-        "pitch": -33.91,
-        "yaw": 71.5,
+        "id": "hs_1785412533512",
+        "pitch": -22.6,
+        "yaw": -20.34,
         "type": "scene",
-        "text": "Entrance Hall 1",
-        "sceneId": "entranceHall01",
-        "targetYaw": -0.88,
-        "targetPitch": -0.66,
-        "targetHfov": 120
-      }
-    ],
-    "entranceHall10": [
-      {
-        "id": "hs_1780406821012",
-        "pitch": -40.08,
-        "yaw": 118.67,
-        "type": "scene",
-        "text": "Entrance Hall 9",
-        "sceneId": "entranceHall09",
-        "targetYaw": 0,
-        "targetPitch": 0,
+        "text": "Bad → Zimmer 1",
+        "sceneId": "stock1_bathroomToRoom1",
+        "targetYaw": -21.72,
+        "targetPitch": -3.99,
         "targetHfov": 120
       },
       {
-        "id": "hs_1780695656675",
-        "pitch": -59.64,
-        "yaw": 0.46,
+        "id": "hs_1785412727456",
+        "pitch": -0.3,
+        "yaw": -20.33,
         "type": "scene",
-        "text": "Entrance Hall to Hallway 1",
-        "sceneId": "entranceHallToHallway01",
-        "targetYaw": -12.08,
-        "targetPitch": -8.87,
+        "text": "Zimmer 1",
+        "sceneId": "stock2_room1_a",
+        "targetYaw": -21.72,
+        "targetPitch": -3.99,
         "targetHfov": 120
       }
     ],
-    "entranceHallToHallway01": [
+    "stock1_room02": [
       {
-        "id": "hs_1780695719504",
-        "pitch": -51.84,
-        "yaw": -6.36,
+        "id": "hs_1785412276643",
+        "pitch": -24.64,
+        "yaw": -165.38,
         "type": "scene",
-        "text": "Hallway to Kitchen 1",
-        "sceneId": "hallwayToKitchen01",
-        "targetYaw": -3.1,
-        "targetPitch": -6.49,
+        "text": "Zimmer 4 → Flur",
+        "sceneId": "stock1_room04ToHall",
+        "targetYaw": -21.72,
+        "targetPitch": -3.99,
         "targetHfov": 120
       }
     ],
-    "hallwayToKitchen01": [
+    "stock1_bathroomToRoom1": [
       {
-        "id": "hs_1780695751443",
-        "pitch": -33.77,
-        "yaw": 2.46,
+        "id": "hs_1785412550004",
+        "pitch": -17.94,
+        "yaw": -13.98,
         "type": "scene",
-        "text": "Kitchen 2",
-        "sceneId": "kitchen02",
-        "targetYaw": 37.24,
-        "targetPitch": 0.76,
+        "text": "Zimmer 2",
+        "sceneId": "stock1_room02",
+        "targetYaw": -21.72,
+        "targetPitch": -3.99,
         "targetHfov": 120
       },
       {
-        "id": "hs_1780696050583",
-        "pitch": -50.83,
-        "yaw": -153.54,
-        "type": "scene",
-        "text": "Kitchen to Hall 2",
-        "sceneId": "kitchenToHall02",
-        "targetYaw": -157.26,
-        "targetPitch": -5.42,
-        "targetHfov": 120
-      }
-    ],
-    "kitchen02": [
-      {
-        "id": "hs_1780695797468",
-        "pitch": -40.34,
-        "yaw": 29.23,
-        "type": "scene",
-        "text": "Kitchen 3",
-        "sceneId": "kitchen03",
-        "targetYaw": 66.76,
-        "targetPitch": 0.55,
-        "targetHfov": 120
-      },
-      {
-        "id": "hs_1780695977572",
-        "pitch": -42.21,
-        "yaw": -151.45,
-        "type": "scene",
-        "text": "Hallway to Kitchen 1",
-        "sceneId": "hallwayToKitchen01",
-        "targetYaw": -174.79,
-        "targetPitch": -5.16,
-        "targetHfov": 120
-      }
-    ],
-    "kitchen03": [
-      {
-        "id": "hs_1780695846960",
-        "pitch": -41.58,
-        "yaw": -150.84,
-        "type": "scene",
-        "text": "Kitchen 2",
-        "sceneId": "kitchen02",
-        "targetYaw": -151.38,
-        "targetPitch": -10.93,
-        "targetHfov": 120
-      }
-    ],
-    "kitchenToHall02": [
-      {
-        "id": "hs_1780696120936",
-        "pitch": -48.78,
-        "yaw": -0.63,
-        "type": "scene",
-        "text": "Hall 2 to Room 1",
-        "sceneId": "hall02ToRoom01",
-        "targetYaw": 12.72,
-        "targetPitch": -5,
-        "targetHfov": 120
-      },
-      {
-        "id": "hs_1780800000001",
-        "pitch": -35,
-        "yaw": 30,
-        "type": "scene",
-        "text": "Kitchen 2",
-        "sceneId": "kitchen02",
-        "targetYaw": 37.24,
-        "targetPitch": 0.76,
-        "targetHfov": 120
-      }
-    ],
-    "hall02ToRoom01": [
-      {
-        "id": "hs_1780696146205",
-        "pitch": -33.37,
-        "yaw": 13.88,
-        "type": "scene",
-        "text": "Room 2",
-        "sceneId": "room02",
-        "targetYaw": 20.9,
-        "targetPitch": -4.48,
-        "targetHfov": 120
-      }
-    ],
-    "room02": [
-      {
-        "id": "hs_1780696263655",
-        "pitch": -30.58,
-        "yaw": 21.15,
-        "type": "scene",
-        "text": "Room 3",
-        "sceneId": "room03",
-        "targetYaw": 89.97,
-        "targetPitch": -10.23,
-        "targetHfov": 120
-      }
-    ],
-    "room03": [
-      {
-        "id": "hs_1780696296843",
-        "pitch": -53.66,
-        "yaw": -49.25,
-        "type": "scene",
-        "text": "Room 4",
-        "sceneId": "room04",
-        "targetYaw": 39.12,
-        "targetPitch": -4.63,
-        "targetHfov": 120
-      }
-    ],
-    "room04": [
-      {
-        "id": "hs_1780707435511",
-        "pitch": -22.67,
-        "yaw": 10.18,
-        "type": "scene",
-        "text": "Room 4 to Hall 2",
-        "sceneId": "room04ToHall02",
-        "targetYaw": -24.79,
-        "targetPitch": -6.31,
-        "targetHfov": 120
-      }
-    ],
-    "room04ToHall02": [
-      {
-        "id": "hs_1780800000002",
-        "pitch": -35,
-        "yaw": -135,
-        "type": "scene",
-        "text": "Kitchen 2",
-        "sceneId": "kitchen02",
-        "targetYaw": 37.24,
-        "targetPitch": 0.76,
-        "targetHfov": 120
-      },
-      {
-        "id": "hs_1780800000003",
-        "pitch": -40,
-        "yaw": -20,
-        "type": "scene",
-        "text": "Bathroom 2",
-        "sceneId": "bathroom02",
-        "targetYaw": 136.7,
-        "targetPitch": -19.37,
-        "targetHfov": 120
-      }
-    ],
-    "hall02_3": [
-      {
-        "id": "hs_1780707596660",
-        "pitch": -42.94,
-        "yaw": -69.44,
-        "type": "scene",
-        "text": "Bathroom 2",
-        "sceneId": "bathroom02",
-        "targetYaw": 136.7,
-        "targetPitch": -19.37,
-        "targetHfov": 120
-      }
-    ],
-    "bathroom02": [
-      {
-        "id": "hs_1780707669667",
-        "pitch": -34.33,
-        "yaw": -173.78,
-        "type": "scene",
-        "text": "Bathroom 3 to Room 1",
-        "sceneId": "bathroom03ToRoom01",
-        "targetYaw": 178.97,
-        "targetPitch": 0.41,
-        "targetHfov": 120
-      }
-    ],
-    "bathroom03ToRoom01": [
-      {
-        "id": "hs_1780707740392",
-        "pitch": -18.76,
-        "yaw": 152.47,
-        "type": "scene",
-        "text": "Room 1-2",
-        "sceneId": "room01_2",
-        "targetYaw": 126.95,
-        "targetPitch": -11.04,
-        "targetHfov": 120
-      },
-      {
-        "id": "hs_1780709394680",
-        "pitch": -27.32,
-        "yaw": 3.61,
-        "type": "scene",
-        "text": "Entrance Hall to Hallway 1",
-        "sceneId": "entranceHallToHallway01",
-        "targetYaw": 170.14,
-        "targetPitch": -11.72,
-        "targetHfov": 120
-      }
-    ],
-    "room01_2": [
-      {
-        "id": "hs_1780707889356",
-        "pitch": -15.64,
-        "yaw": 123.13,
-        "type": "scene",
-        "text": "Room 1-5",
-        "sceneId": "room01_5",
-        "targetYaw": 122.17,
-        "targetPitch": -1.47,
-        "targetHfov": 120
-      }
-    ],
-    "room01_5": [
-      {
-        "id": "hs_1780708003167",
-        "pitch": -23.65,
-        "yaw": -97.75,
-        "type": "scene",
-        "text": "Room 1-7",
-        "sceneId": "room01_7",
-        "targetYaw": -47.96,
-        "targetPitch": -9.8,
-        "targetHfov": 120
-      },
-      {
-        "id": "hs_1780709023004",
-        "pitch": -24.69,
-        "yaw": 167.54,
-        "type": "scene",
-        "text": "Bathroom 2 to Balcony 1",
-        "sceneId": "bathroom02ToBalcony01",
-        "targetYaw": -175.87,
-        "targetPitch": -7.35,
-        "targetHfov": 120
-      },
-      {
-        "id": "hs_1780709284021",
-        "pitch": -27.4,
-        "yaw": -60.2,
-        "type": "scene",
-        "text": "Bathroom 3 to Room 1",
-        "sceneId": "bathroom03ToRoom01",
-        "targetYaw": 14.29,
-        "targetPitch": -6.52,
-        "targetHfov": 120
-      }
-    ],
-    "room01_7": [
-      {
-        "id": "hs_1780708228086",
-        "pitch": -47.68,
-        "yaw": -30.02,
-        "type": "scene",
-        "text": "Bathroom 2-2",
-        "sceneId": "bathroom02_2",
-        "targetYaw": 9.54,
-        "targetPitch": -6.24,
-        "targetHfov": 120
-      }
-    ],
-    "bathroom02_2": [
-      {
-        "id": "hs_1780708296306",
-        "pitch": -36.28,
-        "yaw": -159.94,
-        "type": "scene",
-        "text": "Room 1-7",
-        "sceneId": "room01_7",
-        "targetYaw": 132.64,
-        "targetPitch": -16.29,
-        "targetHfov": 120
-      },
-      {
-        "id": "hs_1780708432666",
+        "id": "hs_1785412557498",
         "pitch": -18.26,
-        "yaw": 170.47,
+        "yaw": 0.39,
         "type": "scene",
-        "text": "Room 1-5",
-        "sceneId": "room01_5",
-        "targetYaw": 122.71,
-        "targetPitch": 0.85,
+        "text": "Küche",
+        "sceneId": "stock1_kitchen",
+        "targetYaw": -21.72,
+        "targetPitch": -3.99,
+        "targetHfov": 120
+      },
+      {
+        "id": "hs_1785412568905",
+        "pitch": -33.54,
+        "yaw": -23.97,
+        "type": "scene",
+        "text": "Zimmer 4 → Flur",
+        "sceneId": "stock1_room04ToHall",
+        "targetYaw": -21.72,
+        "targetPitch": -3.99,
+        "targetHfov": 120
+      },
+      {
+        "id": "hs_1785412579720",
+        "pitch": -44.33,
+        "yaw": 29.83,
+        "type": "scene",
+        "text": "Bad",
+        "sceneId": "stock1_bathroom",
+        "targetYaw": -21.72,
+        "targetPitch": -3.99,
+        "targetHfov": 120
+      },
+      {
+        "id": "hs_1785412696664",
+        "pitch": -17.52,
+        "yaw": 141.36,
+        "type": "scene",
+        "text": "Zimmer 1",
+        "sceneId": "stock2_room1_a",
+        "targetYaw": -21.72,
+        "targetPitch": -3.99,
         "targetHfov": 120
       }
     ],
-    "bathroom02ToBalcony01": [
+    "stock1_bathroom": [
       {
-        "id": "hs_1780709095814",
-        "pitch": -29.53,
-        "yaw": 39.73,
+        "id": "hs_1785412600128",
+        "pitch": -23.43,
+        "yaw": -176.8,
         "type": "scene",
-        "text": "Bathroom 2 to Balcony 1",
-        "sceneId": "bathroom02ToBalcony01",
-        "targetYaw": 153.38,
-        "targetPitch": -8.37,
-        "targetHfov": 120
-      },
-      {
-        "id": "hs_1780709136473",
-        "pitch": -29.24,
-        "yaw": 3.83,
-        "type": "scene",
-        "text": "Room 1-5",
-        "sceneId": "room01_5",
-        "targetYaw": 14.29,
-        "targetPitch": -6.52,
+        "text": "Bad → Zimmer 1",
+        "sceneId": "stock1_bathroomToRoom1",
+        "targetYaw": -21.72,
+        "targetPitch": -3.99,
         "targetHfov": 120
       }
     ],
-    "entrance01": [
+    "stock1_kitchen": [
       {
-        "id": "hs_1780962570705",
-        "pitch": -12.29,
-        "yaw": 7.71,
+        "id": "hs_1785412614629",
+        "pitch": -24.48,
+        "yaw": -139.38,
         "type": "scene",
-        "text": "Entrance to Garden 1",
-        "sceneId": "entranceToGarden01",
-        "targetYaw": 8.85,
-        "targetPitch": 3.41,
+        "text": "Zimmer 4 → Flur",
+        "sceneId": "stock1_room04ToHall",
+        "targetYaw": -21.72,
+        "targetPitch": -3.99,
         "targetHfov": 120
       }
     ],
-    "entranceToGarden01": [
+    "stock2_room1_a": [
       {
-        "id": "hs_1780962621415",
-        "pitch": -11.8,
-        "yaw": 171.06,
+        "id": "hs_1785412715565",
+        "pitch": -60.3,
+        "yaw": 31.09,
         "type": "scene",
-        "text": "Entrance 1",
-        "sceneId": "entrance01",
-        "targetYaw": 0,
-        "targetPitch": 0,
+        "text": "Bad → Zimmer 1",
+        "sceneId": "stock1_bathroomToRoom1",
+        "targetYaw": -21.72,
+        "targetPitch": -3.99,
         "targetHfov": 120
       },
       {
-        "id": "hs_1780962696603",
-        "pitch": -11.52,
-        "yaw": -27.93,
+        "id": "hs_1785412776869",
+        "pitch": -11.61,
+        "yaw": 122.58,
         "type": "scene",
-        "text": "Garden 3",
-        "sceneId": "garden03",
-        "targetYaw": -15.49,
-        "targetPitch": 9.49,
-        "targetHfov": 120
-      },
-      {
-        "id": "hs_1780963262943",
-        "pitch": -10.66,
-        "yaw": 35.64,
-        "type": "scene",
-        "text": "Garden 14",
-        "sceneId": "garden14",
-        "targetYaw": 16.03,
-        "targetPitch": -4.39,
+        "text": "Zimmer 1 (2)",
+        "sceneId": "stock2_room1_b",
+        "targetYaw": -21.72,
+        "targetPitch": -3.99,
         "targetHfov": 120
       }
     ],
-    "garden03": [
+    "stock2_room1_b": [
       {
-        "id": "hs_1780962756640",
-        "pitch": -15.98,
-        "yaw": 169.05,
+        "id": "hs_1785412785019",
+        "pitch": -22.63,
+        "yaw": -60.25,
         "type": "scene",
-        "text": "Entrance to Garden 1",
-        "sceneId": "entranceToGarden01",
-        "targetYaw": 176.48,
-        "targetPitch": -3.2,
+        "text": "Zimmer 1",
+        "sceneId": "stock2_room1_a",
+        "targetYaw": -21.72,
+        "targetPitch": -3.99,
         "targetHfov": 120
       },
       {
-        "id": "hs_1780962804441",
-        "pitch": -8.08,
-        "yaw": -18.81,
+        "id": "hs_1785412821806",
+        "pitch": -17.63,
+        "yaw": -85.43,
         "type": "scene",
-        "text": "Garden 7",
-        "sceneId": "garden07",
-        "targetYaw": 0,
-        "targetPitch": 0,
+        "text": "Bad",
+        "sceneId": "stock2_bathroom",
+        "targetYaw": -21.72,
+        "targetPitch": -3.99,
         "targetHfov": 120
       },
       {
-        "id": "hs_1780963192986",
-        "pitch": -10.55,
-        "yaw": 78.44,
+        "id": "hs_1785412855445",
+        "pitch": -26.36,
+        "yaw": 155.48,
         "type": "scene",
-        "text": "Garden 14",
-        "sceneId": "garden14",
-        "targetYaw": 16.03,
-        "targetPitch": -4.39,
+        "text": "Bad → Balkon",
+        "sceneId": "stock2_bathroomToBalcony",
+        "targetYaw": -21.72,
+        "targetPitch": -3.99,
         "targetHfov": 120
       }
     ],
-    "garden07": [
+    "stock2_bathroom": [
       {
-        "id": "hs_1780962888104",
-        "pitch": 6.22,
-        "yaw": 4.38,
+        "id": "hs_1785412832615",
+        "pitch": -18.17,
+        "yaw": 168.48,
         "type": "scene",
-        "text": "Garden 10",
-        "sceneId": "garden10",
-        "targetYaw": 13.85,
-        "targetPitch": -10.07,
-        "targetHfov": 120
-      },
-      {
-        "id": "hs_1780962969654",
-        "pitch": -13.89,
-        "yaw": 161.26,
-        "type": "scene",
-        "text": "Garden 3",
-        "sceneId": "garden03",
-        "targetYaw": -172.95,
-        "targetPitch": 1.31,
+        "text": "Zimmer 1 (2)",
+        "sceneId": "stock2_room1_b",
+        "targetYaw": -21.72,
+        "targetPitch": -3.99,
         "targetHfov": 120
       }
     ],
-    "garden10": [
+    "stock2_bathroomToBalcony": [
       {
-        "id": "hs_1780962933925",
-        "pitch": -34.39,
-        "yaw": 154.84,
+        "id": "hs_1785412864036",
+        "pitch": -13.21,
+        "yaw": -51.04,
         "type": "scene",
-        "text": "Garden 7",
-        "sceneId": "garden07",
-        "targetYaw": -172.77,
-        "targetPitch": -2.07,
+        "text": "Bad",
+        "sceneId": "stock2_bathroom",
+        "targetYaw": -21.72,
+        "targetPitch": -3.99,
+        "targetHfov": 120
+      },
+      {
+        "id": "hs_1785412872112",
+        "pitch": -27.9,
+        "yaw": 1.72,
+        "type": "scene",
+        "text": "Zimmer 1 (2)",
+        "sceneId": "stock2_room1_b",
+        "targetYaw": -21.72,
+        "targetPitch": -3.99,
+        "targetHfov": 120
+      },
+      {
+        "id": "hs_1785412892595",
+        "pitch": -13.79,
+        "yaw": -32.68,
+        "type": "scene",
+        "text": "Zimmer 1",
+        "sceneId": "stock2_room1_a",
+        "targetYaw": -21.72,
+        "targetPitch": -3.99,
         "targetHfov": 120
       }
     ],
-    "garden14": [
+    "stock1_garden23": [
       {
-        "id": "hs_1780963230745",
-        "pitch": -17.72,
-        "yaw": 175,
+        "id": "hs_1785413004284",
+        "pitch": -20.78,
+        "yaw": -38.77,
         "type": "scene",
-        "text": "Garden 3",
-        "sceneId": "garden03",
-        "targetYaw": 16.03,
-        "targetPitch": -4.39,
+        "text": "Garten 25",
+        "sceneId": "stock1_garden25",
+        "targetYaw": -7.17,
+        "targetPitch": -28.95,
         "targetHfov": 120
       },
       {
-        "id": "hs_1780963239195",
-        "pitch": -6.49,
-        "yaw": 118.71,
+        "id": "hs_1785413067561",
+        "pitch": -15.18,
+        "yaw": 175.87,
         "type": "scene",
-        "text": "Entrance 1",
-        "sceneId": "entrance01",
-        "targetYaw": 16.03,
-        "targetPitch": -4.39,
-        "targetHfov": 120
-      },
-      {
-        "id": "hs_1780963280410",
-        "pitch": -7.05,
-        "yaw": -141.75,
-        "type": "scene",
-        "text": "Garden 7",
-        "sceneId": "garden07",
-        "targetYaw": 16.03,
-        "targetPitch": -4.39,
-        "targetHfov": 120
-      },
-      {
-        "id": "hs_1780963373910",
-        "pitch": -6.77,
-        "yaw": 9.59,
-        "type": "scene",
-        "text": "Garden 16",
-        "sceneId": "garden16",
-        "targetYaw": 0,
-        "targetPitch": 0,
+        "text": "Garten 21",
+        "sceneId": "stock1_garden21",
+        "targetYaw": -175.22,
+        "targetPitch": -18.96,
         "targetHfov": 120
       }
     ],
-    "garden16": [
+    "stock1_garden27": [
       {
-        "id": "hs_1780963519030",
-        "pitch": -10.13,
-        "yaw": 3.9,
+        "id": "hs_1785413038158",
+        "pitch": -15.3,
+        "yaw": -121.42,
         "type": "scene",
-        "text": "Garden 21",
-        "sceneId": "garden21",
-        "targetYaw": 7.37,
-        "targetPitch": 0.89,
-        "targetHfov": 120
-      },
-      {
-        "id": "hs_1780964168231",
-        "pitch": -6.97,
-        "yaw": -134.32,
-        "type": "scene",
-        "text": "Entrance to Garden 1",
-        "sceneId": "entranceToGarden01",
-        "targetYaw": -129.4,
-        "targetPitch": -5.1,
-        "targetHfov": 120
-      },
-      {
-        "id": "hs_1780964177997",
-        "pitch": -7.21,
-        "yaw": -107.41,
-        "type": "scene",
-        "text": "Garden 3",
-        "sceneId": "garden03",
-        "targetYaw": -129.4,
-        "targetPitch": -5.1,
+        "text": "Garten 25",
+        "sceneId": "stock1_garden25",
+        "targetYaw": -7.17,
+        "targetPitch": -28.95,
         "targetHfov": 120
       }
     ],
-    "garden21": [
+    "stock1_garden21": [
       {
-        "id": "hs_1780963546679",
-        "pitch": -10.09,
-        "yaw": 0.95,
+        "id": "hs_1785413109849",
+        "pitch": -13.16,
+        "yaw": 163,
         "type": "scene",
-        "text": "Garden 23",
-        "sceneId": "garden23",
-        "targetYaw": 7.37,
-        "targetPitch": 0.89,
+        "text": "Garten 16",
+        "sceneId": "stock1_garden16",
+        "targetYaw": -175.22,
+        "targetPitch": -18.96,
         "targetHfov": 120
       },
       {
-        "id": "hs_1780963561968",
-        "pitch": -21.9,
-        "yaw": 158.54,
+        "id": "hs_1785413135153",
+        "pitch": -8.46,
+        "yaw": -0.88,
         "type": "scene",
-        "text": "Garden 16",
-        "sceneId": "garden16",
-        "targetYaw": 7.37,
-        "targetPitch": 0.89,
+        "text": "Garten 23",
+        "sceneId": "stock1_garden23",
+        "targetYaw": -175.22,
+        "targetPitch": -18.96,
         "targetHfov": 120
       }
     ],
-    "garden23": [
+    "stock1_garden16": [
       {
-        "id": "hs_1780963680882",
-        "pitch": -15.76,
-        "yaw": 174.98,
+        "id": "hs_1785413378636",
+        "pitch": -4.39,
+        "yaw": -135.73,
         "type": "scene",
-        "text": "Garden 21",
-        "sceneId": "garden21",
-        "targetYaw": -172.51,
-        "targetPitch": -5.05,
+        "text": "Garten 3",
+        "sceneId": "stock1_garden03",
+        "targetYaw": -175.22,
+        "targetPitch": -18.96,
         "targetHfov": 120
       },
       {
-        "id": "hs_1780963771668",
-        "pitch": -21.92,
-        "yaw": -36.2,
+        "id": "hs_1785413653728",
+        "pitch": -9.08,
+        "yaw": 0.41,
         "type": "scene",
-        "text": "Garden 25",
-        "sceneId": "garden25",
-        "targetYaw": 172.11,
-        "targetPitch": -9.18,
-        "targetHfov": 120
+        "text": "Garten 21",
+        "sceneId": "stock1_garden21",
+        "targetYaw": 46.33,
+        "targetPitch": -7.75,
+        "targetHfov": 103.59
       }
     ],
-    "garden25": [
+    "stock1_garden03": [
       {
-        "id": "hs_1780963740756",
-        "pitch": -17.57,
-        "yaw": -130.64,
+        "id": "hs_1785413395255",
+        "pitch": -5.04,
+        "yaw": 85.94,
         "type": "scene",
-        "text": "Garden 23",
-        "sceneId": "garden23",
-        "targetYaw": 172.11,
-        "targetPitch": -9.18,
-        "targetHfov": 120
+        "text": "Garten 16",
+        "sceneId": "stock1_garden16",
+        "targetYaw": 46.33,
+        "targetPitch": -7.75,
+        "targetHfov": 103.59
       },
       {
-        "id": "hs_1780964016004",
-        "pitch": -15.9,
-        "yaw": -98.76,
+        "id": "hs_1785413426541",
+        "pitch": -8.96,
+        "yaw": 177.08,
         "type": "scene",
-        "text": "Entrance Hall 1",
-        "sceneId": "entranceHall01",
-        "targetYaw": 0,
-        "targetPitch": 0,
-        "targetHfov": 120
+        "text": "Eingang → Garten",
+        "sceneId": "stock1_entranceToGarden",
+        "targetYaw": 46.33,
+        "targetPitch": -7.75,
+        "targetHfov": 103.59
       },
       {
-        "id": "hs_1780964085423",
-        "pitch": -15.49,
-        "yaw": 11.48,
+        "id": "hs_1785413533184",
+        "pitch": -8.55,
+        "yaw": -16.89,
         "type": "scene",
-        "text": "Garden 27",
-        "sceneId": "garden27",
-        "targetYaw": -129.4,
-        "targetPitch": -5.1,
-        "targetHfov": 120
+        "text": "Garten 7",
+        "sceneId": "stock1_garden07",
+        "targetYaw": 46.33,
+        "targetPitch": -7.75,
+        "targetHfov": 103.59
       }
     ],
-    "garden27": [
+    "stock1_entranceToGarden": [
       {
-        "id": "hs_1780964096603",
-        "pitch": -15.02,
-        "yaw": -122.06,
+        "id": "hs_1785413437116",
+        "pitch": -2.54,
+        "yaw": 57.55,
         "type": "scene",
-        "text": "Garden 25",
-        "sceneId": "garden25",
-        "targetYaw": -129.4,
-        "targetPitch": -5.1,
-        "targetHfov": 120
+        "text": "Garten 16",
+        "sceneId": "stock1_garden16",
+        "targetYaw": 46.33,
+        "targetPitch": -7.75,
+        "targetHfov": 103.59
+      },
+      {
+        "id": "hs_1785413468160",
+        "pitch": -11.18,
+        "yaw": 164.88,
+        "type": "scene",
+        "text": "Eingang außen",
+        "sceneId": "stock1_entranceOutside",
+        "targetYaw": 46.33,
+        "targetPitch": -7.75,
+        "targetHfov": 103.59
+      },
+      {
+        "id": "hs_1785413496668",
+        "pitch": -25.87,
+        "yaw": -3.22,
+        "type": "scene",
+        "text": "Garten 3",
+        "sceneId": "stock1_garden03",
+        "targetYaw": 46.33,
+        "targetPitch": -7.75,
+        "targetHfov": 103.59
+      },
+      {
+        "id": "hs_1785413512802",
+        "pitch": -3.83,
+        "yaw": -25.72,
+        "type": "scene",
+        "text": "Garten 7",
+        "sceneId": "stock1_garden07",
+        "targetYaw": 46.33,
+        "targetPitch": -7.75,
+        "targetHfov": 103.59
+      }
+    ],
+    "stock1_entranceOutside": [
+      {
+        "id": "hs_1785413478718",
+        "pitch": -12.47,
+        "yaw": 12.04,
+        "type": "scene",
+        "text": "Eingang → Garten",
+        "sceneId": "stock1_entranceToGarden",
+        "targetYaw": 46.33,
+        "targetPitch": -7.75,
+        "targetHfov": 103.59
+      }
+    ],
+    "stock1_garden07": [
+      {
+        "id": "hs_1785413521336",
+        "pitch": -12.52,
+        "yaw": 154.72,
+        "type": "scene",
+        "text": "Garten 3",
+        "sceneId": "stock1_garden03",
+        "targetYaw": 46.33,
+        "targetPitch": -7.75,
+        "targetHfov": 103.59
+      },
+      {
+        "id": "hs_1785413545927",
+        "pitch": 6.8,
+        "yaw": 5.58,
+        "type": "scene",
+        "text": "Garten 10",
+        "sceneId": "stock1_garden10",
+        "targetYaw": 46.33,
+        "targetPitch": -7.75,
+        "targetHfov": 103.59
+      }
+    ],
+    "stock1_garden10": [
+      {
+        "id": "hs_1785413553262",
+        "pitch": -24.01,
+        "yaw": 155.91,
+        "type": "scene",
+        "text": "Garten 7",
+        "sceneId": "stock1_garden07",
+        "targetYaw": 46.33,
+        "targetPitch": -7.75,
+        "targetHfov": 103.59
       }
     ]
   }
@@ -1023,7 +683,7 @@ const tourScenes = buildScenes();
 
 const viewer = pannellum.viewer("panorama", {
   default: {
-    firstScene: "entranceHall03",
+    firstScene: "stock1_entranceHall01",
     sceneFadeDuration: 0,
     autoLoad: true,
     showControls: true,
@@ -1034,14 +694,33 @@ const viewer = pannellum.viewer("panorama", {
 
 let navigationHistory = [];
 
-document.getElementById("tour-title").innerText = tourScenes.entranceHall03.title;
+document.getElementById("tour-title").innerText = tourScenes.stock1_entranceHall01.title;
 
 viewer.on("scenechange", function (sceneId) {
   document.getElementById("tour-title").innerText = tourScenes[sceneId].title;
   updateSimplePanelLabels();
   updateRoomNavActive(sceneId);
   updateBackButtonState();
+  updateHallwayShortcutVisibility(sceneId);
 });
+
+// Pannellum feuert "scenechange" nicht zuverlässig für die allererste Szene
+// beim initialen Laden — "load" fängt diesen Fall zusätzlich ab.
+viewer.on("load", function () {
+  updateHallwayShortcutVisibility(viewer.getScene());
+});
+
+// Scenen der großen Eingangshalle, aus denen die Verbindungstür zur Diele
+// (entranceHallToHallway01) nicht im Bild sichtbar ist — dafür gibt es den
+// permanenten Kurzweg-Button statt eines (dort unsichtbaren) Foto-Pfeils.
+const ENTRANCE_HALL_SCENE_IDS = new Set(
+  sceneList.map(s => s.id).filter(id => /^stock1_entranceHall\d/.test(id))
+);
+
+function updateHallwayShortcutVisibility(sceneId) {
+  const btn = document.getElementById("tour-hallway-shortcut");
+  if (btn) btn.style.display = ENTRANCE_HALL_SCENE_IDS.has(sceneId) ? "flex" : "none";
+}
 
 // ── Besucher-Navigation: "Zurück" + "Alle Räume" (unabhängig von EDIT_MODE) ──
 const scenesById = Object.fromEntries(sceneList.map(s => [s.id, s]));
@@ -1061,6 +740,20 @@ function createTourNavControls() {
   `;
   backBtn.addEventListener("click", goPreviousHotspot);
   controls.appendChild(backBtn);
+
+  const hallwayBtn = document.createElement("button");
+  hallwayBtn.id = "tour-hallway-shortcut";
+  hallwayBtn.innerHTML = `
+    Weiter zur Diele
+    <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <path d="M7.5 4.5L14 10l-6.5 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  `;
+  hallwayBtn.addEventListener("click", function () {
+    loadSceneSafe("stock1_entranceHallToHallway", null, null, null, true);
+  });
+  controls.appendChild(hallwayBtn);
+  updateHallwayShortcutVisibility(viewer.getScene());
 
   document.body.appendChild(controls);
   createRoomNavPanel(controls);

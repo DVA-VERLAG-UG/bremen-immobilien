@@ -70,9 +70,27 @@ html, body {
   cursor: default;
 }
 
+#tour-hallway-shortcut {
+  display: none;
+  align-items: center;
+  gap: 7px;
+  background: rgba(255, 255, 255, 0.95);
+  color: #000;
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: background 0.2s, transform 0.15s;
+}
+#tour-hallway-shortcut:hover { background: #fff; transform: translateY(-1px); }
+#tour-hallway-shortcut svg { width: 16px; height: 16px; flex-shrink: 0; }
+
 @media (max-width: 640px) {
   #tour-nav-controls { bottom: 12px; left: 12px; }
-  #tour-back-btn { padding: 9px 12px; font-size: 13px; }
+  #tour-back-btn, #tour-hallway-shortcut { padding: 9px 12px; font-size: 13px; }
 }
 
 #room-nav-toggle {
