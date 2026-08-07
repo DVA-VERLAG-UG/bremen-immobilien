@@ -187,7 +187,7 @@
 
     #overview-hint .hint-action {
       font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.58rem;
+      font-size: 0.66rem;
       letter-spacing: 0.3em;
       text-transform: uppercase;
       color: rgba(255,255,255,0.3);
@@ -371,7 +371,7 @@
 
     .stat-label {
       font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.55rem;
+      font-size: 0.66rem;
       letter-spacing: 0.32em;
       text-transform: uppercase;
       color: rgba(255,255,255,0.5);
@@ -393,7 +393,7 @@
 
     .highlight-tag {
       font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.55rem;
+      font-size: 0.66rem;
       letter-spacing: 0.2em;
       text-transform: uppercase;
       border: 1px solid rgba(200,169,110,0.3);
@@ -1218,7 +1218,7 @@
 
     .prop-tag {
       font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.58rem;
+      font-size: 0.66rem;
       letter-spacing: 0.35em;
       text-transform: uppercase;
       color: var(--gold);
@@ -1257,7 +1257,7 @@
 
     .prop-spec-key {
       font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.55rem;
+      font-size: 0.66rem;
       letter-spacing: 0.3em;
       text-transform: uppercase;
       color: rgba(255,255,255,0.5);
@@ -1269,7 +1269,7 @@
       border: 1px solid rgba(200,169,110,0.5);
       color: var(--gold);
       font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.58rem;
+      font-size: 0.66rem;
       letter-spacing: 0.35em;
       text-transform: uppercase;
       text-decoration: none;
@@ -1291,7 +1291,7 @@
     .prop-soon-badge {
       display: inline-block;
       font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.55rem;
+      font-size: 0.66rem;
       letter-spacing: 0.25em;
       text-transform: uppercase;
       color: rgba(200,169,110,0.65);
@@ -1859,7 +1859,7 @@
     /* ── PREVIEW PIN POPUP ──────────────────────────────────────── */
     .preview-popup .mapboxgl-popup-content {
       font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.58rem;
+      font-size: 0.66rem;
       letter-spacing: 0.18em;
       text-transform: uppercase;
       color: rgba(255,255,255,0.7);
@@ -2161,25 +2161,12 @@
 <div id="menu-overlay" role="dialog" aria-modal="true">
   <button class="menu-close-btn" id="menu-close-btn" aria-label="Menü schließen">✕</button>
   <div class="menu-inner">
-    <img class="menu-logo" src="Logos/Kuscu.jpeg" alt="Kuscu Immobilien" />
+    <img class="menu-logo" src="Logos/Kuscu.jpeg" alt="Kuscu Immobilien" loading="lazy" decoding="async" />
     <ul class="menu-nav">
 
       <!-- Startseite -->
       <li class="menu-item">
         <button class="menu-link" onclick="closeMenu(); window.scrollTo({top:0,behavior:'smooth'})">Startseite</button>
-      </li>
-
-      <!-- Objekte with submenu -->
-      <li class="menu-item">
-        <button class="menu-link" onclick="toggleSub('sub-objekte')">Objekte</button>
-        <ul class="menu-sub" id="sub-objekte">
-          <li><button class="menu-sub-link" onclick="navTo('step-3')">Spitta Allee · Vahr</button></li>
-        </ul>
-      </li>
-
-      <!-- Lage -->
-      <li class="menu-item">
-        <button class="menu-link" onclick="navTo('step-2')">Lage</button>
       </li>
 
       <!-- Immobilien page -->
@@ -2395,7 +2382,7 @@
         <div class="triptych-panel triptych-middle reveal-zoom reveal-delay-1">
           <p class="trip-eyebrow">Einblick</p>
           <a class="trip-photo-wrap" href="immobilien.html#rundgang">
-            <img src="Bürgermeister/Full.jpeg" alt="Bürgermeister Spitta Allee 6 — Gesamtansicht" />
+            <img src="Bürgermeister/Full.jpeg" alt="Bürgermeister Spitta Allee 6 — Gesamtansicht" loading="lazy" decoding="async" />
             <div class="trip-photo-overlay">
               <span class="trip-photo-dot"></span>
               <span class="trip-photo-label">Klicke hier für das Exposé</span>
@@ -2541,7 +2528,7 @@
   <footer>
     <div class="cs-container">
       <div class="cs-footer">
-        <img class="footer-brand" src="Logos/Kuscu.jpeg" alt="Kuscu Immobilien" />
+        <img class="footer-brand" src="Logos/Kuscu.jpeg" alt="Kuscu Immobilien" loading="lazy" decoding="async" />
         <div class="footer-links">
           <a href="mailto:navidistanbullu@gmail.com">navidistanbullu@gmail.com</a>
           <!-- TODO: Telefonnummer eintragen, z. B.:
@@ -2595,9 +2582,9 @@
 <div class="property-card" id="card-3">
   <div class="card-photo">
     <div class="card-slider" id="prop-slider">
-      <div class="card-slide active"><img src="Bürgermeister/Front.jpeg" alt="Frontansicht" /></div>
-      <div class="card-slide"><img src="Bürgermeister/Back.jpeg"  alt="Rückseite"    /></div>
-      <div class="card-slide"><img src="Bürgermeister/Full.jpeg"  alt="Gesamtansicht"/></div>
+      <div class="card-slide active"><img src="Bürgermeister/Front.jpeg" alt="Frontansicht" loading="lazy" decoding="async" /></div>
+      <div class="card-slide"><img src="Bürgermeister/Back.jpeg"  alt="Rückseite"    loading="lazy" decoding="async" /></div>
+      <div class="card-slide"><img src="Bürgermeister/Full.jpeg"  alt="Gesamtansicht" loading="lazy" decoding="async" /></div>
     </div>
     <button class="slider-btn prev" aria-label="Vorheriges Bild" onclick="sliderPrev()">
       <svg viewBox="0 0 13 13"><polyline points="8,2 4,6.5 8,11"/></svg>

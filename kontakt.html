@@ -139,6 +139,17 @@
       margin: 1.5rem auto;
     }
 
+    .menu-contact-row {
+      font-size: 0.95rem;
+      letter-spacing: 0.02em;
+    }
+    .menu-contact-row a {
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .menu-contact-row a:hover { color: var(--gold); }
+
     .menu-close {
       position: absolute; top: 1.5rem; right: 2rem;
       background: none; border: none; cursor: pointer;
@@ -382,6 +393,16 @@
       background: var(--gold);
       color: var(--dark);
     }
+    .btn-submit:disabled { opacity: 0.6; cursor: default; }
+
+    .form-error {
+      display: none;
+      margin-top: 1rem;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: #e0736b;
+    }
+    .form-error a { color: inherit; }
 
     /* success state */
     #form-success {
@@ -495,7 +516,7 @@
   <a href="index.html" class="nav-logo"><img src="Logos/kuscu-logo-white.png" alt="Kuscu Immobilien" /></a>
 
   <ul class="nav-links" id="desktop-nav">
-    <li><a href="index.html">Start</a></li>
+    <li><a href="index.html">Startseite</a></li>
     <li><a href="immobilien.html">Immobilien</a></li>
     <li><a href="kontakt.html" class="active">Kontakt</a></li>
   </ul>
@@ -514,15 +535,7 @@
     <ul class="menu-nav">
 
       <li class="menu-item">
-        <a href="index.html" class="menu-link">Start</a>
-      </li>
-
-      <li class="menu-item">
-        <button class="menu-link" onclick="toggleSub('sub-objekte')">Objekte</button>
-        <ul class="menu-sub" id="sub-objekte">
-          <li><a class="menu-sub-link" href="index.html#step-3">Schwachhauser Heerstraße 179</a></li>
-          <li><a class="menu-sub-link" href="index.html#step-5">Müdener Strasse 31</a></li>
-        </ul>
+        <a href="index.html" class="menu-link">Startseite</a>
       </li>
 
       <li class="menu-item">
@@ -537,9 +550,8 @@
 
     <div class="menu-divider"></div>
 
-    <p style="font-family:'Helvetica Neue',Arial,sans-serif; font-size:0.72rem;
-       letter-spacing:0.18em; text-transform:uppercase; color:rgba(255,255,255,0.3);">
-      Bremen &nbsp;·&nbsp; Deutschland
+    <p class="menu-contact-row">
+      <a href="mailto:navidistanbullu@gmail.com">navidistanbullu@gmail.com</a>
     </p>
   </div>
 </div>
@@ -580,7 +592,7 @@
       <h3>Direkt erreichen</h3>
       <p>
         Telefon: <a href="tel:+49421000000">+49 (0)421 – 000 000</a><br>
-        E-Mail: <a href="mailto:info@dva-verlag.de">info@dva-verlag.de</a><br><br>
+        E-Mail: <a href="mailto:navidistanbullu@gmail.com">navidistanbullu@gmail.com</a><br><br>
         Mo – Fr: 09:00 – 18:00 Uhr<br>
         Sa: nach Vereinbarung
       </p>
@@ -604,7 +616,11 @@
     <h2>Nachricht senden</h2>
     <p class="form-sub">Wir melden uns innerhalb von 24 Stunden bei Ihnen.</p>
 
-    <form id="contact-form" onsubmit="submitForm(event)">
+    <form id="contact-form" name="kontaktanfrage" method="POST" onsubmit="submitForm(event)">
+
+      <!-- Honeypot (Bots füllen dieses Feld aus, Menschen sehen es nicht) -->
+      <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off"
+             style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;" aria-hidden="true" />
 
       <div class="form-row">
         <div class="form-group">
@@ -645,12 +661,13 @@
       <div class="checkbox-row">
         <input type="checkbox" id="datenschutz" name="datenschutz" required />
         <label for="datenschutz">
-          Ich habe die <a href="#">Datenschutzerklärung</a> gelesen und stimme der Verarbeitung
+          Ich habe die <a href="datenschutz.html" target="_blank" rel="noopener">Datenschutzerklärung</a> gelesen und stimme der Verarbeitung
           meiner Daten zur Bearbeitung meiner Anfrage zu.
         </label>
       </div>
 
       <button type="submit" class="btn-submit">Nachricht senden</button>
+      <p class="form-error" id="contact-error">Übermittlung fehlgeschlagen — bitte versuchen Sie es erneut oder schreiben Sie an <a href="mailto:navidistanbullu@gmail.com">navidistanbullu@gmail.com</a>.</p>
     </form>
 
     <div id="form-success">
@@ -674,9 +691,9 @@
 
 <!-- ── FOOTER ────────────────────────────────────────────────── -->
 <footer>
-  <img class="footer-logo" src="Logos/Kuscu.jpeg" alt="Kuscu Immobilien" />
+  <img class="footer-logo" src="Logos/Kuscu.jpeg" alt="Kuscu Immobilien" loading="lazy" decoding="async" />
   <nav aria-label="Footer Navigation">
-    <a href="index.html">Start</a>
+    <a href="index.html">Startseite</a>
     <a href="immobilien.html">Immobilien</a>
     <a href="kontakt.html">Kontakt</a>
   </nav>
@@ -706,30 +723,49 @@
     document.getElementById(id).classList.toggle('open');
   }
 
-  // ── FORM SUBMIT ───────────────────────────────────────────────
-  function submitForm(e) {
+  // ── FORM SUBMIT (Web3Forms) ───────────────────────────────────
+  // Gleicher kostenloser Access Key wie auf immobilien.html.
+  const WEB3FORMS_ACCESS_KEY = '83eec60b-6044-4b55-989e-892f654a8f5e';
+
+  async function submitForm(e) {
     e.preventDefault();
-    const f = e.target;
-    const fname  = f.fname.value;
-    const lname  = f.lname.value;
-    const email  = f.email.value;
-    const phone  = f.phone.value;
-    const objekt = f.objekt.value;
-    const msg    = f.message.value;
+    const f       = e.target;
+    const btn     = f.querySelector('.btn-submit');
+    const errBox  = document.getElementById('contact-error');
+    const btnText = btn.textContent;
 
-    const subject = encodeURIComponent('Immobilienanfrage – ' + fname + ' ' + lname);
-    const body = encodeURIComponent(
-      'Name: ' + fname + ' ' + lname + '\n' +
-      'E-Mail: ' + email + '\n' +
-      (phone ? 'Telefon: ' + phone + '\n' : '') +
-      (objekt ? 'Objekt: ' + objekt + '\n' : '') +
-      '\nNachricht:\n' + msg
-    );
+    errBox.style.display = 'none';
+    btn.disabled = true;
+    btn.textContent = 'Wird gesendet…';
 
-    window.location.href = 'mailto:info@dva-verlag.de?subject=' + subject + '&body=' + body;
+    const isLocal = ['localhost', '127.0.0.1'].includes(location.hostname)
+                    || location.protocol === 'file:';
 
-    // Show success state
-    f.style.display = 'none';
+    try {
+      const data = new FormData(f);
+      data.append('access_key', WEB3FORMS_ACCESS_KEY);
+      data.append('subject', 'Neue Kontaktanfrage – ' + f.fname.value + ' ' + f.lname.value);
+      data.append('from_name', 'Kuscu Immobilien Website');
+
+      const res  = await fetch('https://api.web3forms.com/submit', { method: 'POST', body: data });
+      const json = await res.json();
+      if (!json.success) throw new Error(json.message || 'Übermittlung fehlgeschlagen');
+
+      showContactSuccess();
+    } catch (err) {
+      if (isLocal) {
+        // Lokal ohne Server trotzdem den Erfolgszustand zeigen, damit testbar
+        showContactSuccess();
+      } else {
+        errBox.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = btnText;
+      }
+    }
+  }
+
+  function showContactSuccess() {
+    document.getElementById('contact-form').style.display = 'none';
     document.getElementById('form-success').style.display = 'block';
   }
 

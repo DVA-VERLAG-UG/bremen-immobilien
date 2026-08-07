@@ -160,6 +160,7 @@
     }
     .menu-link:hover { color:#fff; }
     .menu-link:hover::after { width:100%; }
+    .menu-link.active-page { color: var(--gold); }
 
     .menu-divider { width:1px; height:40px; background:rgba(200,169,110,.25); margin:1.5rem auto; }
     .menu-contact-row {
@@ -274,7 +275,7 @@
 
     .listing-badge {
       font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.52rem;
+      font-size: 0.66rem;
       letter-spacing: 0.32em;
       text-transform: uppercase;
       padding: 0.3rem 0.75rem;
@@ -321,7 +322,7 @@
 
     .img-nav-count {
       font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.58rem;
+      font-size: 0.72rem;
       letter-spacing: 0.2em;
       color: rgba(255,255,255,0.55);
     }
@@ -582,7 +583,7 @@
 
     .gate-eyebrow {
       font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.58rem;
+      font-size: 0.66rem;
       letter-spacing: 0.4em;
       text-transform: uppercase;
       color: var(--gold);
@@ -658,7 +659,7 @@
 
     .gate-note {
       font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.58rem;
+      font-size: 0.66rem;
       color: rgba(255,255,255,0.2);
       letter-spacing: 0.08em;
       line-height: 1.6;
@@ -993,13 +994,10 @@
         <a class="menu-link" href="index.html">Startseite</a>
       </li>
       <li class="menu-item">
-        <a class="menu-link" href="immobilien.html">Immobilien</a>
+        <a class="menu-link active-page" href="immobilien.html">Immobilien</a>
       </li>
       <li class="menu-item">
-        <a class="menu-link" href="index.html#map">Karte</a>
-      </li>
-      <li class="menu-item">
-        <a class="menu-link" href="mailto:navidistanbullu@gmail.com">Kontakt</a>
+        <a class="menu-link" href="kontakt.html">Kontakt</a>
       </li>
     </ul>
     <div class="menu-divider"></div>
@@ -1050,13 +1048,13 @@
 
       <div class="listing-thumbs">
         <div class="listing-thumb active" data-idx="0" title="Frontansicht">
-          <img src="Bürgermeister/Front.jpeg" alt="" />
+          <img src="Bürgermeister/Front.jpeg" alt="" loading="lazy" decoding="async" />
         </div>
         <div class="listing-thumb" data-idx="1" title="Rückseite">
-          <img src="Bürgermeister/Back.jpeg" alt="" />
+          <img src="Bürgermeister/Back.jpeg" alt="" loading="lazy" decoding="async" />
         </div>
         <div class="listing-thumb" data-idx="2" title="Gesamtansicht">
-          <img src="Bürgermeister/Full.jpeg" alt="" />
+          <img src="Bürgermeister/Full.jpeg" alt="" loading="lazy" decoding="async" />
         </div>
       </div>
     </div>
@@ -1230,7 +1228,7 @@
     </p>
     <div class="vr-frame-box reveal reveal-d4">
       <button class="vr-lock" id="vr-lock" type="button">
-        <img src="Bürgermeister/Full.jpeg" alt="" aria-hidden="true" />
+        <img src="Bürgermeister/Full.jpeg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
         <span class="vr-lock-inner">
           <span class="vr-lock-play" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 21 12 6 21 6 3"/></svg>
@@ -1270,7 +1268,7 @@
       aria-label="Schließen">✕</button>
     <p style="
       font-family:'Helvetica Neue',Arial,sans-serif;
-      font-size:0.58rem; letter-spacing:0.4em; text-transform:uppercase;
+      font-size:0.66rem; letter-spacing:0.4em; text-transform:uppercase;
       color:var(--gold); margin-bottom:1.2rem;">Produktkarte</p>
     <h3 style="font-size:1.3rem; font-weight:400; margin-bottom:0.5rem; line-height:1.3;">
       Bürgermeister Spitta Allee 6
@@ -1300,7 +1298,7 @@
     </a>
     <p style="
       font-family:'Helvetica Neue',Arial,sans-serif;
-      font-size:0.58rem; color:rgba(255,255,255,0.2);
+      font-size:0.72rem; color:rgba(255,255,255,0.45);
       letter-spacing:0.1em;">
       Zugang wird nach kurzer Prüfung freigeschaltet.
     </p>
@@ -1323,16 +1321,15 @@
          durch das Haus.</p>
     </div>
     <div class="gate-photo">
-      <img src="Bürgermeister/Full.jpeg" alt="Einfamilienhaus Vahr — Gesamtansicht" />
+      <img src="Bürgermeister/Full.jpeg" alt="Einfamilienhaus Vahr — Gesamtansicht" loading="lazy" decoding="async" />
     </div>
     <p class="gate-text">
       Melden Sie sich hier an, um den 360°-VR-Rundgang zu sehen und die
       restlichen Informationen samt Exposé zu erhalten.
     </p>
-    <!-- data-netlify: wird aktiv, sobald die Seite bei Netlify gehostet wird;
-         aktuell übermittelt das JavaScript die Daten über Web3Forms per E-Mail -->
-    <form id="gate-form" name="produktkarte-zugang" method="POST" data-netlify="true" netlify-honeypot="botcheck">
-      <input type="hidden" name="form-name" value="produktkarte-zugang" />
+    <!-- Übermittlung erfolgt per JavaScript über Web3Forms (siehe Skript unten);
+         funktioniert unabhängig vom Hosting (Netlify, GitHub Pages, o. Ä.). -->
+    <form id="gate-form" name="produktkarte-zugang" method="POST">
       <input type="hidden" name="objekt" value="Vahr · Bremen (Bürgermeister Spitta Allee 6)" />
       <p class="gate-hp">
         <label>Bitte nicht ausfüllen: <input type="checkbox" name="botcheck" /></label>
@@ -1357,7 +1354,7 @@
 
 <!-- ── FOOTER ──────────────────────────────────────────────────── -->
 <footer>
-  <img class="footer-brand" src="Logos/Kuscu.jpeg" alt="Kuscu Immobilien" />
+  <img class="footer-brand" src="Logos/Kuscu.jpeg" alt="Kuscu Immobilien" loading="lazy" decoding="async" />
   <div class="footer-links">
     <a href="mailto:navidistanbullu@gmail.com">navidistanbullu@gmail.com</a>
     <!-- TODO: Telefonnummer eintragen, z. B.:
