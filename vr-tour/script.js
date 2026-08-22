@@ -733,7 +733,7 @@ function updateHallwayShortcutVisibility(sceneId) {
 const RENOVATION_SCENES = {
   stock1_entranceHall01:    { panorama: "assets/panos/Updated/Wohnzimmer.jpg", yawOffset: -34 },
   stock1_entranceHall02:    { panorama: "assets/panos/Updated/Küche.jpg", yawOffset: -20 },
-  stock1_room04ToHall:      { panorama: "assets/panos/Updated/Flur.jpg", yawOffset: -77 },
+  stock1_room04ToHall:      { panorama: "assets/panos/Updated/Flur.jpg", yawOffset: 88 },
   stock1_kitchen:           { panorama: "assets/panos/Updated/Kinderzimmer2.jpg", yawOffset: -32 },
   stock1_room02:            { panorama: "assets/panos/Updated/Kinderzimmer1.jpg", yawOffset: 30 },
   stock1_bathroom:          { panorama: "assets/panos/Updated/Bad_unten.jpg", yawOffset: 200 },
