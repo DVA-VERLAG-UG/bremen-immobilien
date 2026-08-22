@@ -702,12 +702,15 @@ viewer.on("scenechange", function (sceneId) {
   updateRoomNavActive(sceneId);
   updateBackButtonState();
   updateHallwayShortcutVisibility(sceneId);
+  disableCompareMode();
+  updateCompareToggleVisibility(sceneId);
 });
 
 // Pannellum feuert "scenechange" nicht zuverlässig für die allererste Szene
 // beim initialen Laden — "load" fängt diesen Fall zusätzlich ab.
 viewer.on("load", function () {
   updateHallwayShortcutVisibility(viewer.getScene());
+  updateCompareToggleVisibility(viewer.getScene());
 });
 
 // Scenen der großen Eingangshalle, aus denen die Verbindungstür zur Diele
@@ -721,6 +724,126 @@ function updateHallwayShortcutVisibility(sceneId) {
   const btn = document.getElementById("tour-hallway-shortcut");
   if (btn) btn.style.display = ENTRANCE_HALL_SCENE_IDS.has(sceneId) ? "flex" : "none";
 }
+
+// ── 360°-Vorher/Nachher-Vergleich ────────────────────────────────
+// Nur in den Zimmern verfügbar, für die ein KI-Renovierungsentwurf
+// vorliegt. Zweiter Pannellum-Viewer wird erst bei Bedarf geladen,
+// damit der normale Rundgang für alle anderen Besucher schlank bleibt.
+const RENOVATION_SCENES = {
+  stock1_entranceHall01:    { panorama: "assets/panos/Updated/Wohnzimmer.jpg", yawOffset: -15 },
+  stock1_entranceHall02:    { panorama: "assets/panos/Updated/Küche.jpg", yawOffset: -10 },
+  stock1_room04ToHall:      { panorama: "assets/panos/Updated/Flur.jpg", yawOffset: -18 },
+  stock1_kitchen:           { panorama: "assets/panos/Updated/Kinderzimmer2.jpg", yawOffset: -62 },
+  stock1_room02:            { panorama: "assets/panos/Updated/Kinderzimmer1.jpg", yawOffset: 30 },
+  stock1_bathroom:          { panorama: "assets/panos/Updated/Bad_unten.jpg", yawOffset: 45 },
+  stock2_room1_b:           { panorama: "assets/panos/Updated/Schlafzimmer.jpg", yawOffset: -104 },
+  stock2_bathroom:          { panorama: "assets/panos/Updated/Bad_oben.jpg", yawOffset: -5 },
+  stock2_bathroomToBalcony: { panorama: "assets/panos/Updated/Balkon.jpg", yawOffset: 5 },
+};
+
+let afterViewer = null;
+let compareModeActive = false;
+let compareSyncRAF = null;
+let compareDragging360 = false;
+
+function updateCompareToggleVisibility(sceneId) {
+  const btn = document.getElementById("compare-360-toggle");
+  if (!btn) return;
+  const available = Object.prototype.hasOwnProperty.call(RENOVATION_SCENES, sceneId);
+  btn.classList.toggle("visible", available);
+  if (!available) disableCompareMode();
+}
+
+function enableCompareMode() {
+  if (compareModeActive) return;
+  const sceneId = viewer.getScene();
+  const renovation = RENOVATION_SCENES[sceneId];
+  if (!renovation) return;
+
+  afterViewer = pannellum.viewer("panorama-after", {
+    type: "equirectangular",
+    panorama: renovation.panorama,
+    autoLoad: true,
+    sceneFadeDuration: 0,
+    yaw: viewer.getYaw() + (renovation.yawOffset || 0),
+    pitch: viewer.getPitch(),
+    hfov: viewer.getHfov(),
+    showControls: false,
+    compass: false
+  });
+
+  compareModeActive = true;
+  document.getElementById("panorama-after").classList.add("active");
+  document.getElementById("compare-handle-360").classList.add("active");
+  document.querySelectorAll(".compare-tag-360").forEach(t => t.classList.add("active"));
+  document.documentElement.style.setProperty("--compare-pos", "50%");
+
+  const toggleBtn = document.getElementById("compare-360-toggle");
+  toggleBtn.classList.add("on");
+  document.getElementById("compare-360-toggle-label").textContent = "Vergleich beenden";
+
+  (function syncLoop() {
+    if (!compareModeActive || !afterViewer) return;
+    const offset = (RENOVATION_SCENES[sceneId] && RENOVATION_SCENES[sceneId].yawOffset) || 0;
+    afterViewer.setYaw(viewer.getYaw() + offset, 0);
+    afterViewer.setPitch(viewer.getPitch(), 0);
+    afterViewer.setHfov(viewer.getHfov(), 0);
+    compareSyncRAF = requestAnimationFrame(syncLoop);
+  })();
+}
+
+function disableCompareMode() {
+  if (!compareModeActive) return;
+  compareModeActive = false;
+  if (compareSyncRAF) cancelAnimationFrame(compareSyncRAF);
+  compareSyncRAF = null;
+  if (afterViewer) { afterViewer.destroy(); afterViewer = null; }
+
+  document.getElementById("panorama-after").classList.remove("active");
+  document.getElementById("compare-handle-360").classList.remove("active");
+  document.querySelectorAll(".compare-tag-360").forEach(t => t.classList.remove("active"));
+
+  const toggleBtn = document.getElementById("compare-360-toggle");
+  if (toggleBtn) {
+    toggleBtn.classList.remove("on");
+    document.getElementById("compare-360-toggle-label").textContent = "Vorher/Nachher";
+  }
+}
+
+function initCompareToggle() {
+  const toggleBtn = document.getElementById("compare-360-toggle");
+  const handle = document.getElementById("compare-handle-360");
+  if (!toggleBtn || !handle) return;
+
+  toggleBtn.addEventListener("click", function () {
+    if (compareModeActive) disableCompareMode();
+    else enableCompareMode();
+  });
+
+  function setComparePos(clientX) {
+    const rect = document.getElementById("panorama").getBoundingClientRect();
+    let pct = ((clientX - rect.left) / rect.width) * 100;
+    pct = Math.max(0, Math.min(100, pct));
+    document.documentElement.style.setProperty("--compare-pos", pct + "%");
+  }
+
+  handle.addEventListener("pointerdown", function (e) {
+    compareDragging360 = true;
+    handle.setPointerCapture(e.pointerId);
+    setComparePos(e.clientX);
+    e.stopPropagation();
+  });
+  handle.addEventListener("pointermove", function (e) {
+    if (compareDragging360) { setComparePos(e.clientX); e.stopPropagation(); }
+  });
+  handle.addEventListener("pointerup", function (e) {
+    compareDragging360 = false;
+    e.stopPropagation();
+  });
+  handle.addEventListener("pointercancel", function () { compareDragging360 = false; });
+}
+
+initCompareToggle();
 
 // ── Besucher-Navigation: "Zurück" + "Alle Räume" (unabhängig von EDIT_MODE) ──
 const scenesById = Object.fromEntries(sceneList.map(s => [s.id, s]));

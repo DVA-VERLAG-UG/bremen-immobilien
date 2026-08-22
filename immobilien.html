@@ -874,17 +874,137 @@
     .tagebuch li.done .tagebuch-status,
     .tagebuch li.active .tagebuch-status { color: var(--gold); }
 
+    /* ── VORHER / NACHHER ────────────────────────────────────── */
+    .compare-section {
+      border: 1px solid rgba(255,255,255,0.06);
+      padding: 3.5rem;
+    }
+
+    .compare-desc {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.88rem;
+      line-height: 1.85;
+      color: rgba(255,255,255,0.68);
+      max-width: 520px;
+      margin-bottom: 2.2rem;
+    }
+
+    .compare-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.8rem;
+    }
+
+    .compare-tab {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      padding: 0.55rem 1rem;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: transparent;
+      color: rgba(255,255,255,0.58);
+      cursor: pointer;
+      transition: border-color 0.25s, color 0.25s, background 0.25s;
+    }
+    .compare-tab:hover { border-color: rgba(255,255,255,0.4); color: #fff; }
+    .compare-tab.active {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: rgba(200,169,110,0.08);
+    }
+
+    .compare-slider {
+      --pos: 50%;
+      position: relative;
+      max-width: 900px;
+      aspect-ratio: 3 / 2;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: #0c0c18;
+      user-select: none;
+      cursor: ew-resize;
+      touch-action: pan-y;
+    }
+
+    .compare-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      pointer-events: none;
+    }
+
+    .compare-img.compare-after {
+      clip-path: inset(0 0 0 var(--pos));
+    }
+
+    .compare-tag {
+      position: absolute;
+      bottom: 1.1rem;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.58rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      padding: 0.4rem 0.8rem;
+      background: rgba(8,8,14,0.72);
+      border: 1px solid var(--border);
+      color: rgba(255,255,255,0.75);
+      backdrop-filter: blur(4px);
+      pointer-events: none;
+    }
+    .compare-tag.before { left: 1.1rem; }
+    .compare-tag.after  { right: 1.1rem; color: var(--gold); }
+
+    .compare-handle {
+      position: absolute;
+      top: 0; bottom: 0;
+      left: var(--pos);
+      width: 2px;
+      background: rgba(255,255,255,0.85);
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+    .compare-handle::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      background: var(--gold);
+      transform: translate(-50%, -50%);
+      box-shadow: 0 2px 14px rgba(0,0,0,0.4);
+    }
+    .compare-handle::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 16px; height: 16px;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      background:
+        linear-gradient(currentColor, currentColor) left center / 6px 2px no-repeat,
+        linear-gradient(currentColor, currentColor) right center / 6px 2px no-repeat;
+      color: var(--dark);
+      z-index: 1;
+    }
+
     @media (max-width: 900px) {
       .lage-section { grid-template-columns: 1fr; gap: 3rem; padding: 2.5rem 1.75rem; }
       .ablauf-section { padding: 2.5rem 1.75rem; }
       .ablauf-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .compare-section { padding: 2.5rem 1.75rem; }
       .vr-lock { height: 540px; }
     }
 
     @media (max-width: 580px) {
       .gate-card { padding: 2rem 1.5rem; }
       .gate-photo img { height: 130px; }
-      .lage-section, .ablauf-section { padding: 2rem 1.25rem; }
+      .lage-section, .ablauf-section, .compare-section { padding: 2rem 1.25rem; }
+      .compare-slider { aspect-ratio: 4 / 3; }
       .vr-lock { height: 50vh; }
       .vr-lock-title { font-size: 1.15rem; }
     }
@@ -1186,6 +1306,26 @@
           <span class="tagebuch-status">Geplant</span>
         </li>
       </ul>
+    </div>
+  </section>
+
+  <!-- ── VORHER / NACHHER ── -->
+  <section class="compare-section reveal" id="vorher-nachher">
+    <p class="listing-eyebrow reveal reveal-d1">Vorher / Nachher</p>
+    <h2 class="vr-title reveal reveal-d2">So könnte es aussehen</h2>
+    <div class="listing-divider reveal reveal-d3"></div>
+    <p class="compare-desc reveal reveal-d3">
+      Eine Visualisierung, wie die Räume nach der Sanierung wirken könnten.
+      Ziehen Sie den Regler, um zwischen dem aktuellen Zustand und dem
+      gestalteten Entwurf zu vergleichen.
+    </p>
+    <div class="compare-tabs reveal reveal-d4" id="compare-tabs"></div>
+    <div class="compare-slider reveal reveal-d4" id="compare-slider">
+      <img class="compare-img compare-before" id="compare-before-img" alt="Aktueller Zustand" />
+      <img class="compare-img compare-after" id="compare-after-img" alt="Entwurf nach Sanierung" />
+      <span class="compare-tag before">Vorher</span>
+      <span class="compare-tag after">Nachher</span>
+      <div class="compare-handle"></div>
     </div>
   </section>
 
@@ -1562,6 +1702,63 @@
       }
     }
   });
+
+  // ── Vorher/Nachher-Vergleich ─────────────────────────────────────
+  const COMPARE_ROOMS = [
+    { id: 'stock1_entranceHall01',      label: 'Eingangshalle' },
+    { id: 'stock1_entranceHall02',      label: 'Eingangshalle 2' },
+    { id: 'stock1_room04ToHall',        label: 'Flur' },
+    { id: 'stock1_kitchen',             label: 'Küche' },
+    { id: 'stock1_room02',              label: 'Zimmer 2' },
+    { id: 'stock1_bathroom',            label: 'Bad (1. Stock)' },
+    { id: 'stock2_room1_b',             label: 'Zimmer 1 (2. Stock)' },
+    { id: 'stock2_bathroom',            label: 'Bad (2. Stock)' },
+    { id: 'stock2_bathroomToBalcony',   label: 'Balkon' },
+  ];
+
+  const compareTabs      = document.getElementById('compare-tabs');
+  const compareSlider    = document.getElementById('compare-slider');
+  const compareBeforeImg = document.getElementById('compare-before-img');
+  const compareAfterImg  = document.getElementById('compare-after-img');
+
+  function setCompareRoom(room, btn) {
+    compareBeforeImg.src = `vr-tour/assets/compare/${room.id}_before.jpg`;
+    compareAfterImg.src  = `vr-tour/assets/compare/${room.id}_after.jpg`;
+    compareBeforeImg.alt = `${room.label} — aktueller Zustand`;
+    compareAfterImg.alt  = `${room.label} — Entwurf nach Sanierung`;
+    compareSlider.style.setProperty('--pos', '50%');
+    compareTabs.querySelectorAll('.compare-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  COMPARE_ROOMS.forEach((room, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'compare-tab';
+    btn.type = 'button';
+    btn.textContent = room.label;
+    btn.addEventListener('click', () => setCompareRoom(room, btn));
+    compareTabs.appendChild(btn);
+    if (i === 0) setCompareRoom(room, btn);
+  });
+
+  function setCompareSliderPos(clientX) {
+    const rect = compareSlider.getBoundingClientRect();
+    let pct = ((clientX - rect.left) / rect.width) * 100;
+    pct = Math.max(0, Math.min(100, pct));
+    compareSlider.style.setProperty('--pos', pct + '%');
+  }
+
+  let compareDragging = false;
+  compareSlider.addEventListener('pointerdown', e => {
+    compareDragging = true;
+    compareSlider.setPointerCapture(e.pointerId);
+    setCompareSliderPos(e.clientX);
+  });
+  compareSlider.addEventListener('pointermove', e => {
+    if (compareDragging) setCompareSliderPos(e.clientX);
+  });
+  compareSlider.addEventListener('pointerup', () => { compareDragging = false; });
+  compareSlider.addEventListener('pointercancel', () => { compareDragging = false; });
 
   // ── Reveal on scroll ───────────────────────────────────────────
   const ro = new IntersectionObserver(entries => {

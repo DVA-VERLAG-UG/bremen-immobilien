@@ -13,6 +13,111 @@ html, body {
   height: 100vh;
 }
 
+/* =========================
+   360°-VORHER/NACHHER-VERGLEICH
+========================= */
+
+#panorama-after {
+  position: absolute;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 5;
+  display: none;
+  pointer-events: none;
+  clip-path: inset(0 0 0 var(--compare-pos, 50%));
+}
+#panorama-after.active { display: block; }
+
+/* Pannellum-eigene Steuerelemente auf der Nachher-Ebene ausblenden */
+#panorama-after .pnlm-controls-container,
+#panorama-after .pnlm-compass,
+#panorama-after .pnlm-load-box {
+  display: none !important;
+}
+
+#compare-handle-360 {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: var(--compare-pos, 50%);
+  width: 2px;
+  z-index: 15;
+  background: rgba(255, 255, 255, 0.85);
+  transform: translateX(-50%);
+  display: none;
+  pointer-events: none;
+}
+#compare-handle-360.active { display: block; pointer-events: auto; cursor: ew-resize; }
+#compare-handle-360::before {
+  /* größere unsichtbare Ziehzone, leichter zu treffen als die 2px-Linie */
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 50%;
+  width: 44px;
+  transform: translateX(-50%);
+}
+#compare-handle-360::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  background: #c8a96e;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 2px 14px rgba(0,0,0,0.5);
+  pointer-events: none;
+}
+
+.compare-tag-360 {
+  position: absolute;
+  bottom: 78px;
+  z-index: 16;
+  font-family: Arial, sans-serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  background: rgba(0,0,0,0.6);
+  color: rgba(255,255,255,0.85);
+  border: 1px solid rgba(255,255,255,0.2);
+  pointer-events: none;
+  display: none;
+}
+.compare-tag-360.active { display: block; }
+.compare-tag-360.before-tag { left: 20px; }
+.compare-tag-360.after-tag  { right: 20px; color: #c8a96e; }
+
+#compare-360-toggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 20;
+  display: none;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.55);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+  font-family: Arial, sans-serif;
+  backdrop-filter: blur(4px);
+  transition: background 0.2s, border-color 0.2s;
+}
+#compare-360-toggle.visible { display: flex; }
+#compare-360-toggle:hover { background: rgba(0, 0, 0, 0.75); border-color: rgba(255,255,255,0.4); }
+#compare-360-toggle.on { border-color: #c8a96e; color: #c8a96e; }
+#compare-360-toggle svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+@media (max-width: 640px) {
+  #compare-360-toggle { top: 12px; right: 12px; padding: 9px 13px; font-size: 12px; }
+  .compare-tag-360 { font-size: 10px; padding: 5px 10px; bottom: 64px; }
+}
+
 #tour-title {
   position: absolute;
   top: 20px;

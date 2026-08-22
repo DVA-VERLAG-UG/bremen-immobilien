@@ -1,7 +1,38 @@
 {
   "permissions": {
     "allow": [
-      "Bash(grep -nE \"\\\\.menu-link\\\\.active|\\\\.active-page|nav-links a\\\\.active|\\\\.active \\\\{|\\\\.active,\" immobilien.html)"
+      "Bash(grep -nE \"\\\\.menu-link\\\\.active|\\\\.active-page|nav-links a\\\\.active|\\\\.active \\\\{|\\\\.active,\" immobilien.html)",
+      "Bash(python3 -m http.server 8801)",
+      "Bash(node /private/tmp/claude-501/-Users-nistanbullu-bremen-immobilien-1/d55453ea-1a37-48b8-a2e3-458c45599135/scratchpad/test-compare.js)",
+      "Bash(node -e ' *)",
+      "Bash(pkill -f \"http.server 88\")",
+      "Bash(python3 -m http.server 8800)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:8800/immobilien.html)",
+      "Bash(pkill -f \"http.server 8800\")",
+      "Bash(curl -s \"https://cdn.jsdelivr.net/npm/pannellum/build/pannellum.js\" -o /tmp/pannellum.js)",
+      "Bash(python3 -m http.server 8813)",
+      "Bash(sed -i '' 's/8812/8813/' /private/tmp/claude-501/-Users-nistanbullu-bremen-immobilien-1/d55453ea-1a37-48b8-a2e3-458c45599135/scratchpad/test-360-simple.js)",
+      "Bash(node /private/tmp/claude-501/-Users-nistanbullu-bremen-immobilien-1/d55453ea-1a37-48b8-a2e3-458c45599135/scratchpad/test-360-simple.js)",
+      "Bash(pkill -f \"http.server 8813\")",
+      "Bash(python3 -m http.server 8814)",
+      "Bash(sed -i '' 's/8813/8814/' /private/tmp/claude-501/-Users-nistanbullu-bremen-immobilien-1/d55453ea-1a37-48b8-a2e3-458c45599135/scratchpad/test-360-simple.js)",
+      "Bash(pkill -f \"http.server 8814\")",
+      "Bash(python3 -m http.server 8815)",
+      "Bash(sed -i '' 's/8814/8815/' /private/tmp/claude-501/-Users-nistanbullu-bremen-immobilien-1/d55453ea-1a37-48b8-a2e3-458c45599135/scratchpad/test-360-simple.js)",
+      "Bash(pkill -f \"http.server 8815\")",
+      "Bash(/private/tmp/claude-501/-Users-nistanbullu-bremen-immobilien-1/d55453ea-1a37-48b8-a2e3-458c45599135/scratchpad/venv/bin/python /private/tmp/claude-501/-Users-nistanbullu-bremen-immobilien-1/d55453ea-1a37-48b8-a2e3-458c45599135/scratchpad/align/xcorr.py)",
+      "Bash(\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" --version)",
+      "Bash(NODE_PATH=./node_modules node align/seam_test.js)",
+      "Bash(/private/tmp/claude-501/-Users-nistanbullu-bremen-immobilien-1/d55453ea-1a37-48b8-a2e3-458c45599135/scratchpad/venv/bin/python /private/tmp/claude-501/-Users-nistanbullu-bremen-immobilien-1/d55453ea-1a37-48b8-a2e3-458c45599135/scratchpad/align/composite_seam.py)",
+      "Bash(export ROOMS_JSON='[{\"id\":\"stock1_entranceHall01\",\"aimYaws\":[120,0],\"offsets\":[-25,-20,-15,-10,-5,0,5]}]')",
+      "Bash(NODE_PATH=./node_modules node align/seam_test_fine.js)",
+      "Bash(/private/tmp/claude-501/-Users-nistanbullu-bremen-immobilien-1/d55453ea-1a37-48b8-a2e3-458c45599135/scratchpad/venv/bin/python -)",
+      "Bash(NODE_PATH=./node_modules node align/verify_labels.js)",
+      "Bash(export ROOMS_JSON='[{\"id\":\"stock1_room04ToHall\",\"aimYaws\":[-60],\"offsets\":[-35,-30,-25,-20,-15,-10,-5]}]')",
+      "Bash(export ROOMS_JSON='[{\"id\":\"stock1_kitchen\",\"aimYaws\":[30,-120],\"offsets\":[-85,-75,-65,-55,-45,-35]}]')",
+      "Bash(export ROOMS_JSON='[{\"id\":\"stock1_bathroom\",\"aimYaws\":[-165],\"offsets\":[-150,-120,-90,-60,-30,0,30,60,90,120,150,180]}]')",
+      "Bash(export ROOMS_JSON='[{\"id\":\"stock1_bathroom\",\"aimYaws\":[-165],\"offsets\":[100,115,130,145,160,175,190]}]')",
+      "Bash(pkill -f \"http.server 8811\")"
     ]
   }
 }
