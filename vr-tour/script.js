@@ -1,4 +1,5 @@
 const EDIT_MODE = false;
+const TUNE_MODE = new URLSearchParams(location.search).has("tune");
 
 const sceneList = [
   { id: "stock1_entranceHall01", title: "Eingangshalle 1", panorama: "assets/panos/1Stock/01_Entrance_Hall.jpg" },
@@ -730,13 +731,13 @@ function updateHallwayShortcutVisibility(sceneId) {
 // vorliegt. Zweiter Pannellum-Viewer wird erst bei Bedarf geladen,
 // damit der normale Rundgang für alle anderen Besucher schlank bleibt.
 const RENOVATION_SCENES = {
-  stock1_entranceHall01:    { panorama: "assets/panos/Updated/Wohnzimmer.jpg", yawOffset: -15 },
-  stock1_entranceHall02:    { panorama: "assets/panos/Updated/Küche.jpg", yawOffset: -10 },
-  stock1_room04ToHall:      { panorama: "assets/panos/Updated/Flur.jpg", yawOffset: -18 },
-  stock1_kitchen:           { panorama: "assets/panos/Updated/Kinderzimmer2.jpg", yawOffset: -62 },
+  stock1_entranceHall01:    { panorama: "assets/panos/Updated/Wohnzimmer.jpg", yawOffset: -34 },
+  stock1_entranceHall02:    { panorama: "assets/panos/Updated/Küche.jpg", yawOffset: -20 },
+  stock1_room04ToHall:      { panorama: "assets/panos/Updated/Flur.jpg", yawOffset: -77 },
+  stock1_kitchen:           { panorama: "assets/panos/Updated/Kinderzimmer2.jpg", yawOffset: -32 },
   stock1_room02:            { panorama: "assets/panos/Updated/Kinderzimmer1.jpg", yawOffset: 30 },
-  stock1_bathroom:          { panorama: "assets/panos/Updated/Bad_unten.jpg", yawOffset: 45 },
-  stock2_room1_b:           { panorama: "assets/panos/Updated/Schlafzimmer.jpg", yawOffset: -104 },
+  stock1_bathroom:          { panorama: "assets/panos/Updated/Bad_unten.jpg", yawOffset: 200 },
+  stock2_room1_b:           { panorama: "assets/panos/Updated/Schlafzimmer.jpg", yawOffset: 51 },
   stock2_bathroom:          { panorama: "assets/panos/Updated/Bad_oben.jpg", yawOffset: -5 },
   stock2_bathroomToBalcony: { panorama: "assets/panos/Updated/Balkon.jpg", yawOffset: 5 },
 };
@@ -782,6 +783,8 @@ function enableCompareMode() {
   toggleBtn.classList.add("on");
   document.getElementById("compare-360-toggle-label").textContent = "Vergleich beenden";
 
+  if (TUNE_MODE) showTunePanel(sceneId);
+
   (function syncLoop() {
     if (!compareModeActive || !afterViewer) return;
     const offset = (RENOVATION_SCENES[sceneId] && RENOVATION_SCENES[sceneId].yawOffset) || 0;
@@ -808,6 +811,69 @@ function disableCompareMode() {
     toggleBtn.classList.remove("on");
     document.getElementById("compare-360-toggle-label").textContent = "Vorher/Nachher";
   }
+
+  hideTunePanel();
+}
+
+// ── Live-Justierung (nur mit ?tune=1 in der URL) ─────────────────
+// Erlaubt es, yawOffset pro Raum live zu verstellen, ohne die Seite
+// neu zu laden. Wert erscheint in einem kleinen Panel und in der
+// Konsole, damit er danach dauerhaft in RENOVATION_SCENES eingetragen
+// werden kann.
+function showTunePanel(sceneId) {
+  let panel = document.getElementById("tune-panel");
+  if (!panel) {
+    panel = document.createElement("div");
+    panel.id = "tune-panel";
+    panel.innerHTML = `
+      <div id="tune-panel-label"></div>
+      <div id="tune-panel-controls">
+        <button type="button" data-delta="-5">-5</button>
+        <button type="button" data-delta="-1">-1</button>
+        <div id="tune-panel-value"></div>
+        <button type="button" data-delta="1">+1</button>
+        <button type="button" data-delta="5">+5</button>
+      </div>
+      <div id="tune-panel-hint">Pfeiltasten: ±1° · Shift+Pfeiltasten: ±5°</div>
+    `;
+    document.body.appendChild(panel);
+    panel.querySelectorAll("button[data-delta]").forEach(btn => {
+      btn.addEventListener("click", () => adjustYawOffset(parseInt(btn.dataset.delta, 10)));
+    });
+  }
+  panel.classList.add("active");
+  updateTunePanel(sceneId);
+}
+
+function hideTunePanel() {
+  const panel = document.getElementById("tune-panel");
+  if (panel) panel.classList.remove("active");
+}
+
+function updateTunePanel(sceneId) {
+  const panel = document.getElementById("tune-panel");
+  if (!panel) return;
+  const renovation = RENOVATION_SCENES[sceneId];
+  document.getElementById("tune-panel-label").textContent = sceneId;
+  document.getElementById("tune-panel-value").textContent = (renovation.yawOffset || 0) + "°";
+}
+
+function adjustYawOffset(delta) {
+  if (!TUNE_MODE || !compareModeActive) return;
+  const sceneId = viewer.getScene();
+  const renovation = RENOVATION_SCENES[sceneId];
+  if (!renovation) return;
+  renovation.yawOffset = (renovation.yawOffset || 0) + delta;
+  updateTunePanel(sceneId);
+  console.log(`${sceneId}: yawOffset: ${renovation.yawOffset}`);
+}
+
+if (TUNE_MODE) {
+  document.addEventListener("keydown", (e) => {
+    if (!compareModeActive) return;
+    if (e.key === "ArrowLeft") { adjustYawOffset(e.shiftKey ? -5 : -1); e.preventDefault(); }
+    else if (e.key === "ArrowRight") { adjustYawOffset(e.shiftKey ? 5 : 1); e.preventDefault(); }
+  });
 }
 
 function initCompareToggle() {
