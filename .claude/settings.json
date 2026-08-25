@@ -36,7 +36,13 @@
       "Bash(sips -g pixelWidth -g pixelHeight vr-tour/assets/compare/stock1_room02_before.jpg vr-tour/assets/compare/stock1_room02_after.jpg)",
       "Bash(sips -g pixelWidth -g pixelHeight vr-tour/assets/panos/1Stock/Room_2.jpg vr-tour/assets/panos/Updated/kinderzimmer1.jpg)",
       "Bash(/private/tmp/claude-501/-Users-nistanbullu-bremen-immobilien-1/d55453ea-1a37-48b8-a2e3-458c45599135/scratchpad/venv/bin/python /private/tmp/claude-501/-Users-nistanbullu-bremen-immobilien-1/d55453ea-1a37-48b8-a2e3-458c45599135/scratchpad/align/regen_compare.py)",
-      "Bash(git commit -m ' *)"
+      "Bash(git commit -m ' *)",
+      "Bash(NODE_PATH=./node_modules node align/check_hero_ablauf.js)",
+      "Bash(NODE_PATH=./node_modules node align/test_i18n.js)",
+      "Bash(NODE_PATH=./node_modules node align/test_i18n_index.js)",
+      "Bash(grep -n \"^\\\\s*nav\\\\s*{\\\\|nav\\\\s*{$\" /Users/nistanbullu/bremen-immobilien-1/kontakt.html)",
+      "Bash(grep -n \"^\\\\s*nav \\\\|nav a {\\\\|nav a,\" /Users/nistanbullu/bremen-immobilien-1/kontakt.html)",
+      "Bash(NODE_PATH=./node_modules node align/test_i18n_kontakt.js)"
     ]
   }
 }

@@ -25,7 +25,7 @@
     }
 
     /* ── NAV ─────────────────────────────────────────────── */
-    nav {
+    body > nav {
       position: fixed;
       top: 0; left: 0; right: 0;
       z-index: 100;
@@ -501,7 +501,7 @@
         padding: 3.5rem 1.5rem 5rem;
       }
       .form-row { grid-template-columns: 1fr; }
-      nav { padding: 0 1.5rem; }
+      body > nav { padding: 0 1.5rem; }
       .hero-content { padding: 0 1.5rem; }
       footer { padding: 2rem 1.5rem; flex-direction: column; align-items: flex-start; gap: 1rem; }
       footer nav { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-left: 0; }
@@ -510,18 +510,19 @@
   </style>
 </head>
 <body>
+<script src="i18n.js"></script>
 
 <!-- ── NAV ───────────────────────────────────────────────────── -->
 <nav>
   <a href="index.html" class="nav-logo"><img src="Logos/kuscu-logo-white.png" alt="Kuscu Immobilien" /></a>
 
   <ul class="nav-links" id="desktop-nav">
-    <li><a href="index.html">Startseite</a></li>
-    <li><a href="immobilien.html">Immobilien</a></li>
-    <li><a href="kontakt.html" class="active">Kontakt</a></li>
+    <li><a href="index.html" data-i18n="nav.home">Startseite</a></li>
+    <li><a href="immobilien.html" data-i18n="nav.immobilien">Immobilien</a></li>
+    <li><a href="kontakt.html" class="active" data-i18n="nav.kontakt">Kontakt</a></li>
   </ul>
 
-  <button class="burger-btn" id="menu-btn" aria-label="Menü öffnen">
+  <button class="burger-btn" id="menu-btn" aria-label="Menü öffnen" data-i18n-aria="nav.menuOpen">
     <span class="burger-line"></span>
     <span class="burger-line"></span>
     <span class="burger-line"></span>
@@ -530,20 +531,20 @@
 
 <!-- ── MENU OVERLAY ──────────────────────────────────────────── -->
 <div id="menu-overlay" role="dialog" aria-modal="true">
-  <button class="menu-close" id="menu-close" aria-label="Menü schließen">✕</button>
+  <button class="menu-close" id="menu-close" aria-label="Menü schließen" data-i18n-aria="nav.menuClose">✕</button>
   <div class="menu-inner">
     <ul class="menu-nav">
 
       <li class="menu-item">
-        <a href="index.html" class="menu-link">Startseite</a>
+        <a href="index.html" class="menu-link" data-i18n="nav.home">Startseite</a>
       </li>
 
       <li class="menu-item">
-        <a href="immobilien.html" class="menu-link">Immobilien</a>
+        <a href="immobilien.html" class="menu-link" data-i18n="nav.immobilien">Immobilien</a>
       </li>
 
       <li class="menu-item">
-        <a href="kontakt.html" class="menu-link active-page">Kontakt</a>
+        <a href="kontakt.html" class="menu-link active-page" data-i18n="nav.kontakt">Kontakt</a>
       </li>
 
     </ul>
@@ -559,9 +560,9 @@
 <!-- ── HERO ──────────────────────────────────────────────────── -->
 <section class="hero">
   <div class="hero-content">
-    <p class="hero-eyebrow reveal">Kontakt</p>
-    <h1 class="hero-h1 reveal reveal-d1">Sprechen wir.<br>Wir sind für Sie da.</h1>
-    <p class="hero-sub reveal reveal-d2">
+    <p class="hero-eyebrow reveal" data-i18n="nav.kontakt">Kontakt</p>
+    <h1 class="hero-h1 reveal reveal-d1" data-i18n="kontakt.heroTitle">Sprechen wir.<br>Wir sind für Sie da.</h1>
+    <p class="hero-sub reveal reveal-d2" data-i18n="kontakt.heroSub">
       Ob Kaufanfrage, Besichtigung oder einfache Fragen — unser Team antwortet Ihnen persönlich.
     </p>
   </div>
@@ -576,21 +577,21 @@
   <div class="info-block">
 
     <div class="info-group reveal">
-      <p class="section-label">Anschrift</p>
+      <p class="section-label" data-i18n="kontakt.addressLabel">Anschrift</p>
       <h3>Kuscu Holding</h3>
       <address>
         Schwachhauser Heerstraße 179<br>
         28211 Bremen<br>
-        Deutschland
+        <span data-i18n="kontakt.country">Deutschland</span>
       </address>
     </div>
 
     <div class="contact-divider reveal"></div>
 
     <div class="info-group reveal reveal-d1">
-      <p class="section-label">Erreichbarkeit</p>
-      <h3>Direkt erreichen</h3>
-      <p>
+      <p class="section-label" data-i18n="kontakt.reachLabel">Erreichbarkeit</p>
+      <h3 data-i18n="kontakt.reachTitle">Direkt erreichen</h3>
+      <p data-i18n="kontakt.reachBody">
         Telefon: <a href="tel:+49421000000">+49 (0)421 – 000 000</a><br>
         E-Mail: <a href="mailto:navidistanbullu@gmail.com">navidistanbullu@gmail.com</a><br><br>
         Mo – Fr: 09:00 – 18:00 Uhr<br>
@@ -601,9 +602,9 @@
     <div class="contact-divider reveal"></div>
 
     <div class="info-group reveal reveal-d2">
-      <p class="section-label">Schnellanfrage</p>
-      <h3>Exposé anfordern</h3>
-      <p>
+      <p class="section-label" data-i18n="kontakt.quickLabel">Schnellanfrage</p>
+      <h3 data-i18n="kontakt.quickTitle">Exposé anfordern</h3>
+      <p data-i18n="kontakt.quickBody">
         Besuchen Sie unsere <a href="immobilien.html">Immobilienübersicht</a> und fordern Sie
         direkt das Exposé Ihrer Wunschimmobilie über Google Drive an.
       </p>
@@ -613,8 +614,8 @@
 
   <!-- RIGHT: FORM -->
   <div class="form-card reveal reveal-d1">
-    <h2>Nachricht senden</h2>
-    <p class="form-sub">Wir melden uns innerhalb von 24 Stunden bei Ihnen.</p>
+    <h2 data-i18n="kontakt.formTitle">Nachricht senden</h2>
+    <p class="form-sub" data-i18n="kontakt.formSub">Wir melden uns innerhalb von 24 Stunden bei Ihnen.</p>
 
     <form id="contact-form" name="kontaktanfrage" method="POST" onsubmit="submitForm(event)">
 
@@ -624,56 +625,56 @@
 
       <div class="form-row">
         <div class="form-group">
-          <label for="fname">Vorname</label>
+          <label for="fname" data-i18n="kontakt.firstName">Vorname</label>
           <input type="text" id="fname" name="fname" placeholder="Max" required />
         </div>
         <div class="form-group">
-          <label for="lname">Nachname</label>
+          <label for="lname" data-i18n="kontakt.lastName">Nachname</label>
           <input type="text" id="lname" name="lname" placeholder="Mustermann" required />
         </div>
       </div>
 
       <div class="form-group">
-        <label for="email">E-Mail-Adresse</label>
+        <label for="email" data-i18n="kontakt.emailLabel">E-Mail-Adresse</label>
         <input type="email" id="email" name="email" placeholder="max@beispiel.de" required />
       </div>
 
       <div class="form-group">
-        <label for="phone">Telefon (optional)</label>
+        <label for="phone" data-i18n="form.phonePh">Telefon (optional)</label>
         <input type="tel" id="phone" name="phone" placeholder="+49 421 …" />
       </div>
 
       <div class="form-group">
-        <label for="objekt">Objekt</label>
+        <label for="objekt" data-i18n="kontakt.objekt">Objekt</label>
         <select id="objekt" name="objekt">
-          <option value="">Alle / Allgemeine Anfrage</option>
+          <option value="" data-i18n="kontakt.objektAll">Alle / Allgemeine Anfrage</option>
           <option value="schwachhausen">Schwachhauser Heerstraße 179</option>
           <option value="muedener">Müdener Strasse 31</option>
-          <option value="andere">Anderes Objekt / Sonstige Anfrage</option>
+          <option value="andere" data-i18n="kontakt.objektOther">Anderes Objekt / Sonstige Anfrage</option>
         </select>
       </div>
 
       <div class="form-group">
-        <label for="message">Ihre Nachricht</label>
-        <textarea id="message" name="message" placeholder="Ich interessiere mich für …" required></textarea>
+        <label for="message" data-i18n="kontakt.messageLabel">Ihre Nachricht</label>
+        <textarea id="message" name="message" placeholder="Ich interessiere mich für …" required data-i18n-ph="kontakt.messagePh2"></textarea>
       </div>
 
       <div class="checkbox-row">
         <input type="checkbox" id="datenschutz" name="datenschutz" required />
-        <label for="datenschutz">
+        <label for="datenschutz" data-i18n="kontakt.consent">
           Ich habe die <a href="datenschutz.html" target="_blank" rel="noopener">Datenschutzerklärung</a> gelesen und stimme der Verarbeitung
           meiner Daten zur Bearbeitung meiner Anfrage zu.
         </label>
       </div>
 
-      <button type="submit" class="btn-submit">Nachricht senden</button>
-      <p class="form-error" id="contact-error">Übermittlung fehlgeschlagen — bitte versuchen Sie es erneut oder schreiben Sie an <a href="mailto:navidistanbullu@gmail.com">navidistanbullu@gmail.com</a>.</p>
+      <button type="submit" class="btn-submit" id="contact-submit-btn" data-i18n="kontakt.send">Nachricht senden</button>
+      <p class="form-error" id="contact-error" data-i18n="kontakt.error">Übermittlung fehlgeschlagen — bitte versuchen Sie es erneut oder schreiben Sie an <a href="mailto:navidistanbullu@gmail.com">navidistanbullu@gmail.com</a>.</p>
     </form>
 
     <div id="form-success">
       <div class="check">✦</div>
-      <h3>Vielen Dank!</h3>
-      <p>Wir haben Ihre Nachricht erhalten und melden uns in Kürze bei Ihnen.</p>
+      <h3 data-i18n="kontakt.thanksTitle">Vielen Dank!</h3>
+      <p data-i18n="kontakt.successBody">Wir haben Ihre Nachricht erhalten und melden uns in Kürze bei Ihnen.</p>
     </div>
   </div>
 
@@ -693,9 +694,9 @@
 <footer>
   <img class="footer-logo" src="Logos/Kuscu.jpeg" alt="Kuscu Immobilien" loading="lazy" decoding="async" />
   <nav aria-label="Footer Navigation">
-    <a href="index.html">Startseite</a>
-    <a href="immobilien.html">Immobilien</a>
-    <a href="kontakt.html">Kontakt</a>
+    <a href="index.html" data-i18n="nav.home">Startseite</a>
+    <a href="immobilien.html" data-i18n="nav.immobilien">Immobilien</a>
+    <a href="kontakt.html" data-i18n="nav.kontakt">Kontakt</a>
   </nav>
 </footer>
 
@@ -736,7 +737,7 @@
 
     errBox.style.display = 'none';
     btn.disabled = true;
-    btn.textContent = 'Wird gesendet…';
+    btn.textContent = window.i18nText('form.sending', 'Wird gesendet…');
 
     const isLocal = ['localhost', '127.0.0.1'].includes(location.hostname)
                     || location.protocol === 'file:';
@@ -781,6 +782,46 @@
   }, { threshold: 0.15 });
 
   revealEls.forEach(el => revealObs.observe(el));
+</script>
+
+<script>
+  window.I18N_TR = {
+    'nav.home': 'Ana Sayfa',
+    'nav.immobilien': 'Emlaklar',
+    'nav.kontakt': 'İletişim',
+    'nav.menuOpen': 'Menüyü aç',
+    'nav.menuClose': 'Menüyü kapat',
+    'form.phonePh': 'Telefon (opsiyonel)',
+    'form.sending': 'Gönderiliyor…',
+
+    'kontakt.heroTitle': 'Konuşalım.<br>Sizin için buradayız.',
+    'kontakt.heroSub': 'İster satın alma talebi, ister randevu, ister basit bir soru olsun — ekibimiz size kişisel olarak yanıt verir.',
+
+    'kontakt.addressLabel': 'Adres',
+    'kontakt.country': 'Almanya',
+    'kontakt.reachLabel': 'Ulaşılabilirlik',
+    'kontakt.reachTitle': 'Doğrudan Ulaşın',
+    'kontakt.reachBody': 'Telefon: <a href="tel:+49421000000">+49 (0)421 – 000 000</a><br>E-posta: <a href="mailto:navidistanbullu@gmail.com">navidistanbullu@gmail.com</a><br><br>Pzt – Cum: 09:00 – 18:00<br>Cmt: randevu ile',
+    'kontakt.quickLabel': 'Hızlı Talep',
+    'kontakt.quickTitle': 'Broşür Talep Et',
+    'kontakt.quickBody': '<a href="immobilien.html">Emlak listemizi</a> ziyaret edin ve istediğiniz emlağın broşürünü doğrudan Google Drive üzerinden talep edin.',
+
+    'kontakt.formTitle': 'Mesaj Gönder',
+    'kontakt.formSub': '24 saat içinde size geri dönüş yapacağız.',
+    'kontakt.firstName': 'Ad',
+    'kontakt.lastName': 'Soyad',
+    'kontakt.emailLabel': 'E-posta Adresi',
+    'kontakt.objekt': 'Emlak',
+    'kontakt.objektAll': 'Tümü / Genel Talep',
+    'kontakt.objektOther': 'Başka Bir Emlak / Diğer Talep',
+    'kontakt.messageLabel': 'Mesajınız',
+    'kontakt.messagePh2': 'İlgileniyorum çünkü …',
+    'kontakt.consent': '<a href="datenschutz.html" target="_blank" rel="noopener">Gizlilik Politikası</a>\'nı okudum ve verilerimin talebimin işlenmesi amacıyla kullanılmasını kabul ediyorum.',
+    'kontakt.send': 'Mesaj Gönder',
+    'kontakt.error': 'Gönderim başarısız oldu — lütfen tekrar deneyin veya <a href="mailto:navidistanbullu@gmail.com">navidistanbullu@gmail.com</a> adresine yazın.',
+    'kontakt.thanksTitle': 'Teşekkürler!',
+    'kontakt.successBody': 'Mesajınızı aldık ve kısa süre içinde size geri döneceğiz.',
+  };
 </script>
 </body>
 </html>

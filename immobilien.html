@@ -419,11 +419,11 @@
 
     .listing-desc {
       font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.88rem;
-      line-height: 1.85;
-      color: rgba(255,255,255,0.68);
+      font-size: 1.02rem;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.7);
       margin-bottom: 1.5rem;
-      max-width: 400px;
+      max-width: 420px;
     }
 
     .listing-tags {
@@ -527,9 +527,9 @@
 
     .vr-desc {
       font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.88rem;
-      line-height: 1.85;
-      color: rgba(255,255,255,0.68);
+      font-size: 1.02rem;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.7);
       max-width: 440px;
       margin-bottom: 2.2rem;
     }
@@ -610,10 +610,28 @@
 
     .gate-text {
       font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.78rem;
-      color: rgba(255,255,255,0.42);
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.45);
       line-height: 1.75;
       margin-bottom: 1.8rem;
+    }
+
+    /* ── PRODUKTKARTE-ANFRAGE (Modal) ────────────────────────── */
+    #modal-overlay {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(8,8,14,0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      display: none;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 90px 1.25rem 2rem;
+      overflow-y: auto;
+    }
+    .pk-textarea {
+      resize: vertical;
+      min-height: 80px;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
     }
 
     .gate-input {
@@ -721,6 +739,7 @@
       line-height: 1.75;
     }
     .gate-card.success #gate-form,
+    .gate-card.success #pk-form,
     .gate-card.success .gate-text,
     .gate-card.success .gate-photo { display: none; }
     .gate-card.success .gate-success { display: block; }
@@ -805,15 +824,15 @@
       margin-bottom: 0.9rem;
     }
     .ablauf-step h3 {
-      font-size: 1.05rem;
+      font-size: 1.2rem;
       font-weight: 400;
       margin-bottom: 0.6rem;
     }
     .ablauf-step p {
       font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.8rem;
+      font-size: 0.95rem;
       line-height: 1.75;
-      color: rgba(255,255,255,0.6);
+      color: rgba(255,255,255,0.62);
     }
 
     /* ── LAGE & TAGEBUCH ─────────────────────────────────────── */
@@ -826,9 +845,9 @@
     }
     .lage-text {
       font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.88rem;
-      line-height: 1.85;
-      color: rgba(255,255,255,0.68);
+      font-size: 1.02rem;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.7);
       max-width: 440px;
       margin-bottom: 1.6rem;
     }
@@ -882,9 +901,9 @@
 
     .compare-desc {
       font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.88rem;
-      line-height: 1.85;
-      color: rgba(255,255,255,0.68);
+      font-size: 1.02rem;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.7);
       max-width: 520px;
       margin-bottom: 2.2rem;
     }
@@ -1089,16 +1108,17 @@
   </style>
 </head>
 <body>
+<script src="i18n.js"></script>
 
 <!-- ── NAV ────────────────────────────────────────────────────── -->
 <nav>
   <a class="nav-logo" href="index.html"><img src="Logos/kuscu-logo-white.png" alt="Kuscu Immobilien" /></a>
   <div class="nav-links">
-    <a href="index.html">Startseite</a>
-    <a href="immobilien.html" class="active">Immobilien</a>
-    <a href="kontakt.html">Kontakt</a>
+    <a href="index.html" data-i18n="nav.home">Startseite</a>
+    <a href="immobilien.html" class="active" data-i18n="nav.immobilien">Immobilien</a>
+    <a href="kontakt.html" data-i18n="nav.kontakt">Kontakt</a>
   </div>
-  <button id="menu-btn" aria-label="Menü öffnen">
+  <button id="menu-btn" aria-label="Menü öffnen" data-i18n-aria="nav.menuOpen">
     <span class="burger-line"></span>
     <span class="burger-line"></span>
     <span class="burger-line"></span>
@@ -1107,17 +1127,17 @@
 
 <!-- ── MENU OVERLAY ──────────────────────────────────────────── -->
 <div id="menu-overlay" role="dialog" aria-modal="true">
-  <button class="menu-close-btn" id="menu-close-btn" aria-label="Menü schließen">✕</button>
+  <button class="menu-close-btn" id="menu-close-btn" aria-label="Menü schließen" data-i18n-aria="nav.menuClose">✕</button>
   <div style="text-align:center">
     <ul class="menu-nav">
       <li class="menu-item">
-        <a class="menu-link" href="index.html">Startseite</a>
+        <a class="menu-link" href="index.html" data-i18n="nav.home">Startseite</a>
       </li>
       <li class="menu-item">
-        <a class="menu-link active-page" href="immobilien.html">Immobilien</a>
+        <a class="menu-link active-page" href="immobilien.html" data-i18n="nav.immobilien">Immobilien</a>
       </li>
       <li class="menu-item">
-        <a class="menu-link" href="kontakt.html">Kontakt</a>
+        <a class="menu-link" href="kontakt.html" data-i18n="nav.kontakt">Kontakt</a>
       </li>
     </ul>
     <div class="menu-divider"></div>
@@ -1129,10 +1149,10 @@
 
 <!-- ── PAGE HERO ──────────────────────────────────────────────── -->
 <section class="page-hero">
-  <p class="page-eyebrow reveal">Aktuelle Objekte</p>
+  <p class="page-eyebrow reveal" data-i18n="hero.eyebrow">Aktuelle Objekte</p>
   <h1 class="page-title reveal reveal-d1">Vahr · Bremen</h1>
   <div class="gold-line reveal reveal-d2"></div>
-  <p class="page-sub reveal reveal-d3">
+  <p class="page-sub reveal reveal-d3" data-i18n="hero.sub">
     Ein Einfamilienhaus in der Vahr — derzeit in der Renovierung.
     Die genaue Adresse ist Teil der Produktkarte.
   </p>
@@ -1152,28 +1172,28 @@
       <div class="listing-img-overlay"></div>
 
       <div class="listing-badge-row">
-        <span class="listing-badge">Wohnen</span>
-        <span class="listing-badge status">In Entwicklung</span>
+        <span class="listing-badge" data-i18n="listing.badgeWohnen">Wohnen</span>
+        <span class="listing-badge status" data-i18n="listing.badgeStatus">In Entwicklung</span>
       </div>
 
       <div class="listing-img-nav">
-        <button class="img-nav-btn" id="img-prev" aria-label="Vorheriges Bild">
+        <button class="img-nav-btn" id="img-prev" aria-label="Vorheriges Bild" data-i18n-aria="listing.imgPrev">
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><polyline points="8,1 3,6 8,11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
         <span class="img-nav-count" id="img-count">1 / 3</span>
-        <button class="img-nav-btn" id="img-next" aria-label="Nächstes Bild">
+        <button class="img-nav-btn" id="img-next" aria-label="Nächstes Bild" data-i18n-aria="listing.imgNext">
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><polyline points="4,1 9,6 4,11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
       </div>
 
       <div class="listing-thumbs">
-        <div class="listing-thumb active" data-idx="0" title="Frontansicht">
+        <div class="listing-thumb active" data-idx="0" title="Frontansicht" data-i18n-title="listing.thumbFront">
           <img src="Bürgermeister/Front.jpeg" alt="" loading="lazy" decoding="async" />
         </div>
-        <div class="listing-thumb" data-idx="1" title="Rückseite">
+        <div class="listing-thumb" data-idx="1" title="Rückseite" data-i18n-title="listing.thumbBack">
           <img src="Bürgermeister/Back.jpeg" alt="" loading="lazy" decoding="async" />
         </div>
-        <div class="listing-thumb" data-idx="2" title="Gesamtansicht">
+        <div class="listing-thumb" data-idx="2" title="Gesamtansicht" data-i18n-title="listing.thumbFull">
           <img src="Bürgermeister/Full.jpeg" alt="" loading="lazy" decoding="async" />
         </div>
       </div>
@@ -1182,11 +1202,11 @@
     <!-- Info panel -->
     <div class="listing-info-panel">
 
-      <p class="listing-eyebrow reveal reveal-d1">Einfamilienhaus · 2 Etagen</p>
+      <p class="listing-eyebrow reveal reveal-d1" data-i18n="listing.eyebrow">Einfamilienhaus · 2 Etagen</p>
       <h2 class="listing-address reveal reveal-d2">Vahr<br><span style="font-size:0.6em; color:rgba(255,255,255,0.28); font-family:'Helvetica Neue',Arial,sans-serif; letter-spacing:0.05em;">28329 Bremen</span></h2>
       <p class="listing-city reveal reveal-d2" style="display:flex;align-items:center;gap:0.5rem;margin-top:0.6rem;">
         <svg width="11" height="11" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;opacity:0.4"><rect x="3" y="7" width="10" height="8" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M5.5 7V5.5a2.5 2.5 0 115 0V7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-        <span>Adresse in der Produktkarte</span>
+        <span data-i18n="listing.addrInCard">Adresse in der Produktkarte</span>
       </p>
 
       <div class="listing-divider reveal reveal-d3"></div>
@@ -1194,39 +1214,36 @@
       <div class="listing-specs reveal reveal-d3">
         <div class="lspec">
           <span class="lspec-val">~100 m²</span>
-          <span class="lspec-key">Wohnfläche</span>
+          <span class="lspec-key" data-i18n="listing.specArea">Wohnfläche</span>
         </div>
         <div class="lspec">
           <span class="lspec-val">5</span>
-          <span class="lspec-key">Zimmer</span>
+          <span class="lspec-key" data-i18n="listing.specRooms">Zimmer</span>
         </div>
         <div class="lspec">
           <span class="lspec-val">2</span>
-          <span class="lspec-key">Etagen</span>
+          <span class="lspec-key" data-i18n="listing.specFloors">Etagen</span>
         </div>
         <div class="lspec">
-          <span class="lspec-val">Garage</span>
-          <span class="lspec-key">Stellplatz</span>
+          <span class="lspec-val" data-i18n="listing.specGarageVal">Garage</span>
+          <span class="lspec-key" data-i18n="listing.specGarageKey">Stellplatz</span>
         </div>
       </div>
 
-      <p class="listing-desc reveal reveal-d4">
-        Ruhig gelegenes Einfamilienhaus in der Vahr — mit solider Bausubstanz,
-        Garage und Garten. Die Renovierung läuft. Hochwertige Sanierung mit
-        Sorgfalt ausgeführt. Keine Käuferprovision.
+      <p class="listing-desc reveal reveal-d4" data-i18n="listing.desc">
+        Ruhig gelegenes Einfamilienhaus in der Vahr — solide Bausubstanz,
+        Garage und Garten. Die Sanierung läuft mit Sorgfalt.
       </p>
 
       <div class="listing-tags reveal reveal-d4">
-        <span class="ltag">Keine Käuferprovision</span>
-        <span class="ltag">Ruhige Lage</span>
-        <span class="ltag">Garage</span>
-        <span class="ltag">Garten</span>
+        <span class="ltag" data-i18n="listing.tagNoCommission">Keine Käuferprovision</span>
+        <span class="ltag" data-i18n="listing.tagGarden">Garten</span>
         <span class="ltag">28329 Bremen</span>
       </div>
 
       <div class="listing-price-row reveal reveal-d5">
-        <span class="listing-price-label">Kaufpreis</span>
-        <span class="listing-price-val">Auf Anfrage</span>
+        <span class="listing-price-label" data-i18n="listing.priceLabel">Kaufpreis</span>
+        <span class="listing-price-val" data-i18n="listing.priceVal">Auf Anfrage</span>
       </div>
 
       <div class="listing-cta-group reveal reveal-d6">
@@ -1244,7 +1261,7 @@
             <line x1="12" y1="11" x2="12" y2="17"/>
             <polyline points="9 14 12 17 15 14"/>
           </svg>
-          Produktkarte anfordern
+          <span data-i18n="listing.btnCard">Produktkarte anfordern</span>
         </a>
         <a class="btn-expose-ghost"
            href="mailto:navidistanbullu@gmail.com?subject=Anfrage%3A%20B%C3%BCrgermeister%20Spitta%20Allee%206&body=Hallo%2C%0A%0Aich%20interessiere%20mich%20f%C3%BCr%20die%20Immobilie%20B%C3%BCrgermeister%20Spitta%20Allee%206%20und%20bitte%20um%20R%C3%BCckmeldung.%0A%0AMit%20freundlichen%20Gr%C3%BC%C3%9Fen"
@@ -1253,7 +1270,7 @@
             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
             <polyline points="22,6 12,13 2,6"/>
           </svg>
-          Per E-Mail anfragen
+          <span data-i18n="listing.btnEmail">Per E-Mail anfragen</span>
         </a>
       </div>
 
@@ -1263,47 +1280,43 @@
   <!-- ── LAGE & SANIERUNGS-TAGEBUCH ── -->
   <section class="lage-section reveal" id="lage">
     <div>
-      <p class="listing-eyebrow reveal reveal-d1">Die Lage</p>
-      <h2 class="vr-title reveal reveal-d2">Zuhause in der Vahr</h2>
+      <p class="listing-eyebrow reveal reveal-d1" data-i18n="lage.eyebrow">Die Lage</p>
+      <h2 class="vr-title reveal reveal-d2" data-i18n="lage.title">Zuhause in der Vahr</h2>
       <div class="listing-divider reveal reveal-d3"></div>
-      <p class="lage-text reveal reveal-d3">
-        Die Vahr gehört zu den grünsten Stadtteilen Bremens: viel Raum
-        zum Durchatmen, der Vahrer See gleich um die Ecke und der
-        traditionsreiche Golfplatz des Club zur Vahr vor der Tür.
-        Einkäufe erledigen Sie in der Berliner Freiheit, die Straßenbahn
-        bringt Sie ohne Umsteigen in die Innenstadt — und Kitas wie
-        Schulen liegen in Gehweite.
+      <p class="lage-text reveal reveal-d3" data-i18n="lage.text">
+        Die Vahr gehört zu den grünsten Stadtteilen Bremens — ruhig,
+        grün und trotzdem gut angebunden.
       </p>
       <div class="listing-tags reveal reveal-d4">
         <span class="ltag">Vahrer See</span>
         <span class="ltag">Berliner Freiheit</span>
-        <span class="ltag">Straßenbahn-Anschluss</span>
+        <span class="ltag" data-i18n="lage.tagTram">Straßenbahn-Anschluss</span>
         <span class="ltag">Golfclub zur Vahr</span>
-        <span class="ltag">Kitas &amp; Schulen</span>
+        <span class="ltag" data-i18n="lage.tagSchools">Kitas &amp; Schulen</span>
       </div>
     </div>
     <div>
-      <p class="listing-eyebrow reveal reveal-d1">Sanierungs-Tagebuch</p>
-      <h2 class="vr-title reveal reveal-d2">Schritt für Schritt, mit Sorgfalt</h2>
+      <p class="listing-eyebrow reveal reveal-d1" data-i18n="tagebuch.eyebrow">Sanierungs-Tagebuch</p>
+      <h2 class="vr-title reveal reveal-d2" data-i18n="tagebuch.title">Schritt für Schritt, mit Sorgfalt</h2>
       <div class="listing-divider reveal reveal-d3"></div>
       <!-- TODO: Status & Meilensteine an den tatsächlichen Stand anpassen.
            Klassen: done = abgeschlossen, active = in Arbeit, ohne = geplant -->
       <ul class="tagebuch reveal reveal-d4">
         <li class="done">
-          <span class="tagebuch-title">Ankauf &amp; Planung</span>
-          <span class="tagebuch-status">Abgeschlossen</span>
+          <span class="tagebuch-title" data-i18n="tagebuch.step1">Ankauf &amp; Planung</span>
+          <span class="tagebuch-status" data-i18n="tagebuch.done">Abgeschlossen</span>
         </li>
         <li class="active">
-          <span class="tagebuch-title">Sanierung &amp; Ausbau</span>
-          <span class="tagebuch-status">In Arbeit</span>
+          <span class="tagebuch-title" data-i18n="tagebuch.step2">Sanierung &amp; Ausbau</span>
+          <span class="tagebuch-status" data-i18n="tagebuch.inProgress">In Arbeit</span>
         </li>
         <li>
-          <span class="tagebuch-title">Feinschliff &amp; Garten</span>
-          <span class="tagebuch-status">Geplant</span>
+          <span class="tagebuch-title" data-i18n="tagebuch.step3">Feinschliff &amp; Garten</span>
+          <span class="tagebuch-status" data-i18n="tagebuch.planned">Geplant</span>
         </li>
         <li>
-          <span class="tagebuch-title">Fertigstellung &amp; Übergabe</span>
-          <span class="tagebuch-status">Geplant</span>
+          <span class="tagebuch-title" data-i18n="tagebuch.step4">Fertigstellung &amp; Übergabe</span>
+          <span class="tagebuch-status" data-i18n="tagebuch.planned">Geplant</span>
         </li>
       </ul>
     </div>
@@ -1311,60 +1324,56 @@
 
   <!-- ── VORHER / NACHHER ── -->
   <section class="compare-section reveal" id="vorher-nachher">
-    <p class="listing-eyebrow reveal reveal-d1">Vorher / Nachher</p>
-    <h2 class="vr-title reveal reveal-d2">So könnte es aussehen</h2>
+    <p class="listing-eyebrow reveal reveal-d1" data-i18n="compare.eyebrow">Vorher / Nachher</p>
+    <h2 class="vr-title reveal reveal-d2" data-i18n="compare.title">So könnte es aussehen</h2>
     <div class="listing-divider reveal reveal-d3"></div>
-    <p class="compare-desc reveal reveal-d3">
-      Eine Visualisierung, wie die Räume nach der Sanierung wirken könnten.
-      Ziehen Sie den Regler, um zwischen dem aktuellen Zustand und dem
-      gestalteten Entwurf zu vergleichen.
+    <p class="compare-desc reveal reveal-d3" data-i18n="compare.desc">
+      So könnten die Räume nach der Sanierung wirken — Regler ziehen
+      zum Vergleichen.
     </p>
     <div class="compare-tabs reveal reveal-d4" id="compare-tabs"></div>
     <div class="compare-slider reveal reveal-d4" id="compare-slider">
       <img class="compare-img compare-before" id="compare-before-img" alt="Aktueller Zustand" />
       <img class="compare-img compare-after" id="compare-after-img" alt="Entwurf nach Sanierung" />
-      <span class="compare-tag before">Vorher</span>
-      <span class="compare-tag after">Nachher</span>
+      <span class="compare-tag before" data-i18n="compare.before">Vorher</span>
+      <span class="compare-tag after" data-i18n="compare.after">Nachher</span>
       <div class="compare-handle"></div>
     </div>
   </section>
 
   <!-- ── SO LÄUFT ES AB ── -->
   <section class="ablauf-section reveal" id="ablauf">
-    <p class="listing-eyebrow reveal reveal-d1">So läuft es ab</p>
-    <h2 class="vr-title reveal reveal-d2">In drei Schritten zur Besichtigung</h2>
+    <p class="listing-eyebrow reveal reveal-d1" data-i18n="ablauf.eyebrow">So läuft es ab</p>
+    <h2 class="vr-title reveal reveal-d2" data-i18n="ablauf.title">In drei Schritten zur Besichtigung</h2>
     <div class="listing-divider reveal reveal-d3"></div>
     <div class="ablauf-grid">
       <div class="ablauf-step reveal reveal-d3">
         <span class="ablauf-num">01</span>
-        <h3>Anmelden</h3>
-        <p>Hinterlassen Sie Ihre E-Mail-Adresse — kostenlos und unverbindlich.
-           Mehr brauchen wir nicht.</p>
+        <h3 data-i18n="ablauf.step1Title">Anmelden</h3>
+        <p data-i18n="ablauf.step1Text">Ihre E-Mail-Adresse genügt — kostenlos und unverbindlich.</p>
       </div>
       <div class="ablauf-step reveal reveal-d4">
         <span class="ablauf-num">02</span>
-        <h3>Rundgang &amp; Exposé</h3>
-        <p>Erkunden Sie das Haus im 360°-Rundgang in Ihrem eigenen Tempo
-           und erhalten Sie das vollständige Exposé.</p>
+        <h3 data-i18n="ablauf.step2Title">Rundgang &amp; Exposé</h3>
+        <p data-i18n="ablauf.step2Text">Erkunden Sie das Haus im 360°-Rundgang und erhalten das
+           vollständige Exposé.</p>
       </div>
       <div class="ablauf-step reveal reveal-d5">
         <span class="ablauf-num">03</span>
-        <h3>Besichtigung</h3>
-        <p>Gefällt Ihnen, was Sie sehen? Dann vereinbaren wir gern einen
-           persönlichen Termin vor Ort.</p>
+        <h3 data-i18n="ablauf.step3Title">Besichtigung</h3>
+        <p data-i18n="ablauf.step3Text">Gefällt es Ihnen? Wir vereinbaren gern einen Termin vor Ort.</p>
       </div>
     </div>
   </section>
 
   <!-- ── 360° RUNDGANG ── -->
   <section class="vr-section reveal" id="rundgang">
-    <p class="listing-eyebrow reveal reveal-d1">Virtueller Rundgang</p>
-    <h2 class="vr-title reveal reveal-d2">360° Rundgang</h2>
+    <p class="listing-eyebrow reveal reveal-d1" data-i18n="vr.eyebrow">Virtueller Rundgang</p>
+    <h2 class="vr-title reveal reveal-d2" data-i18n="vr.title">360° Rundgang</h2>
     <div class="listing-divider reveal reveal-d3"></div>
-    <p class="vr-desc reveal reveal-d3">
-      Erkunden Sie das Haus in aller Ruhe — Raum für Raum, in alle
-      Richtungen. Ziehen Sie das Bild, um sich umzusehen, und folgen
-      Sie den Pfeilen in den nächsten Raum.
+    <p class="vr-desc reveal reveal-d3" data-i18n="vr.desc">
+      Erkunden Sie das Haus in aller Ruhe — Raum für Raum. Folgen Sie
+      den Pfeilen in den nächsten Raum.
     </p>
     <div class="vr-frame-box reveal reveal-d4">
       <button class="vr-lock" id="vr-lock" type="button">
@@ -1373,8 +1382,8 @@
           <span class="vr-lock-play" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 21 12 6 21 6 3"/></svg>
           </span>
-          <span class="vr-lock-title">360°-Rundgang freischalten</span>
-          <span class="vr-lock-sub">Kostenlos mit Ihrer E-Mail-Adresse — Sie erhalten
+          <span class="vr-lock-title" data-i18n="vr.lockTitle">360°-Rundgang freischalten</span>
+          <span class="vr-lock-sub" data-i18n="vr.lockSub">Kostenlos mit Ihrer E-Mail-Adresse — Sie erhalten
             außerdem das vollständige Exposé.</span>
         </span>
       </button>
@@ -1387,83 +1396,70 @@
         allow="fullscreen; gyroscope; accelerometer"
         style="display:none"></iframe>
     </div>
-    <p class="vr-hint reveal reveal-d5">Klicken &amp; ziehen zum Umsehen</p>
+    <p class="vr-hint reveal reveal-d5" data-i18n="vr.hint">Klicken &amp; ziehen zum Umsehen</p>
   </section>
 
 </main>
 
-<!-- ── PRODUKTKARTE MODAL ──────────────────────────────────────── -->
-<div id="modal-overlay" style="
-  display:none; position:fixed; inset:0; z-index:200;
-  background:rgba(8,8,14,0.94); backdrop-filter:blur(12px);
-  align-items:center; justify-content:center;">
-  <div style="
-    max-width:460px; width:90%; padding:3rem;
-    border:1px solid rgba(200,169,110,0.2);
-    background:rgba(8,8,14,0.8); text-align:center; position:relative;">
-    <button id="modal-close" style="
-      position:absolute; top:1rem; right:1rem;
-      background:none; border:none; color:rgba(255,255,255,0.35);
-      font-size:1.2rem; cursor:pointer; line-height:1;"
-      aria-label="Schließen">✕</button>
-    <p style="
-      font-family:'Helvetica Neue',Arial,sans-serif;
-      font-size:0.66rem; letter-spacing:0.4em; text-transform:uppercase;
-      color:var(--gold); margin-bottom:1.2rem;">Produktkarte</p>
-    <h3 style="font-size:1.3rem; font-weight:400; margin-bottom:0.5rem; line-height:1.3;">
-      Bürgermeister Spitta Allee 6
-    </h3>
-    <p style="
-      font-family:'Helvetica Neue',Arial,sans-serif;
-      font-size:0.78rem; color:rgba(255,255,255,0.38);
-      line-height:1.75; margin:1.4rem 0 2rem;">
-      Die Produktkarte enthält vollständige Unterlagen:<br>
-      Grundriss, Vorher-Bilder, Lageplan, Energieausweis und Kaufpreis.
-      Sie wird auf Anfrage freigegeben.
-    </p>
-    <a id="modal-gdrive-btn" href="#" target="_blank" style="
-      display:inline-flex; align-items:center; gap:0.65rem;
-      padding:0.9rem 2rem;
-      border:1px solid var(--gold);
-      background:transparent; color:var(--gold);
-      font-family:'Helvetica Neue',Arial,sans-serif;
-      font-size:0.6rem; letter-spacing:0.32em; text-transform:uppercase;
-      text-decoration:none; transition:background 0.3s, color 0.3s;
-      margin-bottom:0.75rem;">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
-        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
-        <polyline points="14 2 14 8 20 8"/>
+<!-- ── PRODUKTKARTE-ANFRAGE (Modal) ──────────────────────────────── -->
+<div id="modal-overlay">
+  <div class="gate-card" id="pk-card">
+    <button id="modal-close" class="gate-close" aria-label="Schließen" data-i18n-aria="modal.close">✕</button>
+    <p class="gate-eyebrow" data-i18n="modal.eyebrow">Produktkarte</p>
+    <h3 class="gate-title" style="font-size:1.3rem;">Bürgermeister Spitta Allee 6</h3>
+
+    <div class="gate-success" id="pk-success" aria-live="polite">
+      <svg viewBox="0 0 52 52" fill="none">
+        <circle cx="26" cy="26" r="25" stroke="#c8a96e" stroke-width="1.2"/>
+        <path d="M15 27l7.5 7.5L37 20" stroke="#c8a96e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
-      Google Drive öffnen
-    </a>
-    <p style="
-      font-family:'Helvetica Neue',Arial,sans-serif;
-      font-size:0.72rem; color:rgba(255,255,255,0.45);
-      letter-spacing:0.1em;">
-      Zugang wird nach kurzer Prüfung freigeschaltet.
+      <h3 data-i18n="modal.thanksTitle">Danke!</h3>
+      <p data-i18n="modal.thanksText">Ihre Anfrage ist bei uns eingegangen. Wir melden uns in Kürze
+         mit der vollständigen Produktkarte.</p>
+    </div>
+
+    <p class="gate-text" id="pk-intro" data-i18n="modal.intro">
+      Hinterlassen Sie kurz Ihre Daten — wir senden Ihnen die vollständige
+      Produktkarte mit Grundriss, Lageplan, Energieausweis und Kaufpreis zu.
     </p>
+    <form id="pk-form">
+      <input type="hidden" name="objekt" value="Vahr · Bremen (Bürgermeister Spitta Allee 6)" />
+      <p class="gate-hp">
+        <label>Bitte nicht ausfüllen: <input type="checkbox" name="botcheck" /></label>
+      </p>
+      <input class="gate-input" type="text" name="name" required
+             placeholder="Ihr Name" autocomplete="name" data-i18n-ph="form.namePh" />
+      <input class="gate-input" type="email" name="email" required
+             placeholder="Ihre E-Mail-Adresse" autocomplete="email" data-i18n-ph="form.emailPh" />
+      <input class="gate-input" type="tel" name="telefon"
+             placeholder="Telefon (optional)" autocomplete="tel" data-i18n-ph="form.phonePh" />
+      <textarea class="gate-input pk-textarea" name="nachricht"
+                placeholder="Ihre Nachricht (optional)" rows="3" data-i18n-ph="form.messagePh"></textarea>
+      <button type="submit" class="gate-submit" id="pk-submit" data-i18n="modal.submit">Anfrage senden</button>
+      <p class="gate-error" id="pk-error"></p>
+    </form>
   </div>
 </div>
 
 <!-- ── E-MAIL GATE (Produktkarte) ──────────────────────────────── -->
 <div id="gate-overlay">
   <div class="gate-card" id="gate-card">
-    <button class="gate-close" id="gate-close" aria-label="Schließen">✕</button>
-    <p class="gate-eyebrow">Produktkarte</p>
+    <button class="gate-close" id="gate-close" aria-label="Schließen" data-i18n-aria="modal.close">✕</button>
+    <p class="gate-eyebrow" data-i18n="modal.eyebrow">Produktkarte</p>
     <h3 class="gate-title">Vahr · Bremen</h3>
     <div class="gate-success" id="gate-success" aria-live="polite">
       <svg viewBox="0 0 52 52" fill="none">
         <circle cx="26" cy="26" r="25" stroke="#c8a96e" stroke-width="1.2"/>
         <path d="M15 27l7.5 7.5L37 20" stroke="#c8a96e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
-      <h3>Danke!</h3>
-      <p>Ihr Zugang ist freigeschaltet — viel Freude beim Rundgang
+      <h3 data-i18n="gate.thanksTitle">Danke!</h3>
+      <p data-i18n="gate.thanksText">Ihr Zugang ist freigeschaltet — viel Freude beim Rundgang
          durch das Haus.</p>
     </div>
     <div class="gate-photo">
-      <img src="Bürgermeister/Full.jpeg" alt="Einfamilienhaus Vahr — Gesamtansicht" loading="lazy" decoding="async" />
+      <img src="Bürgermeister/Full.jpeg" alt="Einfamilienhaus Vahr — Gesamtansicht" loading="lazy" decoding="async" data-i18n-alt="gate.photoAlt" />
     </div>
-    <p class="gate-text">
+    <p class="gate-text" data-i18n="gate.text">
       Melden Sie sich hier an, um den 360°-VR-Rundgang zu sehen und die
       restlichen Informationen samt Exposé zu erhalten.
     </p>
@@ -1475,16 +1471,16 @@
         <label>Bitte nicht ausfüllen: <input type="checkbox" name="botcheck" /></label>
       </p>
       <input class="gate-input" type="email" name="email" required
-             placeholder="Ihre E-Mail-Adresse" autocomplete="email" />
+             placeholder="Ihre E-Mail-Adresse" autocomplete="email" data-i18n-ph="form.emailPh" />
       <label class="gate-consent">
         <input type="checkbox" name="datenschutz-einwilligung" required />
-        <span>Ich habe die <a href="datenschutz.html" target="_blank">Datenschutzerklärung</a>
+        <span data-i18n="gate.consent">Ich habe die <a href="datenschutz.html" target="_blank">Datenschutzerklärung</a>
         gelesen und bin damit einverstanden, dass meine E-Mail-Adresse zur
         Kontaktaufnahme zu diesem Objekt gespeichert wird.</span>
       </label>
-      <button class="gate-submit" type="submit">Zugang freischalten</button>
-      <p class="gate-error" id="gate-error">Übermittlung fehlgeschlagen — bitte versuchen Sie es erneut.</p>
-      <p class="gate-note">
+      <button class="gate-submit" type="submit" id="gate-submit-btn" data-i18n="gate.submit">Zugang freischalten</button>
+      <p class="gate-error" id="gate-error" data-i18n="gate.error">Übermittlung fehlgeschlagen — bitte versuchen Sie es erneut.</p>
+      <p class="gate-note" data-i18n="gate.note">
         Ihre E-Mail-Adresse wird ausschließlich zur Kontaktaufnahme
         zu diesem Objekt verwendet.
       </p>
@@ -1499,10 +1495,10 @@
     <a href="mailto:navidistanbullu@gmail.com">navidistanbullu@gmail.com</a>
     <!-- TODO: Telefonnummer eintragen, z. B.:
     <a href="tel:+49421XXXXXXX">+49 421 XXX XX XX</a> -->
-    <a href="impressum.html">Impressum</a>
-    <a href="datenschutz.html">Datenschutz</a>
+    <a href="impressum.html" data-i18n="footer.impressum">Impressum</a>
+    <a href="datenschutz.html" data-i18n="footer.datenschutz">Datenschutz</a>
   </div>
-  <span class="footer-copy">© 2026 Kuscu Immobilien · Alle Rechte vorbehalten</span>
+  <span class="footer-copy" data-i18n="footer.copy">© 2026 Kuscu Immobilien · Alle Rechte vorbehalten</span>
 </footer>
 
 <script>
@@ -1575,25 +1571,20 @@
   window.addEventListener('scroll', updateParallax, { passive: true });
   updateParallax();
 
-  // ── Produktkarte modal ─────────────────────────────────────────
-  // Replace this URL with the actual Google Drive share link
-  const GDRIVE_URL = '#';  // TODO: replace with real Google Drive link
-
-  const modalOverlay  = document.getElementById('modal-overlay');
-  const modalClose    = document.getElementById('modal-close');
-  const modalDriveBtn = document.getElementById('modal-gdrive-btn');
-  const btnPK         = document.getElementById('btn-produktkarte');
-
-  modalDriveBtn.href = GDRIVE_URL;
+  // ── Produktkarte-Anfrage (Modal) ─────────────────────────────────
+  const modalOverlay = document.getElementById('modal-overlay');
+  const modalClose   = document.getElementById('modal-close');
+  const btnPK        = document.getElementById('btn-produktkarte');
+  const pkCard       = document.getElementById('pk-card');
+  const pkForm       = document.getElementById('pk-form');
+  const pkSubmit     = document.getElementById('pk-submit');
+  const pkError      = document.getElementById('pk-error');
 
   btnPK.addEventListener('click', e => {
     e.preventDefault();
-    if (isUnlocked()) {
-      modalOverlay.style.display = 'flex';
-      document.body.style.overflow = 'hidden';
-    } else {
-      openGate();
-    }
+    pkCard.classList.remove('success');
+    modalOverlay.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
   });
 
   modalClose.addEventListener('click', closeModal);
@@ -1604,6 +1595,51 @@
     modalOverlay.style.display = 'none';
     document.body.style.overflow = '';
   }
+
+  pkForm.addEventListener('submit', async e => {
+    e.preventDefault();
+    pkError.style.display = 'none';
+    pkSubmit.disabled = true;
+    pkSubmit.textContent = window.i18nText('form.sending', 'Wird gesendet…');
+
+    const isLocal = ['localhost', '127.0.0.1'].includes(location.hostname)
+                    || location.protocol === 'file:';
+
+    function showPkSuccess() {
+      pkCard.classList.add('success');
+      pkForm.reset();
+    }
+
+    try {
+      if (WEB3FORMS_ACCESS_KEY.startsWith('HIER_')) {
+        throw new Error('Access Key fehlt');
+      }
+      const data = new FormData(pkForm);
+      data.append('access_key', WEB3FORMS_ACCESS_KEY);
+      data.append('subject', 'Neue Produktkarten-Anfrage: Vahr · Bremen');
+      data.append('from_name', 'Kuscu Immobilien Website');
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: data
+      });
+      const json = await res.json();
+      if (!json.success) throw new Error(json.message || 'Übermittlung fehlgeschlagen');
+      showPkSuccess();
+    } catch (err) {
+      if (isLocal) {
+        // Lokal trotzdem als Erfolg anzeigen, damit die Seite testbar bleibt
+        showPkSuccess();
+      } else {
+        pkError.textContent = WEB3FORMS_ACCESS_KEY.startsWith('HIER_')
+          ? window.i18nText('form.notConfigured', 'Formular noch nicht konfiguriert — der Web3Forms Access Key fehlt.')
+          : window.i18nText('gate.error', 'Übermittlung fehlgeschlagen — bitte versuchen Sie es erneut.');
+        pkError.style.display = 'block';
+      }
+    } finally {
+      pkSubmit.disabled = false;
+      pkSubmit.textContent = window.i18nText('modal.submit', 'Anfrage senden');
+    }
+  });
 
   // ── E-Mail-Gate (Produktkarte) ─────────────────────────────────
   // sessionStorage: Freischaltung gilt nur für die laufende Browser-Sitzung,
@@ -1646,7 +1682,7 @@
     setTimeout(() => {
       closeGate();
       gateSubmit.disabled = false;
-      gateSubmit.textContent = 'Zugang freischalten';
+      gateSubmit.textContent = window.i18nText('gate.submit', 'Zugang freischalten');
       document.getElementById('rundgang').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 2200);
   }
@@ -1668,7 +1704,7 @@
     e.preventDefault();
     gateError.style.display = 'none';
     gateSubmit.disabled = true;
-    gateSubmit.textContent = 'Wird gesendet…';
+    gateSubmit.textContent = window.i18nText('form.sending', 'Wird gesendet…');
 
     const isLocal = ['localhost', '127.0.0.1'].includes(location.hostname)
                     || location.protocol === 'file:';
@@ -1694,26 +1730,26 @@
         showGateSuccess();
       } else {
         gateError.textContent = WEB3FORMS_ACCESS_KEY.startsWith('HIER_')
-          ? 'Formular noch nicht konfiguriert — der Web3Forms Access Key fehlt.'
-          : 'Übermittlung fehlgeschlagen — bitte versuchen Sie es erneut.';
+          ? window.i18nText('form.notConfigured', 'Formular noch nicht konfiguriert — der Web3Forms Access Key fehlt.')
+          : window.i18nText('gate.error', 'Übermittlung fehlgeschlagen — bitte versuchen Sie es erneut.');
         gateError.style.display = 'block';
         gateSubmit.disabled = false;
-        gateSubmit.textContent = 'Zugang freischalten';
+        gateSubmit.textContent = window.i18nText('gate.submit', 'Zugang freischalten');
       }
     }
   });
 
   // ── Vorher/Nachher-Vergleich ─────────────────────────────────────
   const COMPARE_ROOMS = [
-    { id: 'stock1_entranceHall01',      label: 'Wohnzimmer' },
-    { id: 'stock1_entranceHall02',      label: 'Küche' },
-    { id: 'stock1_room04ToHall',        label: 'Flur' },
-    { id: 'stock1_kitchen',             label: 'Kinderzimmer 2' },
-    { id: 'stock1_room02',              label: 'Kinderzimmer 1' },
-    { id: 'stock1_bathroom',            label: 'Bad Erdgeschoss' },
-    { id: 'stock2_room1_b',             label: 'Schlafzimmer 1. Stock' },
-    { id: 'stock2_bathroom',            label: 'Bad 1. Stock' },
-    { id: 'stock2_bathroomToBalcony',   label: 'Balkon' },
+    { id: 'stock1_entranceHall01',      label: 'Wohnzimmer',            labelTr: 'Oturma Odası' },
+    { id: 'stock1_entranceHall02',      label: 'Küche',                 labelTr: 'Mutfak' },
+    { id: 'stock1_room04ToHall',        label: 'Flur',                  labelTr: 'Koridor' },
+    { id: 'stock1_kitchen',             label: 'Kinderzimmer 2',        labelTr: 'Çocuk Odası 2' },
+    { id: 'stock1_room02',              label: 'Kinderzimmer 1',        labelTr: 'Çocuk Odası 1' },
+    { id: 'stock1_bathroom',            label: 'Bad Erdgeschoss',       labelTr: 'Zemin Kat Banyosu' },
+    { id: 'stock2_room1_b',             label: 'Schlafzimmer 1. Stock', labelTr: '1. Kat Yatak Odası' },
+    { id: 'stock2_bathroom',            label: 'Bad 1. Stock',          labelTr: '1. Kat Banyosu' },
+    { id: 'stock2_bathroomToBalcony',   label: 'Balkon',                labelTr: 'Balkon' },
   ];
 
   const compareTabs      = document.getElementById('compare-tabs');
@@ -1721,24 +1757,35 @@
   const compareBeforeImg = document.getElementById('compare-before-img');
   const compareAfterImg  = document.getElementById('compare-after-img');
 
+  function roomLabel(room) {
+    return window.i18nLang() === 'tr' ? room.labelTr : room.label;
+  }
+
   function setCompareRoom(room, btn) {
     compareBeforeImg.src = `vr-tour/assets/compare/${room.id}_before.jpg`;
     compareAfterImg.src  = `vr-tour/assets/compare/${room.id}_after.jpg`;
-    compareBeforeImg.alt = `${room.label} — aktueller Zustand`;
-    compareAfterImg.alt  = `${room.label} — Entwurf nach Sanierung`;
+    compareBeforeImg.alt = `${roomLabel(room)} — ${window.i18nText('compare.altBefore', 'aktueller Zustand')}`;
+    compareAfterImg.alt  = `${roomLabel(room)} — ${window.i18nText('compare.altAfter', 'Entwurf nach Sanierung')}`;
     compareSlider.style.setProperty('--pos', '50%');
     compareTabs.querySelectorAll('.compare-tab').forEach(t => t.classList.remove('active'));
     btn.classList.add('active');
   }
 
+  let activeCompareIdx = 0;
   COMPARE_ROOMS.forEach((room, i) => {
     const btn = document.createElement('button');
     btn.className = 'compare-tab';
     btn.type = 'button';
-    btn.textContent = room.label;
-    btn.addEventListener('click', () => setCompareRoom(room, btn));
+    btn.textContent = roomLabel(room);
+    btn.addEventListener('click', () => { activeCompareIdx = i; setCompareRoom(room, btn); });
     compareTabs.appendChild(btn);
     if (i === 0) setCompareRoom(room, btn);
+  });
+
+  document.addEventListener('langchange', () => {
+    const tabButtons = compareTabs.querySelectorAll('.compare-tab');
+    COMPARE_ROOMS.forEach((room, i) => { tabButtons[i].textContent = roomLabel(room); });
+    setCompareRoom(COMPARE_ROOMS[activeCompareIdx], tabButtons[activeCompareIdx]);
   });
 
   function setCompareSliderPos(clientX) {
@@ -1768,6 +1815,108 @@
   }, { threshold: 0.1 });
 
   document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+</script>
+
+<script>
+  window.I18N_TR = {
+    'nav.home': 'Ana Sayfa',
+    'nav.immobilien': 'Emlaklar',
+    'nav.kontakt': 'İletişim',
+    'nav.menuOpen': 'Menüyü aç',
+    'nav.menuClose': 'Menüyü kapat',
+
+    'hero.eyebrow': 'Güncel Emlaklar',
+    'hero.sub': 'Vahr\'da bir müstakil ev — şu anda yenileniyor. Tam adres emlak kartında yer alır.',
+
+    'listing.badgeWohnen': 'Konut',
+    'listing.badgeStatus': 'Geliştirme Aşamasında',
+    'listing.imgPrev': 'Önceki resim',
+    'listing.imgNext': 'Sonraki resim',
+    'listing.thumbFront': 'Ön Görünüm',
+    'listing.thumbBack': 'Arka Görünüm',
+    'listing.thumbFull': 'Genel Görünüm',
+    'listing.eyebrow': 'Müstakil Ev · 2 Kat',
+    'listing.addrInCard': 'Adres emlak kartında',
+    'listing.specArea': 'Yaşam Alanı',
+    'listing.specRooms': 'Oda',
+    'listing.specFloors': 'Kat',
+    'listing.specGarageVal': 'Garaj',
+    'listing.specGarageKey': 'Otopark',
+    'listing.desc': 'Vahr\'da sakin konumlu müstakil ev — sağlam yapı, garaj ve bahçe. Yenileme özenle sürüyor.',
+    'listing.tagNoCommission': 'Alıcı Komisyonu Yok',
+    'listing.tagGarden': 'Bahçe',
+    'listing.priceLabel': 'Satış Fiyatı',
+    'listing.priceVal': 'Talep Üzerine',
+    'listing.btnCard': 'Emlak Kartı Talep Et',
+    'listing.btnEmail': 'E-posta ile Sor',
+
+    'lage.eyebrow': 'Konum',
+    'lage.title': 'Vahr\'da Bir Yuva',
+    'lage.text': 'Vahr, Bremen\'in en yeşil semtlerinden biri — sakin, yeşil ve yine de ulaşımı kolay.',
+    'lage.tagTram': 'Tramvay Bağlantısı',
+    'lage.tagSchools': 'Kreşler &amp; Okullar',
+
+    'tagebuch.eyebrow': 'Yenileme Günlüğü',
+    'tagebuch.title': 'Adım Adım, Özenle',
+    'tagebuch.step1': 'Satın Alma &amp; Planlama',
+    'tagebuch.done': 'Tamamlandı',
+    'tagebuch.step2': 'Yenileme &amp; Tadilat',
+    'tagebuch.inProgress': 'Devam Ediyor',
+    'tagebuch.step3': 'Son Rötuşlar &amp; Bahçe',
+    'tagebuch.planned': 'Planlandı',
+    'tagebuch.step4': 'Tamamlama &amp; Teslim',
+
+    'compare.eyebrow': 'Önce / Sonra',
+    'compare.title': 'Böyle Görünebilir',
+    'compare.desc': 'Odalar yenileme sonrası böyle görünebilir — karşılaştırmak için kaydırıcıyı çekin.',
+    'compare.before': 'Önce',
+    'compare.after': 'Sonra',
+    'compare.altBefore': 'mevcut durum',
+    'compare.altAfter': 'yenileme sonrası tasarım',
+
+    'ablauf.eyebrow': 'Nasıl İşliyor',
+    'ablauf.title': 'Ziyarete Üç Adımda',
+    'ablauf.step1Title': 'Kaydolun',
+    'ablauf.step1Text': 'E-posta adresiniz yeterli — ücretsiz ve taahhüt gerektirmez.',
+    'ablauf.step2Title': 'Tur &amp; Broşür',
+    'ablauf.step2Text': 'Evi 360° turda keşfedin ve eksiksiz broşürü alın.',
+    'ablauf.step3Title': 'Ziyaret',
+    'ablauf.step3Text': 'Beğendiniz mi? Yerinde bir randevu ayarlamaktan memnuniyet duyarız.',
+
+    'vr.eyebrow': 'Sanal Tur',
+    'vr.title': '360° Tur',
+    'vr.desc': 'Evi kendi hızınızda, oda oda keşfedin. Bir sonraki odaya geçmek için okları takip edin.',
+    'vr.lockTitle': '360° Turu Etkinleştir',
+    'vr.lockSub': 'E-posta adresinizle ücretsiz — ayrıca eksiksiz broşürü de alırsınız.',
+    'vr.hint': 'Bakmak için tıklayın &amp; sürükleyin',
+
+    'modal.close': 'Kapat',
+    'modal.eyebrow': 'Emlak Kartı',
+    'modal.thanksTitle': 'Teşekkürler!',
+    'modal.thanksText': 'Talebiniz bize ulaştı. Eksiksiz emlak kartıyla kısa süre içinde size dönüş yapacağız.',
+    'modal.intro': 'Bilgilerinizi kısaca bırakın — size plan, konum planı, enerji kimlik belgesi ve satış fiyatını içeren eksiksiz emlak kartını gönderelim.',
+    'modal.submit': 'Talebi Gönder',
+
+    'form.namePh': 'Adınız',
+    'form.emailPh': 'E-posta adresiniz',
+    'form.phonePh': 'Telefon (opsiyonel)',
+    'form.messagePh': 'Mesajınız (opsiyonel)',
+    'form.sending': 'Gönderiliyor…',
+    'form.notConfigured': 'Form henüz yapılandırılmadı — Web3Forms erişim anahtarı eksik.',
+
+    'gate.thanksTitle': 'Teşekkürler!',
+    'gate.thanksText': 'Erişiminiz etkinleştirildi — evin turunun keyfini çıkarın.',
+    'gate.photoAlt': 'Müstakil ev Vahr — genel görünüm',
+    'gate.text': 'Burada kaydolun, 360° VR turunu görmek ve kalan bilgileri broşürle birlikte almak için.',
+    'gate.consent': '<a href="datenschutz.html" target="_blank">Gizlilik Politikası</a>\'nı okudum ve e-posta adresimin bu ilanla ilgili iletişim amacıyla saklanmasını kabul ediyorum.',
+    'gate.submit': 'Erişimi Etkinleştir',
+    'gate.error': 'Gönderim başarısız oldu — lütfen tekrar deneyin.',
+    'gate.note': 'E-posta adresiniz yalnızca bu ilanla ilgili iletişim için kullanılır.',
+
+    'footer.impressum': 'Yasal Bilgiler',
+    'footer.datenschutz': 'Gizlilik Politikası',
+    'footer.copy': '© 2026 Kuscu Immobilien · Tüm hakları saklıdır',
+  };
 </script>
 </body>
 </html>

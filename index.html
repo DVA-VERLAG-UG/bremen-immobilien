@@ -2138,6 +2138,7 @@
   </style>
 </head>
 <body>
+<script src="i18n.js"></script>
 
 <!-- ── SITE LOGO ─────────────────────────────────────────────── -->
 <a id="site-logo" href="index.html" aria-label="Kuscu Immobilien">
@@ -2146,12 +2147,12 @@
 
 <!-- ── TOP NAV LINKS (Desktop) ───────────────────────────────── -->
 <div id="top-links">
-  <a href="immobilien.html">Immobilien</a>
-  <a href="kontakt.html">Kontakt</a>
+  <a href="immobilien.html" data-i18n="nav.immobilien">Immobilien</a>
+  <a href="kontakt.html" data-i18n="nav.kontakt">Kontakt</a>
 </div>
 
 <!-- ── BURGER BUTTON ─────────────────────────────────────────── -->
-<button id="menu-btn" aria-label="Menü öffnen">
+<button id="menu-btn" aria-label="Menü öffnen" data-i18n-aria="nav.menuOpen">
   <span class="burger-line"></span>
   <span class="burger-line"></span>
   <span class="burger-line"></span>
@@ -2159,24 +2160,24 @@
 
 <!-- ── MENU OVERLAY ──────────────────────────────────────────── -->
 <div id="menu-overlay" role="dialog" aria-modal="true">
-  <button class="menu-close-btn" id="menu-close-btn" aria-label="Menü schließen">✕</button>
+  <button class="menu-close-btn" id="menu-close-btn" aria-label="Menü schließen" data-i18n-aria="nav.menuClose">✕</button>
   <div class="menu-inner">
     <img class="menu-logo" src="Logos/Kuscu.jpeg" alt="Kuscu Immobilien" loading="lazy" decoding="async" />
     <ul class="menu-nav">
 
       <!-- Startseite -->
       <li class="menu-item">
-        <button class="menu-link" onclick="closeMenu(); window.scrollTo({top:0,behavior:'smooth'})">Startseite</button>
+        <button class="menu-link" onclick="closeMenu(); window.scrollTo({top:0,behavior:'smooth'})" data-i18n="nav.home">Startseite</button>
       </li>
 
       <!-- Immobilien page -->
       <li class="menu-item">
-        <a href="immobilien.html" class="menu-link">Immobilien</a>
+        <a href="immobilien.html" class="menu-link" data-i18n="nav.immobilien">Immobilien</a>
       </li>
 
       <!-- Kontakt page -->
       <li class="menu-item">
-        <a href="kontakt.html" class="menu-link">Kontakt</a>
+        <a href="kontakt.html" class="menu-link" data-i18n="nav.kontakt">Kontakt</a>
       </li>
 
     </ul>
@@ -2207,7 +2208,7 @@
       <p class="hero-eyebrow">Kuscu Immobilien</p>
       <div class="hero-line"></div>
       <h1 class="hero-title">Bremen</h1>
-      <p class="hero-sub">Erstklassige Objekte in bester Lage</p>
+      <p class="hero-sub" data-i18n="home.heroSub">Erstklassige Objekte in bester Lage</p>
     </div>
   </section>
 
@@ -2254,10 +2255,10 @@
   <!-- Intro -->
   <section class="cs-intro">
     <div class="cs-container">
-      <p class="cs-eyebrow reveal">Immobilien in Bremen</p>
-      <h2 class="cs-h2 reveal reveal-delay-1">Portfolio.<br>Eine Stadt.</h2>
+      <p class="cs-eyebrow reveal" data-i18n="home.introEyebrow">Immobilien in Bremen</p>
+      <h2 class="cs-h2 reveal reveal-delay-1" data-i18n="home.introTitle">Portfolio.<br>Eine Stadt.</h2>
       <div class="cs-gold-line reveal reveal-delay-2"></div>
-      <p class="cs-lead reveal reveal-delay-3">
+      <p class="cs-lead reveal reveal-delay-3" data-i18n="home.introLead">
         Wir erwerben, entwickeln und veräußern Wohn- und Gewerbeimmobilien in Bremen —
         mit Sorgfalt, Qualitätsanspruch und langfristiger Perspektive.
       </p>
@@ -2267,19 +2268,19 @@
   <!-- Foto-Einblick -->
   <section class="cs-glimpse">
     <div class="cs-container">
-      <p class="cs-eyebrow reveal">Ein Einblick</p>
+      <p class="cs-eyebrow reveal" data-i18n="home.glimpseEyebrow">Ein Einblick</p>
       <div class="glimpse-grid">
         <figure class="glimpse-item reveal-zoom">
-          <img src="Bürgermeister/Front.jpeg" alt="Bürgermeister Spitta Allee 6 – Frontansicht" loading="lazy" />
-          <figcaption class="glimpse-cap">Frontansicht</figcaption>
+          <img src="Bürgermeister/Front.jpeg" alt="Bürgermeister Spitta Allee 6 – Frontansicht" loading="lazy" data-i18n-alt="home.glimpseFrontAlt" />
+          <figcaption class="glimpse-cap" data-i18n="listing.thumbFront">Frontansicht</figcaption>
         </figure>
         <figure class="glimpse-item reveal-left reveal-delay-1">
-          <img src="Bürgermeister/Back.jpeg" alt="Bürgermeister Spitta Allee 6 – Rückseite" loading="lazy" />
-          <figcaption class="glimpse-cap">Rückseite</figcaption>
+          <img src="Bürgermeister/Back.jpeg" alt="Bürgermeister Spitta Allee 6 – Rückseite" loading="lazy" data-i18n-alt="home.glimpseBackAlt" />
+          <figcaption class="glimpse-cap" data-i18n="listing.thumbBack">Rückseite</figcaption>
         </figure>
         <figure class="glimpse-item reveal-right reveal-delay-2">
-          <img src="Bürgermeister/Full.jpeg" alt="Bürgermeister Spitta Allee 6 – Gesamtansicht" loading="lazy" />
-          <figcaption class="glimpse-cap">Gesamtansicht</figcaption>
+          <img src="Bürgermeister/Full.jpeg" alt="Bürgermeister Spitta Allee 6 – Gesamtansicht" loading="lazy" data-i18n-alt="home.glimpseFullAlt" />
+          <figcaption class="glimpse-cap" data-i18n="listing.thumbFull">Gesamtansicht</figcaption>
         </figure>
       </div>
     </div>
@@ -2292,17 +2293,17 @@
         <div class="cs-counter-box reveal-zoom">
           <span class="counter-glow" aria-hidden="true"></span>
           <p class="counter-num" data-target="2">2</p>
-          <p class="counter-label">Immobilien im Ankauf</p>
+          <p class="counter-label" data-i18n="home.counterBuying">Immobilien im Ankauf</p>
         </div>
         <div class="cs-counter-box reveal-zoom reveal-delay-1">
           <span class="counter-glow" aria-hidden="true"></span>
           <p class="counter-num" data-target="1">1</p>
-          <p class="counter-label">Immobilien in Entwicklung</p>
+          <p class="counter-label" data-i18n="home.counterDeveloping">Immobilien in Entwicklung</p>
         </div>
         <div class="cs-counter-box reveal-zoom reveal-delay-2">
           <span class="counter-glow" aria-hidden="true"></span>
           <p class="counter-num">—</p>
-          <p class="counter-label">Immobilien im Verkauf</p>
+          <p class="counter-label" data-i18n="home.counterSelling">Immobilien im Verkauf</p>
         </div>
       </div>
     </div>
@@ -2315,29 +2316,29 @@
   <div class="cs-marquee-strip" aria-hidden="true">
     <div class="cs-marquee-track">
       <div class="cs-marquee-group">
-        <span class="cs-marquee-item hi">Kuscu Immobilien<span class="cs-marquee-dot"></span></span>
-        <span class="cs-marquee-item">Bremen<span class="cs-marquee-dot"></span></span>
-        <span class="cs-marquee-item">Ankauf<span class="cs-marquee-dot"></span></span>
-        <span class="cs-marquee-item hi">Entwicklung<span class="cs-marquee-dot"></span></span>
-        <span class="cs-marquee-item">Verkauf<span class="cs-marquee-dot"></span></span>
-        <span class="cs-marquee-item">Freie Hansestadt<span class="cs-marquee-dot"></span></span>
-        <span class="cs-marquee-item hi">Hochwertige Sanierung<span class="cs-marquee-dot"></span></span>
-        <span class="cs-marquee-item">Keine Käuferprovision<span class="cs-marquee-dot"></span></span>
+        <span class="cs-marquee-item hi" data-i18n="marquee.kuscu">Kuscu Immobilien<span class="cs-marquee-dot"></span></span>
+        <span class="cs-marquee-item" data-i18n="marquee.bremen">Bremen<span class="cs-marquee-dot"></span></span>
+        <span class="cs-marquee-item" data-i18n="marquee.ankauf">Ankauf<span class="cs-marquee-dot"></span></span>
+        <span class="cs-marquee-item hi" data-i18n="marquee.entwicklung">Entwicklung<span class="cs-marquee-dot"></span></span>
+        <span class="cs-marquee-item" data-i18n="marquee.verkauf">Verkauf<span class="cs-marquee-dot"></span></span>
+        <span class="cs-marquee-item" data-i18n="marquee.hansestadt">Freie Hansestadt<span class="cs-marquee-dot"></span></span>
+        <span class="cs-marquee-item hi" data-i18n="marquee.sanierung">Hochwertige Sanierung<span class="cs-marquee-dot"></span></span>
+        <span class="cs-marquee-item" data-i18n="marquee.provision">Keine Käuferprovision<span class="cs-marquee-dot"></span></span>
         <span class="cs-marquee-item">Vahr · Bremen<span class="cs-marquee-dot"></span></span>
-        <span class="cs-marquee-item hi">Premium Objekte<span class="cs-marquee-dot"></span></span>
+        <span class="cs-marquee-item hi" data-i18n="marquee.premium">Premium Objekte<span class="cs-marquee-dot"></span></span>
       </div>
       <!-- duplicate for seamless loop -->
       <div class="cs-marquee-group">
-        <span class="cs-marquee-item hi">Kuscu Immobilien<span class="cs-marquee-dot"></span></span>
-        <span class="cs-marquee-item">Bremen<span class="cs-marquee-dot"></span></span>
-        <span class="cs-marquee-item">Ankauf<span class="cs-marquee-dot"></span></span>
-        <span class="cs-marquee-item hi">Entwicklung<span class="cs-marquee-dot"></span></span>
-        <span class="cs-marquee-item">Verkauf<span class="cs-marquee-dot"></span></span>
-        <span class="cs-marquee-item">Freie Hansestadt<span class="cs-marquee-dot"></span></span>
-        <span class="cs-marquee-item hi">Hochwertige Sanierung<span class="cs-marquee-dot"></span></span>
-        <span class="cs-marquee-item">Keine Käuferprovision<span class="cs-marquee-dot"></span></span>
+        <span class="cs-marquee-item hi" data-i18n="marquee.kuscu">Kuscu Immobilien<span class="cs-marquee-dot"></span></span>
+        <span class="cs-marquee-item" data-i18n="marquee.bremen">Bremen<span class="cs-marquee-dot"></span></span>
+        <span class="cs-marquee-item" data-i18n="marquee.ankauf">Ankauf<span class="cs-marquee-dot"></span></span>
+        <span class="cs-marquee-item hi" data-i18n="marquee.entwicklung">Entwicklung<span class="cs-marquee-dot"></span></span>
+        <span class="cs-marquee-item" data-i18n="marquee.verkauf">Verkauf<span class="cs-marquee-dot"></span></span>
+        <span class="cs-marquee-item" data-i18n="marquee.hansestadt">Freie Hansestadt<span class="cs-marquee-dot"></span></span>
+        <span class="cs-marquee-item hi" data-i18n="marquee.sanierung">Hochwertige Sanierung<span class="cs-marquee-dot"></span></span>
+        <span class="cs-marquee-item" data-i18n="marquee.provision">Keine Käuferprovision<span class="cs-marquee-dot"></span></span>
         <span class="cs-marquee-item">Vahr · Bremen<span class="cs-marquee-dot"></span></span>
-        <span class="cs-marquee-item hi">Premium Objekte<span class="cs-marquee-dot"></span></span>
+        <span class="cs-marquee-item hi" data-i18n="marquee.premium">Premium Objekte<span class="cs-marquee-dot"></span></span>
       </div>
     </div>
   </div>
@@ -2345,7 +2346,7 @@
   <!-- Triptych: Bürgermeister Spitta Allee 6 -->
   <section class="cs-triptych">
     <div class="cs-container">
-      <p class="cs-section-label reveal">Aktuelle Entwicklung</p>
+      <p class="cs-section-label reveal" data-i18n="home.triptychLabel">Aktuelle Entwicklung</p>
       <h3 class="cs-triptych-title reveal reveal-delay-1">Bürgermeister Spitta Allee 6</h3>
     </div>
     <div class="cs-container">
@@ -2353,79 +2354,79 @@
 
         <!-- Left: Public info -->
         <div class="triptych-panel triptych-left reveal-left">
-          <p class="trip-eyebrow">Öffentliche Informationen</p>
+          <p class="trip-eyebrow" data-i18n="trip.publicInfo">Öffentliche Informationen</p>
           <div class="trip-info-row">
-            <span class="trip-key">Stadtteil / Lage</span>
+            <span class="trip-key" data-i18n="trip.district">Stadtteil / Lage</span>
             <span class="trip-val">Vahr, Bremen</span>
           </div>
           <div class="trip-info-row">
-            <span class="trip-key">Größe</span>
+            <span class="trip-key" data-i18n="trip.size">Größe</span>
             <span class="trip-val">~100 m²</span>
           </div>
           <div class="trip-info-row">
-            <span class="trip-key">Zimmer</span>
+            <span class="trip-key" data-i18n="listing.specRooms">Zimmer</span>
             <span class="trip-val">5</span>
           </div>
           <div class="trip-info-row">
-            <span class="trip-key">Stellplatz</span>
-            <span class="trip-val">Garage</span>
+            <span class="trip-key" data-i18n="listing.specGarageKey">Stellplatz</span>
+            <span class="trip-val" data-i18n="listing.specGarageVal">Garage</span>
           </div>
           <div class="trip-info-row">
-            <span class="trip-key">Aktueller Stand</span>
-            <span class="trip-val">Renovierung läuft</span>
+            <span class="trip-key" data-i18n="trip.status">Aktueller Stand</span>
+            <span class="trip-val" data-i18n="trip.statusVal">Renovierung läuft</span>
           </div>
           <div class="trip-divider"></div>
-          <p class="trip-impression">Ein ruhig gelegenes Einfamilienhaus in der Vahr — solide Bausubstanz, im Begriff mit Sorgfalt neu zu werden. Hochwertige Sanierung, keine Käuferprovision.</p>
+          <p class="trip-impression" data-i18n="trip.impression">Ein ruhig gelegenes Einfamilienhaus in der Vahr — solide Bausubstanz, im Begriff mit Sorgfalt neu zu werden. Hochwertige Sanierung, keine Käuferprovision.</p>
         </div>
 
         <!-- Middle: Photo teaser -->
         <div class="triptych-panel triptych-middle reveal-zoom reveal-delay-1">
-          <p class="trip-eyebrow">Einblick</p>
+          <p class="trip-eyebrow" data-i18n="trip.glimpse">Einblick</p>
           <a class="trip-photo-wrap" href="immobilien.html#rundgang">
-            <img src="Bürgermeister/Full.jpeg" alt="Bürgermeister Spitta Allee 6 — Gesamtansicht" loading="lazy" decoding="async" />
+            <img src="Bürgermeister/Full.jpeg" alt="Bürgermeister Spitta Allee 6 — Gesamtansicht" loading="lazy" decoding="async" data-i18n-alt="home.glimpseFullAlt" />
             <div class="trip-photo-overlay">
               <span class="trip-photo-dot"></span>
-              <span class="trip-photo-label">Klicke hier für das Exposé</span>
+              <span class="trip-photo-label" data-i18n="trip.photoLabel">Klicke hier für das Exposé</span>
             </div>
           </a>
         </div>
 
         <!-- Right: Locked Objektakte -->
         <div class="triptych-panel triptych-right reveal-right reveal-delay-2">
-          <p class="trip-eyebrow">Objektakte</p>
+          <p class="trip-eyebrow" data-i18n="trip.objektakte">Objektakte</p>
           <ul class="trip-locked-list">
             <li class="trip-locked-item">
               <svg class="lock-icon" viewBox="0 0 16 16" fill="none"><rect x="3" y="7" width="10" height="8" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5.5 7V5.5a2.5 2.5 0 115 0V7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
-              Genaue Adresse &amp; Lageplan
+              <span data-i18n="trip.lockAddr">Genaue Adresse &amp; Lageplan</span>
             </li>
             <li class="trip-locked-item">
               <svg class="lock-icon" viewBox="0 0 16 16" fill="none"><rect x="3" y="7" width="10" height="8" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5.5 7V5.5a2.5 2.5 0 115 0V7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
-              Vorher-Bilder (vollständig)
+              <span data-i18n="trip.lockPhotos">Vorher-Bilder (vollständig)</span>
             </li>
             <li class="trip-locked-item">
               <svg class="lock-icon" viewBox="0 0 16 16" fill="none"><rect x="3" y="7" width="10" height="8" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5.5 7V5.5a2.5 2.5 0 115 0V7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
-              Virtuelle Raumtour
+              <span data-i18n="trip.lockTour">Virtuelle Raumtour</span>
             </li>
             <li class="trip-locked-item">
               <svg class="lock-icon" viewBox="0 0 16 16" fill="none"><rect x="3" y="7" width="10" height="8" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5.5 7V5.5a2.5 2.5 0 115 0V7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
-              Grundriss &amp; Maße
+              <span data-i18n="trip.lockPlan">Grundriss &amp; Maße</span>
             </li>
             <li class="trip-locked-item">
               <svg class="lock-icon" viewBox="0 0 16 16" fill="none"><rect x="3" y="7" width="10" height="8" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5.5 7V5.5a2.5 2.5 0 115 0V7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
-              Kaufpreis &amp; Konditionen
+              <span data-i18n="trip.lockPrice">Kaufpreis &amp; Konditionen</span>
             </li>
             <li class="trip-locked-item">
               <svg class="lock-icon" viewBox="0 0 16 16" fill="none"><rect x="3" y="7" width="10" height="8" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5.5 7V5.5a2.5 2.5 0 115 0V7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
-              Energieausweis
+              <span data-i18n="trip.lockEnergy">Energieausweis</span>
             </li>
           </ul>
           <div class="trip-cta-group">
             <a class="trip-cta" href="immobilien.html#rundgang" target="_blank">
-              Objektakte anschauen
+              <span data-i18n="trip.ctaView">Objektakte anschauen</span>
               <svg viewBox="0 0 11 11" fill="none"><path d="M1.5 5.5H9.5M6 2L9.5 5.5L6 9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </a>
             <a class="trip-cta trip-cta-ghost" href="immobilien.html" target="_blank">
-              Alle Immobilien anschauen
+              <span data-i18n="trip.ctaAll">Alle Immobilien anschauen</span>
               <svg viewBox="0 0 11 11" fill="none"><path d="M1.5 5.5H9.5M6 2L9.5 5.5L6 9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </a>
           </div>
@@ -2443,19 +2444,19 @@
     <div class="cs-container">
       <div class="cs-about-inner reveal">
         <div>
-          <p class="cs-eyebrow">Über uns</p>
-          <h3 class="about-h3">Ein Bremer Unternehmen, das Häuser<br>wieder zum Leben erweckt.</h3>
-          <p class="about-body">
+          <p class="cs-eyebrow" data-i18n="about.eyebrow">Über uns</p>
+          <h3 class="about-h3" data-i18n="about.title">Ein Bremer Unternehmen, das Häuser<br>wieder zum Leben erweckt.</h3>
+          <p class="about-body" data-i18n="about.body1">
             Hinter Kuscu Immobilien steht ein familiengeführtes Unternehmen
             aus Bremen. Wir kaufen Häuser mit Substanz und Charakter,
             sanieren sie mit Sorgfalt — und übergeben sie an Menschen,
             die dort ihr Zuhause finden.
           </p>
-          <p class="about-body">
+          <p class="about-body" data-i18n="about.body2">
             Dabei bleiben wir persönlich: Sie sprechen direkt mit uns,
             ohne Umwege — und kaufen ohne Käuferprovision.
           </p>
-          <p class="about-sign">Ihr Team von Kuscu Immobilien</p>
+          <p class="about-sign" data-i18n="about.sign">Ihr Team von Kuscu Immobilien</p>
         </div>
         <!-- TODO: Für noch mehr Wärme diesen Block durch ein persönliches
              Foto ersetzen (Porträt oder Team vor dem Objekt), z. B.:
@@ -2464,9 +2465,9 @@
         <div class="about-visual reveal-right reveal-delay-1">
           <div class="about-monogram">K</div>
           <ul class="about-values">
-            <li>Sorgfältige Sanierung</li>
-            <li>Direkter, persönlicher Kontakt</li>
-            <li>Keine Käuferprovision</li>
+            <li data-i18n="about.value1">Sorgfältige Sanierung</li>
+            <li data-i18n="about.value2">Direkter, persönlicher Kontakt</li>
+            <li data-i18n="listing.tagNoCommission">Keine Käuferprovision</li>
           </ul>
         </div>
       </div>
@@ -2482,16 +2483,16 @@
       <div class="cs-referral-inner reveal">
         <div class="referral-stripe" aria-hidden="true"></div>
         <div class="referral-text">
-          <p class="cs-eyebrow">Tipgeber-Bonus</p>
-          <h3 class="referral-h3">Sie möchten verkaufen —<br>oder kennen jemanden, der es möchte?</h3>
-          <p class="referral-body">
+          <p class="cs-eyebrow" data-i18n="referral.eyebrow">Tipgeber-Bonus</p>
+          <h3 class="referral-h3" data-i18n="referral.title">Sie möchten verkaufen —<br>oder kennen jemanden, der es möchte?</h3>
+          <p class="referral-body" data-i18n="referral.body">
             Sprechen Sie uns an. Bei einem erfolgreichen Abschluss zahlen wir Ihnen bis zu
             <strong>1.000 €</strong> Tipgeber-Bonus — ganz gleich, ob Sie selbst verkaufen
             oder uns einen Kontakt vermitteln.
           </p>
         </div>
         <a class="referral-cta" href="mailto:navidistanbullu@gmail.com?subject=Tipgeber-Bonus">
-          Jetzt melden
+          <span data-i18n="referral.cta">Jetzt melden</span>
           <svg viewBox="0 0 11 11" fill="none"><path d="M1.5 5.5H9.5M6 2L9.5 5.5L6 9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
       </div>
@@ -2506,19 +2507,19 @@
     <div class="cs-container">
       <div class="cs-contact">
         <div class="cs-contact-left">
-          <p class="cs-eyebrow reveal">Kontakt</p>
-          <h2 class="cs-h2 reveal reveal-delay-1">Interesse?<br>Sprechen Sie<br>uns an.</h2>
+          <p class="cs-eyebrow reveal" data-i18n="nav.kontakt">Kontakt</p>
+          <h2 class="cs-h2 reveal reveal-delay-1" data-i18n="home.contactTitle">Interesse?<br>Sprechen Sie<br>uns an.</h2>
           <div class="cs-gold-line reveal reveal-delay-2" style="margin: 2rem 0;"></div>
-          <p class="cs-lead reveal reveal-delay-3" style="font-size:0.85rem; max-width:360px;">
+          <p class="cs-lead reveal reveal-delay-3" style="font-size:0.85rem; max-width:360px;" data-i18n="home.contactLead">
             Wir freuen uns auf Ihre Anfrage und melden uns zeitnah bei Ihnen zurück.
           </p>
         </div>
         <div class="cs-contact-right reveal reveal-delay-2">
-          <input class="contact-field" type="text" placeholder="Name" />
-          <input class="contact-field" type="email" placeholder="E-Mail" />
-          <input class="contact-field" type="tel" placeholder="Telefon (optional)" />
-          <textarea class="contact-field contact-textarea" placeholder="Ihre Nachricht"></textarea>
-          <button class="contact-submit" onclick="handleContact()">Anfrage senden</button>
+          <input class="contact-field" type="text" placeholder="Name" data-i18n-ph="form.namePh2" />
+          <input class="contact-field" type="email" placeholder="E-Mail" data-i18n-ph="form.emailPh2" />
+          <input class="contact-field" type="tel" placeholder="Telefon (optional)" data-i18n-ph="form.phonePh" />
+          <textarea class="contact-field contact-textarea" placeholder="Ihre Nachricht" data-i18n-ph="form.messagePh"></textarea>
+          <button class="contact-submit" onclick="handleContact()" id="home-contact-submit" data-i18n="modal.submit">Anfrage senden</button>
         </div>
       </div>
     </div>
@@ -2533,10 +2534,10 @@
           <a href="mailto:navidistanbullu@gmail.com">navidistanbullu@gmail.com</a>
           <!-- TODO: Telefonnummer eintragen, z. B.:
           <a href="tel:+49421XXXXXXX">+49 421 XXX XX XX</a> -->
-          <a href="impressum.html">Impressum</a>
-          <a href="datenschutz.html">Datenschutz</a>
+          <a href="impressum.html" data-i18n="footer.impressum">Impressum</a>
+          <a href="datenschutz.html" data-i18n="footer.datenschutz">Datenschutz</a>
         </div>
-        <span class="footer-copy">© 2026 Kuscu Immobilien · Alle Rechte vorbehalten</span>
+        <span class="footer-copy" data-i18n="footer.copy">© 2026 Kuscu Immobilien · Alle Rechte vorbehalten</span>
       </div>
     </div>
   </footer>
@@ -2546,7 +2547,7 @@
 <!-- ── FIXED UI ──────────────────────────────────────────────── -->
 
 <div id="scroll-hint">
-  <span>Scrollen</span>
+  <span data-i18n="home.scroll">Scrollen</span>
   <div class="scroll-arrow">
     <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
       <polyline points="2,4 7,10 12,4"/>
@@ -2556,12 +2557,12 @@
 
 <div id="location-label">
   <p class="label-city">Bremen</p>
-  <p class="label-sub">Freie Hansestadt · Deutschland</p>
+  <p class="label-sub" data-i18n="home.locationSub">Freie Hansestadt · Deutschland</p>
 </div>
 
 <div id="overview-hint">
-  <p class="hint-count">3 Immobilien · Bremen</p>
-  <p class="hint-action">Marker anklicken für Details</p>
+  <p class="hint-count" data-i18n="home.hintCount">3 Immobilien · Bremen</p>
+  <p class="hint-action" data-i18n="home.hintAction">Marker anklicken für Details</p>
 </div>
 
 <div id="progress">
@@ -2586,10 +2587,10 @@
       <div class="card-slide"><img src="Bürgermeister/Back.jpeg"  alt="Rückseite"    loading="lazy" decoding="async" /></div>
       <div class="card-slide"><img src="Bürgermeister/Full.jpeg"  alt="Gesamtansicht" loading="lazy" decoding="async" /></div>
     </div>
-    <button class="slider-btn prev" aria-label="Vorheriges Bild" onclick="sliderPrev()">
+    <button class="slider-btn prev" aria-label="Vorheriges Bild" onclick="sliderPrev()" data-i18n-aria="listing.imgPrev">
       <svg viewBox="0 0 13 13"><polyline points="8,2 4,6.5 8,11"/></svg>
     </button>
-    <button class="slider-btn next" aria-label="Nächstes Bild" onclick="sliderNext()">
+    <button class="slider-btn next" aria-label="Nächstes Bild" onclick="sliderNext()" data-i18n-aria="listing.imgNext">
       <svg viewBox="0 0 13 13"><polyline points="5,2 9,6.5 5,11"/></svg>
     </button>
     <div class="slider-dots" id="slider-dots">
@@ -2600,35 +2601,35 @@
     <div class="card-photo-overlay"></div>
   </div>
   <div class="card-body-inner">
-    <p class="card-type">Einfamilienhaus · Vahr</p>
+    <p class="card-type" data-i18n="card.type">Einfamilienhaus · Vahr</p>
     <p class="card-address">Bürgermeister Spitta Allee 6</p>
     <p class="card-city">28329 Bremen</p>
     <div class="card-divider"></div>
     <div class="card-stats">
       <div class="card-stat">
         <span class="stat-value">~100 m²</span>
-        <span class="stat-label">Wohnfläche</span>
+        <span class="stat-label" data-i18n="listing.specArea">Wohnfläche</span>
       </div>
       <div class="card-stat">
         <span class="stat-value">5</span>
-        <span class="stat-label">Zimmer</span>
+        <span class="stat-label" data-i18n="listing.specRooms">Zimmer</span>
       </div>
       <div class="card-stat">
         <span class="stat-value">2</span>
-        <span class="stat-label">Etagen</span>
+        <span class="stat-label" data-i18n="listing.specFloors">Etagen</span>
       </div>
     </div>
-    <p class="card-desc">
+    <p class="card-desc" data-i18n="card.desc">
       Großzügiges Einfamilienhaus über zwei Etagen mit Garage in ruhiger Lage.
     </p>
     <div class="card-highlights">
-      <span class="highlight-tag">Garage</span>
-      <span class="highlight-tag">2 Etagen</span>
-      <span class="highlight-tag">Ruhige Lage</span>
+      <span class="highlight-tag" data-i18n="listing.specGarageVal">Garage</span>
+      <span class="highlight-tag" data-i18n="card.twoFloors">2 Etagen</span>
+      <span class="highlight-tag" data-i18n="card.quietLocation">Ruhige Lage</span>
     </div>
-    <p class="card-price-label">Kaufpreis</p>
-    <p class="card-price-value">Auf Anfrage</p>
-    <a class="card-cta" href="mailto:navidistanbullu@gmail.com?subject=Anfrage: Bürgermeister Spitta Allee 6">Expose anfordern</a>
+    <p class="card-price-label" data-i18n="listing.priceLabel">Kaufpreis</p>
+    <p class="card-price-value" data-i18n="listing.priceVal">Auf Anfrage</p>
+    <a class="card-cta" href="mailto:navidistanbullu@gmail.com?subject=Anfrage: Bürgermeister Spitta Allee 6" data-i18n="card.cta">Expose anfordern</a>
   </div>
 </div>
 
@@ -3217,7 +3218,9 @@
   function handleContact() {
     const fields = document.querySelectorAll('.contact-field');
     const [name, email, phone, msg] = fields;
-    const subject = encodeURIComponent('Immobilienanfrage von ' + (name.value || 'Interessent'));
+    const subjectPrefix = window.i18nText('card.mailSubjectPrefix', 'Immobilienanfrage von');
+    const interested     = window.i18nText('card.interested', 'Interessent');
+    const subject = encodeURIComponent(subjectPrefix + ' ' + (name.value || interested));
     const body    = encodeURIComponent(
       `Name: ${name.value}\nE-Mail: ${email.value}\nTelefon: ${phone.value}\n\n${msg.value}`
     );
@@ -3362,6 +3365,113 @@
     window.addEventListener('scroll', () => requestAnimationFrame(update), { passive: true });
     update();
   })();
+</script>
+
+<script>
+  window.I18N_TR = {
+    'nav.home': 'Ana Sayfa',
+    'nav.immobilien': 'Emlaklar',
+    'nav.kontakt': 'İletişim',
+    'nav.menuOpen': 'Menüyü aç',
+    'nav.menuClose': 'Menüyü kapat',
+
+    'listing.thumbFront': 'Ön Görünüm',
+    'listing.thumbBack': 'Arka Görünüm',
+    'listing.thumbFull': 'Genel Görünüm',
+    'listing.imgPrev': 'Önceki resim',
+    'listing.imgNext': 'Sonraki resim',
+    'listing.specRooms': 'Oda',
+    'listing.specFloors': 'Kat',
+    'listing.specArea': 'Yaşam Alanı',
+    'listing.specGarageVal': 'Garaj',
+    'listing.specGarageKey': 'Otopark',
+    'listing.priceLabel': 'Satış Fiyatı',
+    'listing.priceVal': 'Talep Üzerine',
+    'listing.tagNoCommission': 'Alıcı Komisyonu Yok',
+
+    'modal.submit': 'Talebi Gönder',
+    'form.phonePh': 'Telefon (opsiyonel)',
+    'form.messagePh': 'Mesajınız (opsiyonel)',
+    'form.namePh2': 'Ad Soyad',
+    'form.emailPh2': 'E-posta',
+
+    'footer.impressum': 'Yasal Bilgiler',
+    'footer.datenschutz': 'Gizlilik Politikası',
+    'footer.copy': '© 2026 Kuscu Immobilien · Tüm hakları saklıdır',
+
+    'home.heroSub': 'Seçkin konumlarda birinci sınıf gayrimenkuller',
+    'home.introEyebrow': 'Bremen\'de Gayrimenkul',
+    'home.introTitle': 'Portföy.<br>Tek Bir Şehir.',
+    'home.introLead': 'Bremen\'de konut ve ticari gayrimenkuller satın alıyor, geliştiriyor ve satıyoruz — özenle, kalite anlayışıyla ve uzun vadeli bir bakış açısıyla.',
+
+    'home.glimpseEyebrow': 'Bir Bakış',
+    'home.glimpseFrontAlt': 'Bürgermeister Spitta Allee 6 – Ön Görünüm',
+    'home.glimpseBackAlt': 'Bürgermeister Spitta Allee 6 – Arka Görünüm',
+    'home.glimpseFullAlt': 'Bürgermeister Spitta Allee 6 – Genel Görünüm',
+
+    'home.counterBuying': 'Satın Alma Aşamasında',
+    'home.counterDeveloping': 'Geliştirme Aşamasında',
+    'home.counterSelling': 'Satış Aşamasında',
+
+    'marquee.kuscu': 'Kuscu Immobilien',
+    'marquee.bremen': 'Bremen',
+    'marquee.ankauf': 'Satın Alma',
+    'marquee.entwicklung': 'Geliştirme',
+    'marquee.verkauf': 'Satış',
+    'marquee.hansestadt': 'Özgür Hansa Şehri',
+    'marquee.sanierung': 'Kaliteli Yenileme',
+    'marquee.provision': 'Alıcı Komisyonu Yok',
+    'marquee.premium': 'Premium Emlaklar',
+
+    'home.triptychLabel': 'Güncel Geliştirme',
+
+    'trip.publicInfo': 'Herkese Açık Bilgiler',
+    'trip.district': 'Semt / Konum',
+    'trip.size': 'Büyüklük',
+    'trip.status': 'Güncel Durum',
+    'trip.statusVal': 'Yenileme sürüyor',
+    'trip.impression': 'Vahr\'da sakin konumlu bir müstakil ev — sağlam yapı, özenle yeniden hayat buluyor. Kaliteli yenileme, alıcı komisyonu yok.',
+    'trip.glimpse': 'Bir Bakış',
+    'trip.photoLabel': 'Broşür için buraya tıklayın',
+    'trip.objektakte': 'Emlak Dosyası',
+    'trip.lockAddr': 'Tam Adres &amp; Konum Planı',
+    'trip.lockPhotos': 'Öncesi Fotoğrafları (eksiksiz)',
+    'trip.lockTour': 'Sanal Oda Turu',
+    'trip.lockPlan': 'Plan &amp; Ölçüler',
+    'trip.lockPrice': 'Satış Fiyatı &amp; Koşullar',
+    'trip.lockEnergy': 'Enerji Kimlik Belgesi',
+    'trip.ctaView': 'Emlak Dosyasını Görüntüle',
+    'trip.ctaAll': 'Tüm Emlakları Görüntüle',
+
+    'about.eyebrow': 'Hakkımızda',
+    'about.title': 'Evlere yeniden hayat veren bir Bremen şirketi.',
+    'about.body1': 'Kuscu Immobilien\'in arkasında Bremen\'den aile şirketi var. Sağlam yapıya ve karaktere sahip evler satın alıyor, özenle yeniliyor — ve orada yuvasını bulacak insanlara teslim ediyoruz.',
+    'about.body2': 'Bu süreçte kişisel kalıyoruz: bizimle doğrudan, aracısız konuşursunuz — ve alıcı komisyonu ödemeden satın alırsınız.',
+    'about.sign': 'Kuscu Immobilien Ekibiniz',
+    'about.value1': 'Özenli Yenileme',
+    'about.value2': 'Doğrudan, Kişisel İletişim',
+
+    'referral.eyebrow': 'Tavsiye Bonusu',
+    'referral.title': 'Satmak mı istiyorsunuz — ya da isteyen birini mi tanıyorsunuz?',
+    'referral.body': 'Bize ulaşın. Başarılı bir satış sonrasında size <strong>1.000 €</strong>\'ya kadar tavsiye bonusu ödüyoruz — ister kendiniz satın, ister bize bir bağlantı iletin.',
+    'referral.cta': 'Şimdi Bildir',
+
+    'home.contactTitle': 'İlginiz mi var?<br>Bizimle<br>konuşun.',
+    'home.contactLead': 'Talebinizi bekliyoruz ve size en kısa sürede geri dönüş yapacağız.',
+
+    'home.scroll': 'Kaydırın',
+    'home.locationSub': 'Özgür Hansa Şehri · Almanya',
+    'home.hintCount': '3 Emlak · Bremen',
+    'home.hintAction': 'Detaylar için işaretçiye tıklayın',
+
+    'card.type': 'Müstakil Ev · Vahr',
+    'card.desc': 'Sakin bir konumda, garajlı, iki katlı geniş müstakil ev.',
+    'card.twoFloors': '2 Kat',
+    'card.quietLocation': 'Sakin Konum',
+    'card.cta': 'Broşür Talep Et',
+    'card.mailSubjectPrefix': 'Gayrimenkul talebi:',
+    'card.interested': 'İlgilenen',
+  };
 </script>
 </body>
 </html> 
