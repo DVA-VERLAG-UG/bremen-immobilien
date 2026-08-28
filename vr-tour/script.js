@@ -35,6 +35,15 @@ const sceneList = [
 // später auf eine kleinere Auswahl kürzen, sobald die Wege feststehen.
 const roomMenu = sceneList.map(s => ({ id: s.id, label: s.title }));
 
+// Liefert den Raumtitel in der aktuell gewählten Sprache (DE/TR), ohne
+// den deutschen Originaltext in sceneList zu duplizieren.
+function roomTitle(sceneOrId) {
+  const id = typeof sceneOrId === "string" ? sceneOrId : sceneOrId.id;
+  const scene = typeof sceneOrId === "string" ? sceneList.find(s => s.id === id) : sceneOrId;
+  const deTitle = scene ? scene.title : id;
+  return window.i18nText ? window.i18nText("room." + id, deTitle) : deTitle;
+}
+
 const savedConfig = {
   "views": {},
   "hotspots": {
@@ -694,10 +703,10 @@ const viewer = pannellum.viewer("panorama", {
 
 let navigationHistory = [];
 
-document.getElementById("tour-title").innerText = tourScenes.stock1_entranceHall01.title;
+document.getElementById("tour-title").innerText = roomTitle("stock1_entranceHall01");
 
 viewer.on("scenechange", function (sceneId) {
-  document.getElementById("tour-title").innerText = tourScenes[sceneId].title;
+  document.getElementById("tour-title").innerText = roomTitle(sceneId);
   updateSimplePanelLabels();
   updateRoomNavActive(sceneId);
   updateBackButtonState();
@@ -780,7 +789,8 @@ function enableCompareMode() {
 
   const toggleBtn = document.getElementById("compare-360-toggle");
   toggleBtn.classList.add("on");
-  document.getElementById("compare-360-toggle-label").textContent = "Vergleich beenden";
+  document.getElementById("compare-360-toggle-label").textContent =
+    window.i18nText ? window.i18nText("vrtour.compareToggleOn", "Vergleich beenden") : "Vergleich beenden";
 
   (function syncLoop() {
     if (!compareModeActive || !afterViewer) return;
@@ -806,7 +816,8 @@ function disableCompareMode() {
   const toggleBtn = document.getElementById("compare-360-toggle");
   if (toggleBtn) {
     toggleBtn.classList.remove("on");
-    document.getElementById("compare-360-toggle-label").textContent = "Vorher/Nachher";
+    document.getElementById("compare-360-toggle-label").textContent =
+      window.i18nText ? window.i18nText("vrtour.compareToggle", "Vorher/Nachher") : "Vorher/Nachher";
   }
 }
 
@@ -859,7 +870,7 @@ function createTourNavControls() {
     <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
       <path d="M12.5 4.5L6 10l6.5 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
-    Zurück
+    <span data-i18n="vrtour.back">Zurück</span>
   `;
   backBtn.addEventListener("click", goPreviousHotspot);
   controls.appendChild(backBtn);
@@ -867,7 +878,7 @@ function createTourNavControls() {
   const hallwayBtn = document.createElement("button");
   hallwayBtn.id = "tour-hallway-shortcut";
   hallwayBtn.innerHTML = `
-    Weiter zur Diele
+    <span data-i18n="vrtour.hallwayShortcut">Weiter zur Diele</span>
     <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
       <path d="M7.5 4.5L14 10l-6.5 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
@@ -898,7 +909,7 @@ function createRoomNavPanel(controls) {
         <rect x="2.5" y="11.5" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.4"/>
         <rect x="11.5" y="11.5" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.4"/>
       </svg>
-      Alle Räume
+      <span data-i18n="vrtour.allRooms">Alle Räume</span>
     </button>
     <div id="room-nav-panel">
       <div id="room-nav-list"></div>
@@ -921,7 +932,7 @@ function createRoomNavPanel(controls) {
           <path d="M4.8 8.2l2.1 2.1 4.3-4.5" stroke="#000" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </span>
-      <span class="room-nav-label">${room.label}</span>
+      <span class="room-nav-label">${roomTitle(room.id)}</span>
     `;
     btn.addEventListener("click", function () {
       loadSceneSafe(room.id, null, null, null, true);
@@ -1026,6 +1037,7 @@ function createHotspotForViewer(hs) {
   return {
     ...hs,
     type: "info",
+    text: roomTitle(hs.sceneId),
     clickHandlerFunc: function () {
       loadSceneSafe(
         hs.sceneId,
@@ -1455,3 +1467,38 @@ function getSceneTitle(sceneId) {
   const scene = sceneList.find(s => s.id === sceneId);
   return scene ? scene.title : sceneId;
 }
+
+// Hält die dynamisch per JS gesetzten Texte (Raumtitel, Menü-Labels,
+// Vergleichs-Button) aktuell, wenn die Sprache umgeschaltet wird —
+// entweder über den Toggle auf der übergeordneten Seite (immobilien.html,
+// via "storage"-Event synchronisiert) oder direkt hier im Iframe.
+document.addEventListener("langchange", function () {
+  const titleEl = document.getElementById("tour-title");
+  if (titleEl) titleEl.innerText = roomTitle(viewer.getScene());
+
+  document.querySelectorAll(".room-nav-item").forEach(btn => {
+    const label = btn.querySelector(".room-nav-label");
+    if (label) label.textContent = roomTitle(btn.dataset.sceneId);
+  });
+
+  const toggleLabel = document.getElementById("compare-360-toggle-label");
+  if (toggleLabel) {
+    toggleLabel.textContent = compareModeActive
+      ? window.i18nText("vrtour.compareToggleOn", "Vergleich beenden")
+      : window.i18nText("vrtour.compareToggle", "Vorher/Nachher");
+  }
+
+  // Hotspot-Pfeil-Tooltips (Pannellum-eigene DOM-Elemente) neu setzen:
+  // erst die zugrundeliegende Szenenkonfiguration aktualisieren, dann
+  // die aktuell sichtbare Szene neu laden, damit Pannellum die Tooltips
+  // mit dem neuen Text rendert.
+  Object.keys(tourScenes).forEach(id => {
+    (tourScenes[id].hotSpots || []).forEach(hs => {
+      hs.text = roomTitle(hs.sceneId);
+    });
+  });
+  const curScene = viewer.getScene();
+  if (tourScenes[curScene] && tourScenes[curScene].hotSpots.length) {
+    viewer.loadScene(curScene, viewer.getPitch(), viewer.getYaw(), viewer.getHfov());
+  }
+});

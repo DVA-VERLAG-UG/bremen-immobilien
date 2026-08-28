@@ -1,30 +1,35 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="de">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>Villa VR Tour</title>
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16.png">
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum/build/pannellum.css">
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+  <script src="../i18n.js"></script>
   <div id="tour-title">Villa VR Tour</div>
   <div id="panorama"></div>
   <div id="panorama-after"></div>
   <div id="compare-handle-360"></div>
-  <span class="compare-tag-360 before-tag">Vorher</span>
-  <span class="compare-tag-360 after-tag">Nachher</span>
+  <span class="compare-tag-360 before-tag" data-i18n="compare.before">Vorher</span>
+  <span class="compare-tag-360 after-tag" data-i18n="compare.after">Nachher</span>
 
   <button id="compare-360-toggle" type="button">
     <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
       <path d="M10 3v14M4 7l-2 3 2 3M16 7l2 3-2 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
-    <span id="compare-360-toggle-label">Vorher/Nachher</span>
+    <span id="compare-360-toggle-label" data-i18n="vrtour.compareToggle">Vorher/Nachher</span>
   </button>
 
+  <script src="i18n-dict.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/pannellum/build/pannellum.js"></script>
 <script src="script.js?v=999"></script>
 </body>

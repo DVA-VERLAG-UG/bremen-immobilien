@@ -81,12 +81,14 @@
     style.textContent = `
       .lang-toggle {
         display: flex; align-items: center; gap: 1px;
-        margin-right: 1.4rem;
+        height: 44px;
+        margin-left: auto;
         border: 1px solid rgba(255,255,255,0.15);
         border-radius: 4px;
         overflow: hidden;
         flex-shrink: 0;
       }
+      .lang-toggle.lang-toggle-fixed { margin-left: 0; }
       .lang-toggle button {
         background: none; border: none;
         color: rgba(255,255,255,0.5);
@@ -100,7 +102,6 @@
       .lang-toggle button.active { background: var(--gold, #c8a96e); color: var(--dark, #08080e); }
       .lang-toggle button:not(.active):hover { color: #fff; }
       @media (max-width: 768px) {
-        .lang-toggle { margin-right: 0.6rem; }
         .lang-toggle button { padding: 0.4rem 0.55rem; }
       }
       /* Fallback-Positionierung für Seiten ohne <nav>-Flexbox (z. B. die
@@ -110,12 +111,13 @@
          Wörter je Sprache). */
       .lang-toggle.lang-toggle-fixed {
         position: fixed;
-        top: 2rem;
+        top: 1.125rem;
+        height: 44px;
         z-index: 200;
         margin-right: 0;
       }
       @media (max-width: 768px) {
-        .lang-toggle.lang-toggle-fixed { top: 1.4rem; right: 3.6rem !important; }
+        .lang-toggle.lang-toggle-fixed { top: 1.4rem; height: 44px; right: 3.6rem !important; }
       }
     `;
     document.head.appendChild(style);
@@ -149,7 +151,12 @@
       '<button type="button" data-lang="tr">TR</button>';
 
     if (nav) {
-      if (menuBtn && menuBtn.parentNode === nav) {
+      // Immer links von den Nav-Links (und links vom Burger-Button)
+      // einfügen, damit die Position auf allen Seiten gleich ist.
+      const navLinks = nav.querySelector('.nav-links');
+      if (navLinks && navLinks.parentNode === nav) {
+        nav.insertBefore(wrap, navLinks);
+      } else if (menuBtn && menuBtn.parentNode === nav) {
         nav.insertBefore(wrap, menuBtn);
       } else {
         nav.appendChild(wrap);
@@ -183,4 +190,12 @@
   } else {
     init();
   }
+
+  // Hält andere gleichzeitig offene Fenster/Frames synchron (z. B. den
+  // eingebetteten VR-Rundgang als Iframe), sobald sich die Sprache in
+  // einem anderen Kontext ändert. Das "storage"-Event feuert nur in
+  // ANDEREN Fenstern/Frames als dem, das localStorage geändert hat.
+  window.addEventListener('storage', function (e) {
+    if (e.key === LANG_KEY) applyLang(currentLang());
+  });
 })();

@@ -42,7 +42,13 @@
       "Bash(NODE_PATH=./node_modules node align/test_i18n_index.js)",
       "Bash(grep -n \"^\\\\s*nav\\\\s*{\\\\|nav\\\\s*{$\" /Users/nistanbullu/bremen-immobilien-1/kontakt.html)",
       "Bash(grep -n \"^\\\\s*nav \\\\|nav a {\\\\|nav a,\" /Users/nistanbullu/bremen-immobilien-1/kontakt.html)",
-      "Bash(NODE_PATH=./node_modules node align/test_i18n_kontakt.js)"
+      "Bash(NODE_PATH=./node_modules node align/test_i18n_kontakt.js)",
+      "Bash(NODE_PATH=./node_modules node align/measure_nav.js)",
+      "Bash(NODE_PATH=./node_modules node align/nav_jump_test.js)",
+      "Bash(NODE_PATH=./node_modules node align/test_vrtour_real_flow.js)",
+      "Bash(/private/tmp/claude-501/-Users-nistanbullu-bremen-immobilien-1/d55453ea-1a37-48b8-a2e3-458c45599135/scratchpad/venv/bin/python -c ' *)",
+      "Bash(NODE_PATH=./node_modules node align/audit_nav_consistency.js)",
+      "Bash(NODE_PATH=./node_modules node align/final_smoke_all.js)"
     ]
   }
 }
