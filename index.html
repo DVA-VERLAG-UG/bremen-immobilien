@@ -8,8 +8,6 @@
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-  <link href="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css" rel="stylesheet" />
-  <script src="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.js"></script>
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -29,15 +27,20 @@
       overflow-x: hidden;
     }
 
-    /* ── MAP ─────────────────────────────────────────────── */
-    #map {
+    /* ── HERO VIDEO (Globe → Zoom → Orbit) ──────────────────── */
+    #globe-video, #zoom-video, #orbit-video {
       position: fixed;
       inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
       z-index: 0;
+      opacity: 0;
+      transition: opacity 0.35s ease;
     }
-
-    .mapboxgl-ctrl-bottom-left,
-    .mapboxgl-ctrl-bottom-right { opacity: 0.35; }
+    #globe-video.active { opacity: 1; }
+    #zoom-video.active  { opacity: 1; }
+    #orbit-video.active { opacity: 1; }
 
     /* ── SCROLL DRIVER ───────────────────────────────────── */
     #scroll-driver {
@@ -166,42 +169,6 @@
       opacity: 0.8;
     }
 
-    /* ── OVERVIEW HINT ───────────────────────────────────── */
-    #overview-hint {
-      position: fixed;
-      bottom: 2.5rem;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 10;
-      text-align: center;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.8s ease;
-    }
-
-    #overview-hint.visible { opacity: 1; }
-
-    #overview-hint .hint-count {
-      font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.62rem;
-      letter-spacing: 0.45em;
-      text-transform: uppercase;
-      color: var(--gold);
-    }
-
-    #overview-hint .hint-action {
-      font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.66rem;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.3);
-      margin-top: 0.4rem;
-    }
-
-    /* ── BUILDING PANEL (left-half slide-in) ────────────── */
-    /* building panel retired — hidden, cards now carry the photo */
-    #building-panel { display: none !important; }
-
     /* ── PROPERTY CARDS (full-photo with overlaid text) ────── */
     .property-card {
       position: fixed;
@@ -214,8 +181,8 @@
       border-radius: 3px;
       z-index: 25;
       overflow: hidden;
-      transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
-                  opacity 0.75s ease;
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                  opacity 0.45s ease;
       opacity: 0;
       pointer-events: none;
     }
@@ -224,6 +191,12 @@
       transform: translateY(-50%) translateX(0);
       opacity: 1;
       pointer-events: auto;
+    }
+
+    /* Karte ausblenden, solange das Vollbild-Menü offen ist */
+    body.menu-open .property-card.visible {
+      opacity: 0;
+      pointer-events: none;
     }
 
     /* photo fills the whole card */
@@ -438,122 +411,6 @@
 
     .card-cta:hover { background: var(--gold); color: var(--dark); }
 
-    /* ── MARKERS ─────────────────────────────────────────── */
-    .map-marker {
-      width: 44px;
-      height: 44px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      opacity: 0;
-      transition: opacity 0.7s ease;
-    }
-
-    .map-marker.visible { opacity: 1; }
-
-    .marker-ring {
-      position: relative;
-      width: 20px;
-      height: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .marker-dot {
-      width: 10px;
-      height: 10px;
-      background: var(--gold);
-      border-radius: 50%;
-      position: relative;
-      z-index: 1;
-      transition: transform 0.3s ease, width 0.3s ease, height 0.3s ease;
-    }
-
-    .marker-pulse {
-      position: absolute;
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: var(--gold);
-      animation: pulseRing 2.4s ease-out infinite;
-    }
-
-    .map-marker:hover .marker-dot {
-      transform: scale(1.4);
-    }
-
-    /* overview mode: bigger markers */
-    .map-marker.overview .marker-dot {
-      width: 14px;
-      height: 14px;
-    }
-    .map-marker.overview .marker-pulse {
-      width: 14px;
-      height: 14px;
-    }
-
-    /* featured pin — element is exactly 44×44 so anchor:'center' = dot center = coordinate */
-    .map-marker.featured {
-      width: 44px;
-      height: 44px;
-      align-items: center;
-      justify-content: center;
-    }
-    .map-marker.featured .marker-ring {
-      position: relative;
-      width: 28px;
-      height: 28px;
-    }
-    .map-marker.featured .marker-dot {
-      width: 14px;
-      height: 14px;
-      box-shadow: 0 0 14px rgba(200,169,110,0.7);
-    }
-    .map-marker.featured .marker-pulse {
-      width: 14px;
-      height: 14px;
-    }
-    /* stem hangs below the ring as an overflow decoration — no effect on layout/anchor */
-    .marker-stem {
-      display: none;
-      position: absolute;
-      top: 100%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 2px;
-      height: 36px;
-      background: linear-gradient(to bottom, var(--gold), rgba(200,169,110,0));
-      border-radius: 1px;
-      opacity: 0;
-      transition: opacity 0.45s ease 0.25s;
-    }
-    .map-marker.featured .marker-stem { display: block; }
-    .map-marker.featured.visible .marker-stem { opacity: 1; }
-
-    /* ── MARKER TOOLTIP ──────────────────────────────────── */
-    .marker-tooltip {
-      position: absolute;
-      bottom: calc(100% + 10px);
-      left: 50%;
-      transform: translateX(-50%);
-      white-space: nowrap;
-      background: rgba(8,8,14,0.92);
-      border: 1px solid rgba(200,169,110,0.3);
-      padding: 0.4rem 0.7rem;
-      font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.6rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.7);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.25s ease;
-    }
-
-    .map-marker:hover .marker-tooltip { opacity: 1; }
-
     /* ── PROGRESS DOTS ───────────────────────────────────── */
     #progress {
       position: fixed;
@@ -584,6 +441,18 @@
       background: var(--gold);
       border-color: var(--gold);
       transform: scale(1.5);
+    }
+
+    /* ── NAV SCRIM (Lesbarkeit über dem Video) ──────────────── */
+    #nav-scrim {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 80px;
+      z-index: 15;
+      background: rgba(8, 8, 14, 0.4);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      pointer-events: none;
     }
 
     /* ── SITE LOGO ───────────────────────────────────────── */
@@ -936,10 +805,13 @@
     #content-section {
       position: relative;
       z-index: 30;
-      background: var(--dark);
+      background: rgba(8, 8, 14, 0.66);
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
       isolation: isolate;
       overflow-x: hidden;
     }
+
 
     /* Sticky canvas wrapper — height:0 so it takes no layout space,
        sticky so the canvas always sits at the top of the viewport
@@ -1018,23 +890,13 @@
       100% { transform: translate(65px,  35px) scale(0.9);  }
     }
 
-    /* ── MAP → CONTENT FADE OVERLAY ────────────────────────── */
-    #map-fade-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 26;
-      background: var(--dark);
-      opacity: 0;
-      pointer-events: none;
-      will-change: opacity;
-    }
 
     /* longer gradient so the fade-in lands on an already-dark base */
     #content-section::before {
       content: '';
       display: block;
       height: 35vh;
-      background: linear-gradient(to bottom, transparent, var(--dark));
+      background: linear-gradient(to bottom, transparent, rgba(8, 8, 14, 0.66));
       margin-top: -35vh;
       position: relative;
       z-index: 1;
@@ -1767,7 +1629,7 @@
         border-left: none; border-right: none; border-bottom: none;
         border-top: 1px solid rgba(200,169,110,0.22);
         transform: translateY(100%);
-        transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.75s ease;
+        transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.45s ease;
         opacity: 1;
       }
       .property-card.visible { transform: translateY(0); }
@@ -1853,66 +1715,6 @@
       0%,100% { opacity: 0.3; }
       50%      { opacity: 1; }
     }
-    @keyframes pulseRing {
-      0%   { transform: scale(1);   opacity: 0.8; }
-      80%  { transform: scale(3.5); opacity: 0; }
-      100% { transform: scale(3.5); opacity: 0; }
-    }
-
-    /* ── PREVIEW PINS (nicht klickbar, grau) ───────────────────── */
-    /* ── PREVIEW PIN POPUP ──────────────────────────────────────── */
-    .preview-popup .mapboxgl-popup-content {
-      font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.66rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.7);
-      background: rgba(8,8,14,0.85);
-      border: 1px solid rgba(200,169,110,0.25);
-      padding: 0.3rem 0.7rem;
-      border-radius: 2px;
-      backdrop-filter: blur(8px);
-      white-space: nowrap;
-    }
-    .preview-popup .mapboxgl-popup-tip { display: none; }
-
-    /* ── ALLE-OBJEKTE CTA ───────────────────────────────────────── */
-    #all-props-cta {
-      position: fixed;
-      bottom: 2.5rem;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 10;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.8s ease;
-      white-space: nowrap;
-    }
-    #all-props-cta.visible { opacity: 1; pointer-events: auto; }
-    .cta-all-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.65rem;
-      font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.68rem;
-      letter-spacing: 0.26em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.6);
-      text-decoration: none;
-      border: 1px solid rgba(200,169,110,0.32);
-      padding: 0.8rem 1.8rem;
-      border-radius: 2px;
-      background: rgba(8,8,14,0.55);
-      backdrop-filter: blur(10px);
-      transition: color 0.25s, border-color 0.25s, background 0.25s;
-    }
-    .cta-all-link:hover {
-      color: var(--gold);
-      border-color: var(--gold);
-      background: rgba(8,8,14,0.75);
-    }
-    .cta-all-link svg { width: 11px; height: 11px; flex-shrink: 0; }
-
     /* ── GLOBE PREMIUM OVERLAYS ─────────────────────────────── */
 
     /* Deep-space vignette — makes the globe float in darkness */
@@ -2144,6 +1946,9 @@
 <body>
 <script src="i18n.js"></script>
 
+<!-- ── NAV SCRIM ─────────────────────────────────────────────── -->
+<div id="nav-scrim" aria-hidden="true"></div>
+
 <!-- ── SITE LOGO ─────────────────────────────────────────────── -->
 <a id="site-logo" href="index.html" aria-label="Kuscu Immobilien">
   <img src="Logos/kuscu-logo-white.png" alt="Kuscu Immobilien" />
@@ -2195,15 +2000,22 @@
   </div>
 </div>
 
-<!-- ── MAP ──────────────────────────────────────────────────── -->
-<div id="map"></div>
-<div id="map-fade-overlay"></div>
+<!-- ── HERO VIDEO (Globe → Zoom → Orbit) ─────────────────────── -->
+<video id="globe-video" muted playsinline preload="auto" loop autoplay src="video/globe-web.mp4"></video>
+<video id="zoom-video" muted playsinline preload="auto" src="video/zoom-web.mp4"></video>
+<video id="orbit-video" muted playsinline preload="auto" loop src="video/orbit-web.mp4"></video>
 
 <!-- ── PREMIUM GLOBE OVERLAYS ──────────────────────────────── -->
 <div id="globe-vignette"></div>
 <div id="film-grain"></div>
 <div class="letterbox top" id="lb-top"></div>
 <div class="letterbox bottom" id="lb-bottom"></div>
+
+<!-- Globe-Intro: Weltkugel dreht sich als Endlos-Loop, solange nicht
+     gescrollt wird. Sobald der Nutzer zu scrollen beginnt, wird dieser
+     kurze Bereich (60vh, viel kürzer als die 400vh der Zoom-Strecke)
+     zügig durchgescrubbt — danach übernimmt Zoom.mp4 wie gehabt. -->
+<div id="globe-driver" style="height: 60vh; pointer-events: none;"></div>
 
 <!-- ── SCROLL SECTIONS ──────────────────────────────────────── -->
 <div id="scroll-driver">
@@ -2227,7 +2039,14 @@
   <section class="step" id="step-3"></section>
 
   <!-- Buffer: extra scroll time on last property before content appears -->
-  <div style="height: 50vh; pointer-events: none;"></div>
+  <!-- 150vh statt nur 50vh: Der Puffer muss größer als die Viewport-Höhe
+       sein, sonst beginnt #content-section optisch schon von unten ins
+       Bild zu rutschen, bevor der Zoom-Scrub überhaupt fertig ist (ein
+       Puffer < 100vh lässt den Seiteninhalt buchstäblich "durchscheinen",
+       während man noch mitten im Zoom ist). 150vh garantiert ein festes
+       50vh-Fenster, in dem Orbit-Video + Karte nach dem Snap ungestört
+       stehen bleiben, bevor die nächste Sektion überhaupt sichtbar wird. -->
+  <div style="height: 150vh; pointer-events: none;"></div>
 </div>
 
 
@@ -2565,23 +2384,11 @@
   <p class="label-sub" data-i18n="home.locationSub">Freie Hansestadt · Deutschland</p>
 </div>
 
-<div id="overview-hint">
-  <p class="hint-count" data-i18n="home.hintCount">3 Immobilien · Bremen</p>
-  <p class="hint-action" data-i18n="home.hintAction">Marker anklicken für Details</p>
-</div>
-
 <div id="progress">
   <div class="progress-dot" data-step="0"></div>
   <div class="progress-dot" data-step="1"></div>
   <div class="progress-dot" data-step="2"></div>
   <div class="progress-dot" data-step="3"></div>
-</div>
-
-<!-- ── BUILDING PANEL ────────────────────────────────────────── -->
-<div id="building-panel">
-  <img id="building-img-el" src="" alt="Immobilie" />
-  <div class="panel-fade"></div>
-  <div class="panel-label" id="building-img-label"></div>
 </div>
 
 <!-- ── PROPERTY CARD ─────────────────────────────────────────── -->
@@ -2640,462 +2447,273 @@
 
 <!-- ── SCRIPT ────────────────────────────────────────────────── -->
 <script>
-  mapboxgl.accessToken = [
-    'pk.eyJ1IjoibmF2aWRpc3QiLCJhIjoiY21wM3M1', 'bDVtMDdybDJzc2Rka2RlbDdieCJ9',
-    '.zvZjkJdqBhNZ1JJxxRWobg'
-  ].join('');
+  // ── Hero-Video (Globe → Zoom → Orbit) ─────────────────────────────
+  // Ersetzt die frühere Mapbox-Kamerafahrt: Globe-Turning.mp4 dreht sich
+  // im Ruhezustand endlos, bis der Nutzer zu scrollen beginnt — dann wird
+  // es zügig zum Ende hin gescrubbt. Danach übernimmt Zoom.mp4, an die
+  // Scroll-Position gekoppelt abgespielt (scrubbing); sobald man ganz
+  // durchgescrollt hat, übernimmt Orbit.mp4 als Endlos-Loop und bleibt
+  // als fixierter Hintergrund sichtbar, während der restliche Inhalt
+  // links darüber weiterscrollt.
+  const globeVideo = document.getElementById('globe-video');
+  const zoomVideo  = document.getElementById('zoom-video');
+  const orbitVideo = document.getElementById('orbit-video');
 
-  const PROPERTIES = [
-    {
-      id:     'card-3',
-      coords: [8.871257448102298, 53.09093],
-      image:  'Bürgermeister/Front.jpeg',
-      label:  'Bürgermeister Spitta Allee 6',
-      step:   3,
-    },
-  ];
+  let inOrbit = false;
 
-  // Camera per step
-  const isMobile = () => window.innerWidth < 768;
+  // Kein "zoomReady"-Flag über das loadedmetadata-Event — das Event kann
+  // (je nach Cache/Timing) schon gefeuert haben, bevor dieser Listener
+  // registriert wird. zoomVideo.duration ist truthy sobald Metadaten da
+  // sind, das reicht als Bedingung. Der Listener ist trotzdem nützlich
+  // als Sicherheitsnetz, falls Metadaten erst nach dem ersten Scroll da sind.
+  zoomVideo.addEventListener('loadedmetadata', () => updateHeroVideo());
+  // zoom-video startet INAKTIV — sichtbar wird zuerst die Globe-Rotation,
+  // siehe updateGlobeStage() weiter unten.
+  globeVideo.classList.add('active');
 
-  const CAMERA = [
-    // 0: globe
-    { center: [10, 25],          zoom: 1.8,  pitch: 0,  bearing: 0,  duration: 0    },
-    // 1: Europe
-    { center: [8, 50],           zoom: 4.5,  pitch: 25, bearing: -5, duration: 3500 },
-    // 2: Bremen overview — all pins visible
-    { center: [8.882, 53.0755],  zoom: 12.2, pitch: 48, bearing: -8, duration: 4000 },
-    // 3: Bürgermeister Spitta Allee — close enough to see the building
-    // PERF: zoom 18.2 → 17.4 — halbiert grob die Detail-Tile-Last
-    { center: [8.871257448102298, 53.09093], zoom: 17.4, pitch: 55, bearing: 12, duration: 3200 },
-  ];
+  function globeDriverHeight() {
+    const el = document.getElementById('globe-driver');
+    return Math.max(1, el ? el.offsetHeight : 1);
+  }
 
-  // Mobile overrides
-  const CAMERA_MOBILE = {
-    2: { zoom: 11.0, pitch: 35 },
-    3: { zoom: 16.6, pitch: 48 },
-  };
+  let globeProgress = 0;
+  let globeDone = false; // true, sobald einmal fertig zu Zoom.mp4 übergeben wurde
+  let globeScrubbing = false; // true, während aktiv gescrubbt wird (scrollY > 0)
+  let globeScrubStartTime = 0; // Videozeitpunkt, an dem der aktuelle Scrub begonnen hat
+  let globeScrubTarget = 0; // wohin gescrubbt wird: 0 (Anfang) oder duration (Ende)
 
-  // ── Init map ──────────────────────────────────────────────────
-  const map = new mapboxgl.Map({
-    container:   'map',
-    style:       'mapbox://styles/mapbox/standard',
-    center:      CAMERA[0].center,
-    zoom:        CAMERA[0].zoom,
-    pitch:       CAMERA[0].pitch,
-    bearing:     CAMERA[0].bearing,
-    projection:  'globe',
-    interactive: false,
-    antialias:   false, // PERF: MSAA aus — großer FPS-Gewinn, minimal sichtbar
+  function beginGlobeScrub() {
+    // Ziel ist das NÄHERE Ende — steht der Loop z. B. bei Sekunde 3, geht's
+    // zurück zum Anfang statt quer durchs ganze Video zum Ende.
+    globeScrubStartTime = globeVideo.currentTime;
+    const duration = globeVideo.duration || 0;
+    const distToStart = globeScrubStartTime;
+    const distToEnd = duration - globeScrubStartTime;
+    globeScrubTarget = distToStart <= distToEnd ? 0 : duration;
+  }
+
+  function updateGlobeVideo() {
+    if (!globeVideo.duration) return;
+    // Nicht von 0 aus scrubben, sondern ab dem Zeitpunkt, an dem sich das
+    // Video GERADE befand, als das Scrollen losging (während des freien
+    // Loops könnte es überall stehen) — sonst würde das Video beim ersten
+    // Scroll-Pixel unschön zurück-/vorspringen. Gescrubbt wird außerdem
+    // immer zum NÄHEREN Ende hin (Anfang oder Ende des Videos), damit die
+    // feste Scroll-Distanz nie einen größeren Zeitabschnitt abdecken muss
+    // als nötig — siehe beginGlobeScrub().
+    globeVideo.currentTime = globeScrubStartTime + globeProgress * (globeScrubTarget - globeScrubStartTime);
+  }
+  // Sicherheitsnetz wie bei zoomVideo: falls Metadaten erst nach dem
+  // ersten Scroll eintreffen, hier nachträglich Start/Ziel korrekt setzen
+  // (ohne Dauer wäre globeScrubTarget beim ersten Aufruf noch falsch) und
+  // die Scrub-Position anwenden.
+  globeVideo.addEventListener('loadedmetadata', () => {
+    if (window.scrollY > 0 && globeProgress < 1) {
+      if (globeScrubbing) beginGlobeScrub();
+      updateGlobeVideo();
+    }
   });
 
-  // PERF: 3D-Gebäude erst aktivieren, wenn die Kamera nah genug ist.
-  // Auf dem Globus / in Europa-Zoom rendert der Standard-Style sie sonst
-  // umsonst mit und lädt die schweren 3D-Tiles schon beim ersten Frame.
-  let want3D = false;
-  function set3DObjects(on) {
-    want3D = on;
-    if (map.isStyleLoaded()) {
-      map.setConfigProperty('basemap', 'show3dObjects', on);
+  function updateGlobeStage() {
+    globeProgress = Math.max(0, Math.min(1, window.scrollY / globeDriverHeight()));
+
+    if (globeProgress < 1) {
+      if (globeDone) {
+        // Wieder zurück in die Globe-Phase gescrollt: Zoom-Video wieder
+        // ausblenden, Globe übernimmt erneut.
+        globeDone = false;
+        zoomVideo.classList.remove('active');
+      }
+      globeVideo.classList.add('active');
+      if (window.scrollY <= 0) {
+        // Ruhezustand vor dem ersten Scroll: Weltkugel dreht sich frei weiter.
+        globeScrubbing = false;
+        if (globeVideo.paused) globeVideo.play().catch(() => {});
+      } else {
+        if (!globeScrubbing) {
+          // Erster Scroll-Frame dieser Scrub-Session: aktuellen Zeitpunkt
+          // als Startpunkt festhalten, statt beim Scrubben auf Basis der
+          // Scroll-Position von vorne (Sekunde 0) zu beginnen.
+          beginGlobeScrub();
+          globeScrubbing = true;
+        }
+        if (!globeVideo.paused) globeVideo.pause();
+        updateGlobeVideo();
+      }
+    } else if (!globeDone) {
+      globeDone = true;
+      globeScrubbing = false;
+      if (!globeVideo.paused) globeVideo.pause();
+      globeVideo.classList.remove('active');
+      zoomVideo.classList.add('active');
     }
   }
 
-  map.on('style.load', () => {
-    // Standard style: night lighting preset keeps the dark cinematic look
-    map.setConfigProperty('basemap', 'lightPreset', 'night');
-    map.setConfigProperty('basemap', 'show3dObjects', want3D); // PERF: startet aus
-    map.setConfigProperty('basemap', 'showPointOfInterestLabels', false);
-    map.setConfigProperty('basemap', 'showTransitLabels', false);
+  const propertyCard = document.getElementById('card-3');
 
-    map.setFog({
-      'color':          'rgb(6, 10, 26)',
-      'high-color':     'rgb(8, 28, 90)',
-      'horizon-blend':  0.022,
-      'space-color':    'rgb(1, 1, 8)',
-      'star-intensity': 0.5, // PERF: 1.0 → 0.5, kaum sichtbarer Unterschied
-    });
-  });
+  // Die Karte hängt NICHT mehr am Video-Wechsel: sie soll schon "kurz
+  // vorher" (CARD_LEAD) anfangen einzufliegen und genau dann fertig
+  // eingerastet sein, wenn bei zoomProgress=1 der Snap passiert und
+  // Orbit.mp4 startet. Video-Crossfade und Karte laufen also parallel,
+  // aber mit einem kleinen Vorlauf für die Karte.
+  const CARD_LEAD = 0.9;
 
-  // ── DOM refs ──────────────────────────────────────────────────
-  const locationLabel  = document.getElementById('location-label');
-  const overviewHint   = document.getElementById('overview-hint');
+  function enterOrbit() {
+    if (inOrbit) return;
+    inOrbit = true;
+    orbitVideo.classList.add('active');
+    zoomVideo.classList.remove('active');
+    orbitVideo.play().catch(() => {});
+  }
+
+  function exitOrbit() {
+    if (!inOrbit) return;
+    inOrbit = false;
+    orbitVideo.classList.remove('active');
+    // Nur zoomVideo einblenden, wenn wir noch in dessen Phase sind — bei
+    // einem schnellen Sprung/Scroll direkt von Orbit zurück auf ganz oben
+    // (globeDone bereits false) übernimmt stattdessen die Globe-Phase
+    // selbst die Sichtbarkeit, sonst wären kurz beide Videos "active".
+    if (globeDone) zoomVideo.classList.add('active');
+    orbitVideo.pause();
+    // Loop zurücksetzen, damit er beim nächsten Reinscrollen wieder
+    // bei Sekunde 0 startet statt an der Stelle weiterzulaufen, an
+    // der er verlassen wurde.
+    orbitVideo.currentTime = 0;
+  }
+
+  function updateHeroVideo() {
+    if (!zoomVideo.duration) return;
+    zoomVideo.currentTime = zoomProgress * zoomVideo.duration;
+  }
+
+  // ── DOM refs ─────────────────────────────────────────────────────
+  const locationLabel = document.getElementById('location-label');
   const progress       = document.getElementById('progress');
   const progressDots   = document.querySelectorAll('.progress-dot');
-  const scrollHint     = document.getElementById('scroll-hint');
-  const buildingPanel  = document.getElementById('building-panel');
-  const buildingImgEl  = document.getElementById('building-img-el');
-  const buildingLabel  = document.getElementById('building-img-label');
-  const filmGrain      = document.getElementById('film-grain');
+  const scrollHint      = document.getElementById('scroll-hint');
+  const filmGrain        = document.getElementById('film-grain');
 
-  // ── State ─────────────────────────────────────────────────────
-  let currentStep  = 0;
-  let globeTimer   = null;
-  let globeBearing = 0;
-  let rafId        = null;
+  // ── Scroll-scrubbte Hero-Strecke ──────────────────────────────────
+  // zoomStepsY: Scroll-Distanz der 4 Steps (0–3) — hier wird Zoom.mp4
+  // gescrubbt; am Ende (zoomProgress=1) "snapt" die Seite exakt dorthin
+  // und Orbit.mp4 übernimmt.
+  // Danach folgt noch der 150vh-Puffer (Teil von #scroll-driver), in dem
+  // die Karte sichtbar bleibt, bevor sie beim Übergang in #content-section
+  // wieder verschwindet. Orbit.mp4 selbst läuft davon unabhängig einfach
+  // im Hintergrund weiter, egal wie tief man in die Inhalte scrollt.
+  let zoomProgress = 0;
+  let snapArmed = true; // verhindert, dass der Snap sich bei jedem kleinen Ruckler erneut auslöst
 
-  const OVERVIEW_STEPS = new Set([2]);
-  const PROP_STEPS     = { 3: PROPERTIES[0] };
-
-  const PREVIEW_PROPERTIES = [
-    { coords: [8.9410, 53.0710], label: 'Wilseder Berg Str 7',       targetId: 'preview-card-1' },
-    { coords: [8.9350, 53.0650], label: 'Visselhöverder Str 10–18',   targetId: 'preview-card-2' },
-    { coords: [8.9080, 53.0715], label: 'Adam Stegerwald 34',         targetId: 'preview-card-3' },
-    { coords: [8.9150, 53.0680], label: 'Ferdinand Lassalle Str 18',  targetId: 'preview-card-4' },
-  ];
-
-  // ── Markers ───────────────────────────────────────────────────
-  const markerEls = [];
-
-  map.on('load', () => {
-    PROPERTIES.forEach((prop) => {
-      const el = document.createElement('div');
-      el.className = 'map-marker';
-      el.innerHTML = `
-        <div class="marker-ring">
-          <div class="marker-pulse"></div>
-          <div class="marker-dot"></div>
-          <div class="marker-stem"></div>
-        </div>
-        <div class="marker-tooltip">${prop.label}</div>
-      `;
-
-      el.addEventListener('click', () => {
-        // Scroll to the property's dedicated step
-        document.getElementById(`step-${prop.step}`).scrollIntoView({ behavior: 'smooth' });
-      });
-
-      new mapboxgl.Marker({ element: el, anchor: 'center' })
-        .setLngLat(prop.coords)
-        .addTo(map);
-
-      markerEls.push(el);
-    });
-
-    // Preview pins as a native GL layer — always perfectly anchored
-    map.addSource('preview-pins', {
-      type: 'geojson',
-      data: {
-        type: 'FeatureCollection',
-        features: PREVIEW_PROPERTIES.map((p, i) => ({
-          type: 'Feature',
-          id: i,
-          properties: { label: p.label, targetId: p.targetId },
-          geometry: { type: 'Point', coordinates: p.coords },
-        })),
-      },
-    });
-
-    map.addLayer({
-      id: 'preview-circles',
-      type: 'circle',
-      source: 'preview-pins',
-      paint: {
-        'circle-radius': ['case', ['boolean', ['feature-state', 'hover'], false], 7, 5],
-        'circle-color': ['case', ['boolean', ['feature-state', 'hover'], false],
-          'rgba(200,169,110,0.75)', 'rgba(160,175,200,0.55)'],
-        'circle-stroke-width': 1.5,
-        'circle-stroke-color': ['case', ['boolean', ['feature-state', 'hover'], false],
-          'rgba(200,169,110,0.5)', 'rgba(160,175,200,0.35)'],
-        'circle-opacity': 0,
-        'circle-stroke-opacity': 0,
-        'circle-opacity-transition': { duration: 600 },
-        'circle-stroke-opacity-transition': { duration: 600 },
-      },
-    });
-
-    const previewPopup = new mapboxgl.Popup({
-      closeButton: false, closeOnClick: false,
-      className: 'preview-popup', anchor: 'bottom', offset: 12,
-    });
-
-    let hoveredPreviewId = null;
-
-    map.on('mousemove', 'preview-circles', (e) => {
-      if (!e.features.length) return;
-      map.getCanvas().style.cursor = 'pointer';
-      const feat = e.features[0];
-      if (hoveredPreviewId !== feat.id) {
-        if (hoveredPreviewId !== null)
-          map.setFeatureState({ source: 'preview-pins', id: hoveredPreviewId }, { hover: false });
-        hoveredPreviewId = feat.id;
-        map.setFeatureState({ source: 'preview-pins', id: hoveredPreviewId }, { hover: true });
-      }
-      previewPopup.setLngLat(feat.geometry.coordinates)
-        .setHTML(feat.properties.label).addTo(map);
-    });
-
-    map.on('mouseleave', 'preview-circles', () => {
-      map.getCanvas().style.cursor = '';
-      if (hoveredPreviewId !== null) {
-        map.setFeatureState({ source: 'preview-pins', id: hoveredPreviewId }, { hover: false });
-        hoveredPreviewId = null;
-      }
-      previewPopup.remove();
-    });
-
-    map.on('click', 'preview-circles', (e) => {
-      if (!e.features.length) return;
-      const target = document.getElementById(e.features[0].properties.targetId);
-      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    });
-
-    // Building highlight — gold extrusion over the active property
-    // slot:'top' ensures it renders above Standard style's 3D building mesh
-    map.addLayer({
-      id: 'building-highlight',
-      slot: 'top',
-      type: 'fill-extrusion',
-      source: 'composite',
-      'source-layer': 'building',
-      filter: ['==', 1, 0], // nothing highlighted initially
-      paint: {
-        'fill-extrusion-color': '#f0c040',
-        'fill-extrusion-height': ['+', ['max', ['coalesce', ['get', 'height'], 0], 9], 4],
-        'fill-extrusion-base': ['coalesce', ['get', 'min_height'], 0],
-        'fill-extrusion-opacity': 1.0,
-        'fill-extrusion-vertical-gradient': false,
-        'fill-extrusion-opacity-transition': { duration: 800 },
-      },
-    });
-  });
-
-  // ── PERF: Ziel-Tiles im Hintergrund vorladen ──────────────────
-  // Nach dem ersten "idle" (Globus fertig geladen) besucht eine
-  // unsichtbare Mini-Map die Ziel-Kamera von Step 3. Die Tiles landen
-  // im Browser-Cache und sind beim echten Reinzoomen sofort da.
-  map.once('idle', () => {
-    // Bei Datensparmodus oder sehr langsamer Verbindung überspringen
-    const conn = navigator.connection;
-    if (conn && (conn.saveData || /(^|-)2g/.test(conn.effectiveType || ''))) return;
-
-    const holder = document.createElement('div');
-    holder.style.cssText = 'position:fixed;left:-9999px;top:0;width:512px;height:512px;visibility:hidden;';
-    document.body.appendChild(holder);
-
-    const target = CAMERA[CAMERA.length - 1];
-    const prewarm = new mapboxgl.Map({
-      container:   holder,
-      style:       'mapbox://styles/mapbox/standard',
-      center:      target.center,
-      zoom:        target.zoom,
-      pitch:       target.pitch,
-      bearing:     target.bearing,
-      interactive: false,
-      antialias:   false,
-    });
-
-    // 3D-Gebäude aktivieren, damit auch die schweren Gebäude-Tiles
-    // fürs Ziel gecacht werden
-    prewarm.on('style.load', () => {
-      prewarm.setConfigProperty('basemap', 'show3dObjects', true);
-    });
-
-    let cleaned = false;
-    const cleanup = () => {
-      if (cleaned) return;
-      cleaned = true;
-      try { prewarm.remove(); } catch (e) {}
-      holder.remove();
-    };
-    prewarm.once('idle', cleanup);
-    setTimeout(cleanup, 15000); // Sicherheitsnetz
-  });
-
-  // ── Scroll-scrubbed camera ────────────────────────────────────
-  function resolvedCamera(idx) {
-    const i    = Math.max(0, Math.min(idx, CAMERA.length - 1));
-    const base = CAMERA[i];
-    const mob  = isMobile() && CAMERA_MOBILE[i] ? CAMERA_MOBILE[i] : {};
-    const c    = { ...base, ...mob };
-    if (i === 0) c.bearing = globeBearing;
-    return c;
+  function scrollDriverTopY() {
+    // Absolute Dokument-Y-Position, an der #scroll-driver beginnt — seit
+    // dem Globe-Intro (#globe-driver davor) nicht mehr zwangsläufig 0.
+    return document.getElementById('scroll-driver').offsetTop;
   }
 
-  function stepPadding(idx) {
-    if (!(idx in PROP_STEPS)) return { left: 0, right: 0, top: 0, bottom: 0 };
-    // card is 340px + 2.5rem (40px) left margin → push map right by ~420px
-    return isMobile()
-      ? { left: 0, right: 0, top: 0, bottom: Math.round(window.innerHeight * 0.45) }
-      : { left: Math.min(500, Math.round(window.innerWidth * 0.42)), right: 0, top: 0, bottom: 310 };
+  function zoomStepsHeight() {
+    // Reine Scroll-Distanz der 4 Steps (0–3), OHNE den Globe-Intro-Versatz.
+    let h = 0;
+    document.querySelectorAll('#scroll-driver .step').forEach(s => { h += s.offsetHeight; });
+    return Math.max(1, h);
   }
 
-  function lerp(a, b, t) { return a + (b - a) * t; }
-  function smoothstep(t)  { return t * t * (3 - 2 * t); }
-
-  function lerpCamera() {
-    const raw     = window.scrollY / window.innerHeight;
-
-    const fromIdx = Math.min(Math.floor(raw), CAMERA.length - 1);
-    const toIdx   = Math.min(fromIdx + 1,     CAMERA.length - 1);
-    const t       = smoothstep(Math.max(0, Math.min(1, raw - fromIdx)));
-
-    const from    = resolvedCamera(fromIdx);
-    const to      = resolvedCamera(toIdx);
-    const fromPad = stepPadding(fromIdx);
-    const toPad   = stepPadding(toIdx);
-
-    map.jumpTo({
-      center:  [ lerp(from.center[0], to.center[0], t),
-                 lerp(from.center[1], to.center[1], t) ],
-      zoom:    lerp(from.zoom,    to.zoom,    t),
-      pitch:   lerp(from.pitch,   to.pitch,   t),
-      bearing: lerp(from.bearing, to.bearing, t),
-      padding: {
-        left:   lerp(fromPad.left,   toPad.left,   t),
-        right:  lerp(fromPad.right,  toPad.right,  t),
-        top:    lerp(fromPad.top,    toPad.top,    t),
-        bottom: lerp(fromPad.bottom, toPad.bottom, t),
-      },
-    });
+  function zoomStepsY() {
+    // Absolute Dokument-Y-Position, an der die 4 Steps enden (= Beginn
+    // des Puffers).
+    return scrollDriverTopY() + zoomStepsHeight();
   }
 
-  // ── Map → content fade ────────────────────────────────────────
-  const mapFadeEl      = document.getElementById('map-fade-overlay');
-  const contentEl      = document.getElementById('content-section');
-
-  function updateMapFade() {
-    const rect      = contentEl.getBoundingClientRect();
-    const vh        = window.innerHeight;
-    const fadeStart = vh * 1.4;
-    const fadeEnd   = vh * -0.15;
-    const progress  = 1 - Math.max(0, Math.min(1, (rect.top - fadeEnd) / (fadeStart - fadeEnd)));
-
-    mapFadeEl.style.opacity = progress;
-
-    buildingPanel.style.opacity = Math.max(0, 1 - progress * 2.2);
+  function contentPeekY() {
+    // Absolute Dokument-Y-Position, ab der die Oberkante von
+    // #content-section erstmals am unteren Viewport-Rand auftaucht
+    // (Block im normalen Fluss, kein position:fixed). Wichtig: der
+    // Puffer MUSS größer als die Viewport-Höhe sein, sonst würde dieser
+    // Wert kleiner als zoomStepsY() — d.h. der Inhalt würde optisch
+    // schon durchscheinen, bevor der Zoom überhaupt fertig ist. Das
+    // Math.max() ist ein zusätzliches Sicherheitsnetz für sehr kleine
+    // Viewports.
+    const driver = document.getElementById('scroll-driver');
+    return Math.max(zoomStepsY(), driver.offsetTop + driver.offsetHeight - window.innerHeight);
   }
 
-  function scheduleCameraUpdate() {
-    if (rafId) return;
-    rafId = requestAnimationFrame(() => {
-      const raw = window.scrollY / window.innerHeight;
-      if (raw < 0.1) startGlobeRotation();
-      lerpCamera();
-      updateMapFade();
-      rafId = null;
-    });
-  }
+  function updateHero() {
+    updateGlobeStage();
 
-  window.addEventListener('scroll', scheduleCameraUpdate, { passive: true });
-  window.addEventListener('resize', scheduleCameraUpdate, { passive: true });
+    const driverTop = scrollDriverTopY();
+    zoomProgress = Math.max(0, Math.min(1, (window.scrollY - driverTop) / zoomStepsHeight()));
 
-  // ── Update UI for a given step ────────────────────────────────
-  function applyStep(idx) {
-    currentStep = idx;
+    updateHeroVideo();
 
-    // PERF: 3D-Gebäude erst laden/rendern, wenn wir nah genug dran sind
-    set3DObjects(idx >= 2);
+    const pastBuffer = window.scrollY >= contentPeekY() - 2;
 
-    // PERF: Film-Grain nur auf dem Globus animieren — sonst statisch
-    filmGrain.classList.toggle('paused', idx !== 0);
+    // pastBuffer blendet nur die Karte aus — das Orbit-Video selbst läuft
+    // im Hintergrund einfach weiter, auch wenn man tief in die Inhalte
+    // reinscrollt. Es wird nur verlassen, wenn man wieder nach oben aus
+    // der Zoom-Strecke zurückscrollt (zoomProgress < 0.98).
+    propertyCard.classList.toggle('visible', zoomProgress >= CARD_LEAD && !pastBuffer);
 
-    // Progress dots
+    if (zoomProgress >= 1) {
+      enterOrbit();
+    } else if (zoomProgress < 0.98) {
+      exitOrbit();
+    }
+
+    // Progress dots — reflect position within the scrub region
+    const idx = Math.min(3, Math.floor(zoomProgress * 4));
     progressDots.forEach((d, i) => d.classList.toggle('active', i === idx));
-    progress.classList.toggle('visible', idx >= 1);
+    progress.classList.toggle('visible', zoomProgress > 0.01 && zoomProgress < 1);
 
-    // Scroll hint: hide after first scroll
-    scrollHint.classList.toggle('hidden', idx > 0);
+    // Scroll hint: hide after first scroll (auch schon während der
+    // Globe-Scrub-Phase, nicht erst sobald Zoom.mp4 übernimmt)
+    scrollHint.classList.toggle('hidden', window.scrollY > 1);
 
-    // Location label: show only in overview steps
-    locationLabel.classList.toggle('visible', OVERVIEW_STEPS.has(idx));
+    // Location label: brief window early in the zoom (globe/overview feel)
+    locationLabel.classList.toggle('visible', zoomProgress > 0.03 && zoomProgress < 0.35);
 
-    // Overview hint: show in overview steps
-    overviewHint.classList.toggle('visible', OVERVIEW_STEPS.has(idx));
+    // Cinematic vignette/letterbox/grain: only right at the very start
+    const isIntro = zoomProgress < 0.12;
+    document.getElementById('globe-vignette').classList.toggle('hidden', !isIntro);
+    document.getElementById('lb-top').classList.toggle('visible', isIntro);
+    document.getElementById('lb-bottom').classList.toggle('visible', isIntro);
+    filmGrain.classList.toggle('paused', !isIntro);
 
-    // Markers
-    const isFeatured = idx in PROP_STEPS;
-    markerEls.forEach((el) => {
-      // Only show when fully zoomed in — avoids the dot visibly travelling
-      // across the screen during the overview → building camera animation
-      el.classList.toggle('visible',  isFeatured);
-      el.classList.toggle('overview', false);
-      el.classList.toggle('featured', isFeatured);
-    });
-
-    // Preview pins (GL layer): visible from step 2 onward
-    if (map.getLayer('preview-circles')) {
-      const op = idx >= 2 ? 1 : 0;
-      map.setPaintProperty('preview-circles', 'circle-opacity', op);
-      map.setPaintProperty('preview-circles', 'circle-stroke-opacity', op);
-    }
-
-    // CTA: show on final property step
-    const ctaEl = document.getElementById('all-props-cta');
-    if (ctaEl) ctaEl.classList.toggle('visible', idx === 3);
-
-    // Cards
-    hideAllCards();
-    if (PROP_STEPS[idx]) {
-      document.getElementById(PROP_STEPS[idx].id).classList.add('visible');
-    }
-
-    // Building highlight on map
-    const prop = PROP_STEPS[idx];
-    if (map.getLayer('building-highlight')) {
-      if (prop) {
-        const [lng, lat] = prop.coords;
-        map.setFilter('building-highlight', ['<', ['distance', {
-          type: 'Point', coordinates: [lng, lat],
-        }], 30]);
-      } else {
-        map.setFilter('building-highlight', ['==', 1, 0]);
-      }
-    }
-
-    // Vignette & letterbox: visible only on globe step
-    const isGlobe = idx === 0;
-    document.getElementById('globe-vignette').classList.toggle('hidden', !isGlobe);
-    document.getElementById('lb-top').classList.toggle('visible', isGlobe);
-    document.getElementById('lb-bottom').classList.toggle('visible', isGlobe);
+    // Re-armen, sobald man sich wieder deutlich vom Ende entfernt hat
+    if (zoomProgress < 0.9) snapArmed = true;
   }
 
-  function hideAllCards() {
-    document.querySelectorAll('.property-card').forEach(c => c.classList.remove('visible'));
+  let heroRaf = null;
+  function scheduleHeroUpdate() {
+    if (heroRaf) return;
+    heroRaf = requestAnimationFrame(() => { updateHero(); heroRaf = null; });
   }
+  window.addEventListener('scroll', scheduleHeroUpdate, { passive: true });
+  window.addEventListener('resize', scheduleHeroUpdate, { passive: true });
+  updateHero();
 
-  // ── IntersectionObserver ──────────────────────────────────────
-  const steps = document.querySelectorAll('.step');
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const idx = parseInt(entry.target.dataset.step);
-        if (idx !== currentStep) applyStep(idx);
+  // ── Snap ans Ende des Zoom-Videos ─────────────────────────────────
+  // Kurz vor Schluss (zoomProgress zwischen 0.9 und 1) lässt der Nutzer
+  // meist los, bevor exakt Sekunde 20 erreicht ist. Nach einer kurzen
+  // Scroll-Pause "snapt" die Seite dann sanft ans exakte Ende, sodass
+  // Orbit + Karte zuverlässig gemeinsam einrasten statt an einem
+  // Zwischenbild hängen zu bleiben.
+  let snapTimer = null;
+  window.addEventListener('scroll', () => {
+    clearTimeout(snapTimer);
+    snapTimer = setTimeout(() => {
+      if (snapArmed && zoomProgress >= 0.9 && zoomProgress < 1) {
+        snapArmed = false;
+        window.scrollTo({ top: zoomStepsY(), behavior: 'smooth' });
       }
-    });
-  }, { threshold: 0.5 });
+    }, 140);
+  }, { passive: true });
 
-  steps.forEach((el, i) => {
-    el.dataset.step = i;
-    observer.observe(el);
-  });
-
-  // ── Progress dot clicks ───────────────────────────────────────
+  // ── Progress dot clicks ──────────────────────────────────────────
   progressDots.forEach(dot => {
     dot.addEventListener('click', () => {
-      const idx = parseInt(dot.dataset.step);
-      document.getElementById(`step-${idx}`).scrollIntoView({ behavior: 'smooth' });
+      const idx = parseInt(dot.dataset.step, 10);
+      window.scrollTo({ top: scrollDriverTopY() + (idx / 4) * zoomStepsHeight() + 20, behavior: 'smooth' });
     });
-  });
-
-  // ── Globe auto-rotation ───────────────────────────────────────
-  function startGlobeRotation() {
-    if (globeTimer) return;
-    globeTimer = setInterval(() => {
-      const raw = window.scrollY / window.innerHeight;
-      if (raw > 0.25) { stopGlobeRotation(); return; }
-      globeBearing += 0.035;
-      scheduleCameraUpdate();
-    }, 16);
-  }
-
-  function stopGlobeRotation() {
-    clearInterval(globeTimer);
-    globeTimer = null;
-  }
-
-  map.on('load', () => {
-    setTimeout(startGlobeRotation, 1600);
   });
 
   // ── Burger menu ───────────────────────────────────────────────
@@ -3103,10 +2721,12 @@
   const menuOverlay = document.getElementById('menu-overlay');
   const menuCloseBtn = document.getElementById('menu-close-btn');
 
+
   function closeMenu() {
     menuOverlay.classList.remove('open');
     menuBtn.classList.remove('open');
     menuBtn.setAttribute('aria-label', 'Menü öffnen');
+    document.body.classList.remove('menu-open');
     document.body.style.overflow = '';
   }
 
@@ -3114,6 +2734,7 @@
     const isOpen = menuOverlay.classList.toggle('open');
     menuBtn.classList.toggle('open', isOpen);
     menuBtn.setAttribute('aria-label', isOpen ? 'Menü schließen' : 'Menü öffnen');
+    document.body.classList.toggle('menu-open', isOpen);
     document.body.style.overflow = isOpen ? 'hidden' : '';
   });
 
@@ -3134,14 +2755,13 @@
   }
 
   // ── Fixed UI: hide when content section scrolls into view ─────
+  // Die Objekt-Karte (.property-card) bleibt bewusst ausgenommen — ihre
+  // Sichtbarkeit wird komplett über enterOrbit()/exitOrbit() gesteuert
+  // (zoomProgress + pastBuffer), nicht über diesen Observer.
   const fixedEls = [
     document.getElementById('progress'),
     document.getElementById('location-label'),
-    document.getElementById('overview-hint'),
     document.getElementById('scroll-hint'),
-    document.getElementById('all-props-cta'),
-    ...document.querySelectorAll('.map-marker'),
-    ...document.querySelectorAll('.property-card'),
   ];
 
   const contentObserver = new IntersectionObserver((entries) => {

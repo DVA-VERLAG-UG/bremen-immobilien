@@ -1,2 +1,9 @@
 config.js
 .DS_Store
+
+# Rohe 4K-Original-Exporte aus Google Earth Studio — riesig (bis zu
+# mehreren hundert MB), gehören nicht ins Repo. Nur die komprimierten
+# *-web.mp4-Versionen (video/zoom-web.mp4 etc.) werden committed.
+video/Zoom.mp4
+video/Orbit.mp4
+video/Globe Turning.mp4
