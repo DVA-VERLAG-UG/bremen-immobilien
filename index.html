@@ -254,6 +254,66 @@
     .slider-btn.prev { left: 12px; }
     .slider-btn.next { right: 12px; }
 
+    /* ── HAUS-MARKER (nur kurz am Zoom-Ende/Orbit-Start) ───────────────
+       Feste Position, per Pixel-Raster auf dem Standbild kalibriert —
+       gilt nur für diesen einen Frame (Zoom.mp4s letzter = Orbit.mp4s
+       erster Frame), siehe JS für das kurze Sichtbarkeitsfenster. */
+    #hero-marker {
+      position: fixed;
+      left: 48.96%;
+      top: 49.54%;
+      transform: translate(-50%, -50%);
+      z-index: 12;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.6s ease;
+    }
+    #hero-marker.visible { opacity: 1; }
+
+    #hero-marker .marker-dot-wrap {
+      position: relative;
+      width: 14px;
+      height: 14px;
+    }
+    #hero-marker .marker-ring {
+      position: absolute;
+      inset: 0;
+      border: 1.5px solid var(--gold);
+      border-radius: 50%;
+      animation: markerPulse 1.8s ease-out infinite;
+    }
+    #hero-marker .marker-dot {
+      position: absolute;
+      inset: 3px;
+      background: var(--gold);
+      border-radius: 50%;
+      box-shadow: 0 0 8px rgba(200,169,110,0.9);
+    }
+    @keyframes markerPulse {
+      0%   { transform: scale(1);   opacity: 0.9; }
+      100% { transform: scale(2.6); opacity: 0; }
+    }
+
+    #hero-marker .marker-label {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #fff;
+      background: rgba(8,8,14,0.6);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border: 1px solid rgba(200,169,110,0.35);
+      border-radius: 3px;
+      padding: 0.35rem 0.6rem;
+      white-space: nowrap;
+      text-shadow: none;
+    }
+
     /* dot indicators — sit just above the text overlay */
     .slider-dots {
       position: absolute;
@@ -441,6 +501,85 @@
       background: var(--gold);
       border-color: var(--gold);
       transform: scale(1.5);
+    }
+
+    /* ── ORBIT-STEUERUNG (Tempo-Regler + Pause) ─────────────── */
+    #orbit-controls {
+      position: fixed;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(8px);
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      padding: 0.6rem 1.1rem;
+      border: 1px solid rgba(200,169,110,0.22);
+      border-radius: 999px;
+      background: rgba(8,8,14,0.55);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    #orbit-controls.visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    body.menu-open #orbit-controls.visible {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #orbit-pause-btn {
+      width: 30px;
+      height: 30px;
+      flex-shrink: 0;
+      border: 1px solid rgba(200,169,110,0.45);
+      background: rgba(8,8,14,0.4);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    #orbit-pause-btn:hover { background: rgba(200,169,110,0.2); }
+    #orbit-pause-btn svg { width: 12px; height: 12px; fill: var(--gold); }
+    #orbit-pause-btn .icon-play { display: none; }
+    #orbit-pause-btn.paused .icon-pause { display: none; }
+    #orbit-pause-btn.paused .icon-play { display: block; }
+
+    #orbit-seek {
+      width: 150px;
+      accent-color: var(--gold);
+      cursor: pointer;
+    }
+
+    #orbit-time-label {
+      width: 5.2em;
+      font-variant-numeric: tabular-nums;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.02em;
+      color: rgba(255,255,255,0.6);
+      text-align: right;
+    }
+
+    @media (max-width: 768px) {
+      /* Die Objekt-Karte wird hier zum Bottom-Sheet (max-height: 52vh,
+         siehe .property-card weiter unten) — die Steuerung muss darüber
+         sitzen, sonst überdeckt die Karte sie und blockiert die Klicks. */
+      #orbit-controls { bottom: calc(52vh + 1rem); }
+    }
+
+    @media (max-width: 580px) {
+      #orbit-controls { gap: 0.6rem; padding: 0.5rem 0.9rem; }
+      #orbit-seek { width: 100px; }
     }
 
     /* ── NAV SCRIM (Lesbarkeit über dem Video) ──────────────── */
@@ -2384,11 +2523,30 @@
   <p class="label-sub" data-i18n="home.locationSub">Freie Hansestadt · Deutschland</p>
 </div>
 
+<!-- ── HAUS-MARKER ────────────────────────────────────────────── -->
+<div id="hero-marker">
+  <div class="marker-dot-wrap">
+    <div class="marker-ring"></div>
+    <div class="marker-dot"></div>
+  </div>
+  <span class="marker-label" data-i18n="home.markerLabel">Diese Immobilie</span>
+</div>
+
 <div id="progress">
   <div class="progress-dot" data-step="0"></div>
   <div class="progress-dot" data-step="1"></div>
   <div class="progress-dot" data-step="2"></div>
   <div class="progress-dot" data-step="3"></div>
+</div>
+
+<!-- ── ORBIT-STEUERUNG (nur sichtbar, solange Orbit.mp4 läuft) ── -->
+<div id="orbit-controls">
+  <button type="button" id="orbit-pause-btn" aria-label="Pausieren" data-i18n-aria="orbit.pause">
+    <svg class="icon-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+    <svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5l11 7-11 7z"/></svg>
+  </button>
+  <input type="range" id="orbit-seek" min="0" max="1" step="0.001" value="0" aria-label="Videofortschritt" data-i18n-aria="orbit.seek" />
+  <span id="orbit-time-label">0:00 / 0:00</span>
 </div>
 
 <!-- ── PROPERTY CARD ─────────────────────────────────────────── -->
@@ -2558,12 +2716,130 @@
   // aber mit einem kleinen Vorlauf für die Karte.
   const CARD_LEAD = 0.9;
 
+  // ── Orbit-Steuerung: Fortschritts-Regler (Spulen) + Pause, Auto-Reset
+  // nach 5s Inaktivität ──────────────────────────────────────────────
+  const orbitControls   = document.getElementById('orbit-controls');
+  const orbitSeekSlider = document.getElementById('orbit-seek');
+  const orbitTimeLabel  = document.getElementById('orbit-time-label');
+  const orbitPauseBtn   = document.getElementById('orbit-pause-btn');
+
+  let orbitPausedByUser = false;   // manuell über den Pause-Button pausiert
+  let orbitDragging     = false;   // Regler wird gerade per Hand bewegt
+  let orbitInactivityTimer = null;
+  const ORBIT_RESET_DELAY = 5000;
+
+  function formatTime(t) {
+    if (!isFinite(t)) return '0:00';
+    const m = Math.floor(t / 60);
+    const s = Math.floor(t % 60);
+    return m + ':' + String(s).padStart(2, '0');
+  }
+
+  function updateOrbitTimeLabel() {
+    orbitTimeLabel.textContent = formatTime(orbitVideo.currentTime) + ' / ' + formatTime(orbitVideo.duration || 0);
+  }
+
+  // Regler live mit der normalen Wiedergabe synchron halten (wie bei
+  // jedem Video-Player), außer während der Nutzer ihn gerade selbst zieht.
+  orbitVideo.addEventListener('timeupdate', () => {
+    if (orbitDragging || !orbitVideo.duration) return;
+    orbitSeekSlider.value = orbitVideo.currentTime / orbitVideo.duration;
+    updateOrbitTimeLabel();
+  });
+  orbitVideo.addEventListener('loadedmetadata', updateOrbitTimeLabel);
+
+  // ── Haus-Marker: nur kurz am Übergang Zoom-Ende → Orbit-Start ──────
+  // Zoom.mp4s letzter Frame und Orbit.mp4s erster Frame sind identisch,
+  // daher reicht eine feste Position (siehe CSS #hero-marker) — nur in
+  // diesem kurzen Fenster sichtbar, danach (Kamera zieht sich zurück)
+  // wieder ausgeblendet.
+  const heroMarker = document.getElementById('hero-marker');
+  const MARKER_WINDOW = 2.5;
+
+  function updateHeroMarkerVisibility() {
+    heroMarker.classList.toggle(
+      'visible',
+      zoomProgress >= 1 && inOrbit && orbitVideo.currentTime <= MARKER_WINDOW
+    );
+  }
+  // Per timeupdate statt nur per Scroll auslösen: sonst würde der Marker
+  // sichtbar bleiben, wenn man beim Erreichen des Orbits einfach stehen
+  // bleibt (kein weiterer Scroll-Event, der ihn nach MARKER_WINDOW wieder
+  // ausblendet) — und er soll bei jedem Loop-Durchlauf erneut kurz
+  // aufblitzen, sobald currentTime wieder bei 0 startet.
+  orbitVideo.addEventListener('timeupdate', updateHeroMarkerVisibility);
+
+  function armOrbitInactivityTimer() {
+    clearTimeout(orbitInactivityTimer);
+    if (orbitPausedByUser) return; // solange pausiert, kein Auto-Reset
+    orbitInactivityTimer = setTimeout(() => {
+      // 5s nichts angefasst und nicht pausiert: von vorne beginnen,
+      // statt an einer manuell gewählten Stelle hängen zu bleiben.
+      orbitVideo.currentTime = 0;
+      orbitSeekSlider.value = 0;
+      updateOrbitTimeLabel();
+    }, ORBIT_RESET_DELAY);
+  }
+
+  function resetOrbitControls() {
+    // Beim Verlassen der Orbit-Phase (exitOrbit) auf sauberen Ausgangs-
+    // zustand zurücksetzen, damit ein erneuter Einstieg immer normal
+    // startet statt mit dem zuletzt gewählten Pause-Zustand.
+    clearTimeout(orbitInactivityTimer);
+    orbitPausedByUser = false;
+    orbitDragging = false;
+    orbitSeekSlider.value = 0;
+    updateOrbitTimeLabel();
+    orbitPauseBtn.classList.remove('paused');
+    orbitPauseBtn.setAttribute('aria-label', window.i18nText('orbit.pause', 'Pausieren'));
+  }
+
+  orbitSeekSlider.addEventListener('pointerdown', () => { orbitDragging = true; });
+  orbitSeekSlider.addEventListener('input', () => {
+    if (!orbitVideo.duration) return;
+    orbitVideo.currentTime = parseFloat(orbitSeekSlider.value) * orbitVideo.duration;
+    updateOrbitTimeLabel();
+    armOrbitInactivityTimer();
+  });
+  function endOrbitDrag() {
+    if (!orbitDragging) return;
+    orbitDragging = false;
+    armOrbitInactivityTimer();
+  }
+  orbitSeekSlider.addEventListener('pointerup', endOrbitDrag);
+  orbitSeekSlider.addEventListener('pointercancel', endOrbitDrag);
+
+  orbitPauseBtn.addEventListener('click', () => {
+    orbitPausedByUser = !orbitPausedByUser;
+    orbitPauseBtn.classList.toggle('paused', orbitPausedByUser);
+    if (orbitPausedByUser) {
+      orbitVideo.pause();
+      orbitPauseBtn.setAttribute('aria-label', window.i18nText('orbit.play', 'Abspielen'));
+      clearTimeout(orbitInactivityTimer);
+    } else {
+      orbitVideo.play().catch(() => {});
+      orbitPauseBtn.setAttribute('aria-label', window.i18nText('orbit.pause', 'Pausieren'));
+      armOrbitInactivityTimer();
+    }
+  });
+
+  // i18n.js würde den statischen data-i18n-aria="orbit.pause" sonst bei
+  // jedem Sprachwechsel zurücksetzen, auch während pausiert — hier den
+  // aktuellen Pause-Zustand nach einem Sprachwechsel neu anwenden.
+  document.addEventListener('langchange', () => {
+    orbitPauseBtn.setAttribute(
+      'aria-label',
+      orbitPausedByUser ? window.i18nText('orbit.play', 'Abspielen') : window.i18nText('orbit.pause', 'Pausieren')
+    );
+  });
+
   function enterOrbit() {
     if (inOrbit) return;
     inOrbit = true;
     orbitVideo.classList.add('active');
     zoomVideo.classList.remove('active');
     orbitVideo.play().catch(() => {});
+    orbitControls.classList.add('visible');
   }
 
   function exitOrbit() {
@@ -2575,6 +2851,9 @@
     // (globeDone bereits false) übernimmt stattdessen die Globe-Phase
     // selbst die Sichtbarkeit, sonst wären kurz beide Videos "active".
     if (globeDone) zoomVideo.classList.add('active');
+    orbitControls.classList.remove('visible');
+    heroMarker.classList.remove('visible');
+    resetOrbitControls();
     orbitVideo.pause();
     // Loop zurücksetzen, damit er beim nächsten Reinscrollen wieder
     // bei Sekunde 0 startet statt an der Stelle weiterzulaufen, an
@@ -2658,6 +2937,7 @@
     } else if (zoomProgress < 0.98) {
       exitOrbit();
     }
+    updateHeroMarkerVisibility();
 
     // Progress dots — reflect position within the scrub region
     const idx = Math.min(3, Math.floor(zoomProgress * 4));
@@ -3000,6 +3280,10 @@
     'nav.menuOpen': 'Menüyü aç',
     'nav.menuClose': 'Menüyü kapat',
 
+    'orbit.pause': 'Duraklat',
+    'orbit.play': 'Oynat',
+    'orbit.seek': 'Videofortschritt',
+
     'listing.thumbFront': 'Ön Görünüm',
     'listing.thumbBack': 'Arka Görünüm',
     'listing.thumbFull': 'Genel Görünüm',
@@ -3086,6 +3370,7 @@
 
     'home.scroll': 'Kaydırın',
     'home.locationSub': 'Özgür Hansa Şehri · Almanya',
+    'home.markerLabel': 'Bu Gayrimenkul',
     'home.hintCount': '3 Emlak · Bremen',
     'home.hintAction': 'Detaylar için işaretçiye tıklayın',
 
