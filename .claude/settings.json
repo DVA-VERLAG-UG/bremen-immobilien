@@ -132,7 +132,23 @@
       "Bash(./venv/bin/python3 track_optflow.py)",
       "Bash(curl -s http://localhost:8811/video/orbit-track.json -o /dev/null -w \"%{http_code}\\\\n\")",
       "Bash(node test_simple_marker.mjs)",
-      "Bash(node test_blob.mjs)"
+      "Bash(node test_blob.mjs)",
+      "Bash(node run_seektest.mjs)",
+      "Bash(pkill -f run_seektest)",
+      "Bash(pkill -f \"node run_seektest\")",
+      "Bash(git fetch *)",
+      "Bash(git revert *)",
+      "Bash(ffmpeg -y -i video/Zoom.mp4 -vf \"scale=1600:900\" -c:v libx264 -preset slow -crf 25 -pix_fmt yuv420p -g 5 -keyint_min 5 -sc_threshold 0 -movflags +faststart -an /private/tmp/claude-501/-Users-nistanbullu-bremen-immobilien-1/d55453ea-1a37-48b8-a2e3-458c45599135/scratchpad/zoom-fast.mp4)",
+      "Bash(ffmpeg -y -i video/Zoom.mp4 -vf \"scale=1280:720\" -c:v libx264 -preset fast -crf 28 -pix_fmt yuv420p -g 1 -keyint_min 1 -sc_threshold 0 -movflags +faststart -an /private/tmp/claude-501/-Users-nistanbullu-bremen-immobilien-1/d55453ea-1a37-48b8-a2e3-458c45599135/scratchpad/zoom-allintra.mp4)",
+      "Bash(ffmpeg -y -ss 15 -i zoom-allintra.mp4 -frames:v 1 -update 1 quality_check.jpg)",
+      "Bash(ffmpeg -y -ss 19 -i video/zoom-web.mp4 -frames:v 1 -update 1 /private/tmp/claude-501/-Users-nistanbullu-bremen-immobilien-1/d55453ea-1a37-48b8-a2e3-458c45599135/scratchpad/current_end.jpg)",
+      "Bash(ffmpeg -y -ss 19 -i /private/tmp/claude-501/-Users-nistanbullu-bremen-immobilien-1/d55453ea-1a37-48b8-a2e3-458c45599135/scratchpad/zoom-allintra.mp4 -frames:v 1 -update 1 /private/tmp/claude-501/-Users-nistanbullu-bremen-immobilien-1/d55453ea-1a37-48b8-a2e3-458c45599135/scratchpad/new_end.jpg)",
+      "Bash(ffmpeg -y -i video/Zoom.mp4 -vf \"scale=1920:1080\" -c:v libx264 -preset fast -crf 28 -pix_fmt yuv420p -g 1 -keyint_min 1 -sc_threshold 0 -movflags +faststart -an /private/tmp/claude-501/-Users-nistanbullu-bremen-immobilien-1/d55453ea-1a37-48b8-a2e3-458c45599135/scratchpad/zoom-allintra-1080.mp4)",
+      "Bash(cp /private/tmp/claude-501/-Users-nistanbullu-bremen-immobilien-1/d55453ea-1a37-48b8-a2e3-458c45599135/scratchpad/zoom-allintra-1080.mp4 /Users/nistanbullu/bremen-immobilien-1/video/zoom-allintra-test.mp4)",
+      "Bash(node test_fastseek.mjs)",
+      "Bash(ffmpeg -y -ss 19 -i zoom-allintra-1080.mp4 -frames:v 1 -update 1 quality_1080.jpg)",
+      "Bash(cp /private/tmp/claude-501/-Users-nistanbullu-bremen-immobilien-1/d55453ea-1a37-48b8-a2e3-458c45599135/scratchpad/zoom-allintra-1080.mp4 video/zoom-web.mp4)",
+      "Bash(rm -f video/zoom-fast-test.mp4 video/zoom-allintra-test.mp4)"
     ],
     "additionalDirectories": [
       "/private/tmp/claude-501/-Users-nistanbullu-bremen-immobilien-1/d55453ea-1a37-48b8-a2e3-458c45599135/scratchpad"
