@@ -131,7 +131,8 @@
       "Bash(rm -f /private/tmp/claude-501/-Users-nistanbullu-bremen-immobilien-1/d55453ea-1a37-48b8-a2e3-458c45599135/scratchpad/cp_*.jpg /private/tmp/claude-501/-Users-nistanbullu-bremen-immobilien-1/d55453ea-1a37-48b8-a2e3-458c45599135/scratchpad/grid_cp_*.jpg /private/tmp/claude-501/-Users-nistanbullu-bremen-immobilien-1/d55453ea-1a37-48b8-a2e3-458c45599135/scratchpad/seq_t*.jpg /private/tmp/claude-501/-Users-nistanbullu-bremen-immobilien-1/d55453ea-1a37-48b8-a2e3-458c45599135/scratchpad/check_*.jpg /private/tmp/claude-501/-Users-nistanbullu-bremen-immobilien-1/d55453ea-1a37-48b8-a2e3-458c45599135/scratchpad/actual_t*.jpg *)",
       "Bash(./venv/bin/python3 track_optflow.py)",
       "Bash(curl -s http://localhost:8811/video/orbit-track.json -o /dev/null -w \"%{http_code}\\\\n\")",
-      "Bash(node test_simple_marker.mjs)"
+      "Bash(node test_simple_marker.mjs)",
+      "Bash(node test_blob.mjs)"
     ],
     "additionalDirectories": [
       "/private/tmp/claude-501/-Users-nistanbullu-bremen-immobilien-1/d55453ea-1a37-48b8-a2e3-458c45599135/scratchpad"
