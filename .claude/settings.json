@@ -150,7 +150,8 @@
       "Bash(cp /private/tmp/claude-501/-Users-nistanbullu-bremen-immobilien-1/d55453ea-1a37-48b8-a2e3-458c45599135/scratchpad/zoom-allintra-1080.mp4 video/zoom-web.mp4)",
       "Bash(rm -f video/zoom-fast-test.mp4 video/zoom-allintra-test.mp4)",
       "Bash(ffmpeg -y -i video/Zoom.mp4 -vf \"scale=1280:720\" -c:v libx264 -preset fast -crf 27 -pix_fmt yuv420p -g 1 -keyint_min 1 -sc_threshold 0 -movflags +faststart -an /private/tmp/claude-501/-Users-nistanbullu-bremen-immobilien-1/d55453ea-1a37-48b8-a2e3-458c45599135/scratchpad/zoom-small.mp4)",
-      "Bash(pkill -f test_blob_realistic)"
+      "Bash(pkill -f test_blob_realistic)",
+      "Bash(gh pr *)"
     ],
     "additionalDirectories": [
       "/private/tmp/claude-501/-Users-nistanbullu-bremen-immobilien-1/d55453ea-1a37-48b8-a2e3-458c45599135/scratchpad"
