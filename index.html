@@ -2140,8 +2140,12 @@
 </div>
 
 <!-- ── HERO VIDEO (Globe → Zoom → Orbit) ─────────────────────── -->
-<video id="globe-video" muted playsinline preload="auto" loop autoplay src="video/globe-web.mp4"></video>
-<video id="zoom-video" muted playsinline preload="auto" src="video/zoom-web.mp4"></video>
+<!-- globe/zoom: preload="none", weil sie komplett per fetch()+Blob geladen
+     werden (siehe preloadAsBlob() im Script) — mit "auto" würde der
+     Browser zusätzlich sein eigenes natives Progressive-Loading starten
+     und dieselbe Datei doppelt herunterladen. -->
+<video id="globe-video" muted playsinline preload="none" loop autoplay src="video/globe-web.mp4"></video>
+<video id="zoom-video" muted playsinline preload="none" src="video/zoom-web.mp4"></video>
 <video id="orbit-video" muted playsinline preload="auto" loop src="video/orbit-web.mp4"></video>
 
 <!-- ── PREMIUM GLOBE OVERLAYS ──────────────────────────────── -->
@@ -2617,6 +2621,32 @@
   const zoomVideo  = document.getElementById('zoom-video');
   const orbitVideo = document.getElementById('orbit-video');
 
+  // globe-video und zoom-video werden beim Scrollen laufend per
+  // currentTime gescrubbt (viele Seeks pro Sekunde). "preload=auto" ist
+  // nur ein Hinweis — Browser laden damit oft nicht die komplette Datei
+  // vorab, sondern nur einen Teil. Auf localhost fällt das nicht auf
+  // (keine Netzwerklatenz), auf einem echten CDN wie Netlify kann jeder
+  // Seek in noch ungepufferte Bereiche einen echten Netzwerk-Request
+  // brauchen → sichtbares Ruckeln. orbit-video braucht das NICHT: das
+  // läuft fast nur normal/sequenziell (nur gelegentlich manuell per
+  // Regler gesucht), da puffert der Browser ganz normal voraus.
+  // Fix: die Datei komplett als Blob laden und die Video-Quelle darauf
+  // umstellen — danach sind alle Seeks reine Speicherzugriffe, unabhängig
+  // von der Netzwerklatenz. Das native <video src> bleibt als Fallback
+  // aktiv, bis der Blob fertig geladen ist (oder falls der Fetch fehlschlägt).
+  function preloadAsBlob(videoEl, onReady) {
+    const url = videoEl.getAttribute('src');
+    fetch(url)
+      .then(r => r.blob())
+      .then(blob => {
+        const wasActive = videoEl.classList.contains('active');
+        videoEl.src = URL.createObjectURL(blob);
+        if (onReady) videoEl.addEventListener('loadedmetadata', onReady, { once: true });
+        if (wasActive) videoEl.classList.add('active');
+      })
+      .catch(() => {});
+  }
+
   let inOrbit = false;
 
   // Kein "zoomReady"-Flag über das loadedmetadata-Event — das Event kann
@@ -2625,9 +2655,14 @@
   // sind, das reicht als Bedingung. Der Listener ist trotzdem nützlich
   // als Sicherheitsnetz, falls Metadaten erst nach dem ersten Scroll da sind.
   zoomVideo.addEventListener('loadedmetadata', () => updateHeroVideo());
+  preloadAsBlob(zoomVideo, () => updateHeroVideo());
   // zoom-video startet INAKTIV — sichtbar wird zuerst die Globe-Rotation,
   // siehe updateGlobeStage() weiter unten.
   globeVideo.classList.add('active');
+  // updateGlobeStage() erneut aufrufen, sobald der Blob geladen ist, damit
+  // Wiedergabe/Scrub-Position (je nach aktuellem Scroll-Zustand) nach dem
+  // Quellenwechsel korrekt wiederhergestellt wird.
+  preloadAsBlob(globeVideo, () => updateGlobeStage());
 
   function globeDriverHeight() {
     const el = document.getElementById('globe-driver');
